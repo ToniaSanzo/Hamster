@@ -142,13 +142,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GHamster.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\UFont.cpp" />
     <ClCompile Include="src\UGame.cpp" />
     <ClCompile Include="src\ULib.cpp" />
     <ClCompile Include="src\UTexture.cpp" />
     <ClCompile Include="src\UWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GHamster.h" />
+    <ClInclude Include="src\UFont.h" />
     <ClInclude Include="src\UGame.h" />
     <ClInclude Include="src\ULib.h" />
     <ClInclude Include="src\UTexture.h" />
@@ -158,6 +162,7 @@
   <ItemGroup>
     <Image Include="assets\background.png" />
     <Image Include="assets\glass_cage.png" />
+    <Image Include="assets\hamster.png" />
     <Image Include="assets\hamster_icon.png" />
     <Image Include="assets\house_foreground.png" />
     <Image Include="assets\wheel.png" />

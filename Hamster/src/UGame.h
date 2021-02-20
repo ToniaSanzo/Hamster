@@ -6,9 +6,10 @@
 * File: Hamster UGame.h
 */
 #pragma once
+#include "GHamster.h"
 #include "ULib.h"
-#include "UWindow.h"
 #include "UTexture.h"
+#include "UWindow.h"
 
 
 
@@ -23,7 +24,7 @@ public:
     bool init(SDL_Renderer *, UWindow *);
 
     // Updates the game world
-    void update(const double &);
+    void update(const float &);
 
     // Handle's events
     bool handleEvent(SDL_Event &);
@@ -41,4 +42,7 @@ private:
 
     // Environment textures
     UTexture mBackgroundTexture, mGlassCageTexture, mHouseForegroundTexture, mWheelTexture, mWheelArmTexture;
+
+    // The hamster
+    GHamster mHamster;
 };

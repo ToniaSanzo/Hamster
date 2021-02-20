@@ -30,6 +30,12 @@
     <ClCompile Include="src\UTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GHamster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UFont.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ULib.h">
@@ -45,6 +51,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\UTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GHamster.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UFont.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,6 +77,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="assets\wheel_arm.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hamster.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

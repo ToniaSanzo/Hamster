@@ -3,7 +3,7 @@
 * Title: Hamster
 * Author: Tonia Sanzo
 * Date: 2/17/2021
-* File: Hamster ULib.ch
+* File: Hamster ULib.h
 */
 #pragma once
 #include <cstdio>
@@ -13,7 +13,7 @@
 #include <SDL_ttf.h>
 #include <string>
 #include "UVector3.h"
-
+#include <vector>
 
 
 

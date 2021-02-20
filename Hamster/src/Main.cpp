@@ -138,7 +138,7 @@ int main(int argc, char *args[])
             Uint32 cTime = pTime;
 
             // dt(delta time) - time in seconds since the last update function was called
-            double dt = 0.0;
+            float dt = 0.0;
 
             while (!quit) 
             {
@@ -152,7 +152,7 @@ int main(int argc, char *args[])
 
                 // Determine the amount of time in seconds since the last time update was called
                 cTime = SDL_GetTicks();
-                dt = static_cast<double>(cTime - pTime) / 1000.0;
+                dt = static_cast<float>(cTime - pTime) / 1000.f;
                 // Update game world
                 game.update(dt);
                 pTime = cTime;
