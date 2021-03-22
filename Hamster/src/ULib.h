@@ -7,6 +7,8 @@
 */
 #pragma once
 #include <cstdio>
+#include <cmath>
+#include <ctime>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
@@ -14,6 +16,7 @@
 #include <string>
 #include "UVector3.h"
 #include <vector>
+
 
 
 

@@ -36,6 +36,12 @@
     <ClCompile Include="src\UFont.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\UTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\USound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ULib.h">
@@ -53,10 +59,16 @@
     <ClInclude Include="src\UTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GHamster.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\UFont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GHamster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\USound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -82,5 +94,29 @@
     <Image Include="assets\hamster.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="assets\title.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\dustball.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\font.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="assets\softstep.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\wheel_mus.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\save.bin">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

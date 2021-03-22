@@ -147,7 +147,9 @@
     <ClCompile Include="src\UFont.cpp" />
     <ClCompile Include="src\UGame.cpp" />
     <ClCompile Include="src\ULib.cpp" />
+    <ClCompile Include="src\USound.cpp" />
     <ClCompile Include="src\UTexture.cpp" />
+    <ClCompile Include="src\UTimer.cpp" />
     <ClCompile Include="src\UWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,18 +157,32 @@
     <ClInclude Include="src\UFont.h" />
     <ClInclude Include="src\UGame.h" />
     <ClInclude Include="src\ULib.h" />
+    <ClInclude Include="src\USound.h" />
     <ClInclude Include="src\UTexture.h" />
+    <ClInclude Include="src\UTimer.h" />
     <ClInclude Include="src\UVector3.h" />
     <ClInclude Include="src\UWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\background.png" />
+    <Image Include="assets\dustball.png" />
     <Image Include="assets\glass_cage.png" />
     <Image Include="assets\hamster.png" />
     <Image Include="assets\hamster_icon.png" />
     <Image Include="assets\house_foreground.png" />
+    <Image Include="assets\title.png" />
     <Image Include="assets\wheel.png" />
     <Image Include="assets\wheel_arm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\font.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="assets\softstep.wav" />
+    <Media Include="assets\wheel_mus.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\save.bin" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

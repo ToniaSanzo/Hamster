@@ -3,7 +3,7 @@
 * Title: Hamster
 * Author: Tonia Sanzo
 * Date: 2/17/2021
-* File: Hamster UVector3.cpp
+* File: Hamster UVector3.h
 */
 #pragma once
 
