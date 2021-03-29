@@ -7,11 +7,12 @@
 */
 #pragma once
 #include "GHamster.h"
+#include "GButton.h"
+#include "UFont.h"
 #include "ULib.h"
+#include "USound.h"
 #include "UTexture.h"
 #include "UWindow.h"
-#include "UFont.h"
-#include "USound.h"
 
 
 
@@ -28,7 +29,8 @@ public:
         WHEEL_PLAY_STARTING,
         WHEEL_PLAYING,
         GAME_ENDED,
-        NEW_HIGHSCORE
+        NEW_HIGHSCORE,
+        SETTINGS_MENU
     };
 
     // Initializes internals
@@ -53,6 +55,9 @@ private:
     // This is the fade time of the Hamster title
     const static float FADE_TIME;
 
+    // Positions of the buttons
+    const static UVector3 SETTINGS_DIMENSION;
+
     // Information used to make saving data easier
     const static int SAVED_DATA_COUNT = 4;
     const static int HI_SCORE_DATA    = 0;
@@ -60,15 +65,17 @@ private:
     const static int USERNAME_CHAR_2  = 2;
     const static int USERNAME_CHAR_3  = 3;
 
-    // The current state of the game
+    // The current and previous state of the game
     GameState mCurrState;
+    GameState mPrevState;
 
     // Game renderer, and window
     SDL_Renderer *mRenderer;
     UWindow *mWindow;
 
     // Environment textures
-    UTexture mBackgroundTexture, mGlassCageTexture, mHouseForegroundTexture, mWheelTexture, mWheelArmTexture;
+    UTexture mBackgroundTexture, mGlassCageTexture, mHouseForegroundTexture, mWheelTexture, mWheelArmTexture, 
+             mSettingsMenuTexture;
 
     // Current rotation angle of the hamster wheel
     double mDegree;
@@ -83,6 +90,9 @@ private:
     // The hamster
     GHamster mHamster;
     UFont mFonts;
+
+    // The settings button
+    GButton mSettingsButton;
 
     // Number of steps the hamster has made this playthrough
     int mStepCount;

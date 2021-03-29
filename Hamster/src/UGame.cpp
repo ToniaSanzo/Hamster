@@ -7,14 +7,11 @@
 */
 #include "UGame.h"
 
-
-
-
 // Seconds before the title fades out
 const float UGame::FADE_TIME = 3;
 
-
-
+// Dimensions of the settings button
+const UVector3 UGame::SETTINGS_DIMENSION = UVector3{ 65, 65, 0 };
 
 // Default constructor
 UGame::UGame()
@@ -24,6 +21,7 @@ UGame::UGame()
 
     // Set the game state to start
     mCurrState = GameState::START;
+    mPrevState = mCurrState;
 
     // The mTitleFadeTime is a variable to fade the title screen out
     mTitleFadeTime = 0;
@@ -34,9 +32,6 @@ UGame::UGame()
     // Set the number of steps the hamster has made on this playthrough
     mStepCount = 0;
 }
-
-
-
 
 // Initializes and loads all the game objects
 bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
@@ -112,6 +107,14 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
                 mTitleTexture.setBlendMode(SDL_BLENDMODE_BLEND);
                 mTitleTexture.setAlpha(255);
             }
+
+            // Initialize the settings menu
+            mSettingsMenuTexture.initUTexture(mRenderer);
+            if (!mSettingsMenuTexture.loadFromFile("assets/settings_menu.png"))
+            {
+                std::printf("Failed to load settings menu texture!\n");
+                success = false;
+            }
         }
 
         // Initialize the sounds
@@ -132,6 +135,13 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
         if (!mFonts.init(mRenderer))
         {
             std::printf("Failed to load fonts!\n");
+            success = false;
+        }
+
+        // Initialize the settings button
+        if (!mSettingsButton.init(mRenderer, "assets/settings_button.png", UVector3{(ULib::SCREEN_DIMENSIONS.x * 16) / 17, (ULib::SCREEN_DIMENSIONS.y * 15) / 16, 0}, SETTINGS_DIMENSION))
+        {
+            std::printf("Failed to load the settings button!\n");
             success = false;
         }
     }
@@ -205,12 +215,26 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
     return success;
 }
 
-
-
-
 // Update the game world based on the time since the last update
 void UGame::update(const float &dt)
 {
+    // Check if the settings button has been clicked
+    if (mSettingsButton.clicked())
+    {
+        // Close the settings menu
+        if (mCurrState == GameState::SETTINGS_MENU)
+        {
+            mCurrState = mPrevState;
+        }
+
+        // Open the settings menu
+        else
+        {
+            mPrevState = mCurrState;
+            mCurrState = GameState::SETTINGS_MENU;
+        }
+    }
+
     // Add sleep Z's if the hamster is currently sleeping
     if (mHamster.sleeping())
     {
@@ -343,12 +367,7 @@ void UGame::update(const float &dt)
     default:
         break;
     }
-
 }
-
-
-
-
 
 // Handle all the events on the queue
 bool UGame::handleEvent(SDL_Event &e)
@@ -356,6 +375,7 @@ bool UGame::handleEvent(SDL_Event &e)
     if (e.type == SDL_QUIT) { return true; }
 
     mHamster.handleEvent(e);
+    mSettingsButton.handleEvent(e);
 
     if (mCurrState == GameState::WHEEL_PLAYING)
     {
@@ -377,14 +397,26 @@ bool UGame::handleEvent(SDL_Event &e)
     return false;
 }
 
-
-
-
 // Draw the game world to the screen
 void UGame::render()
 {
+    // Used to render either the current or previous game state
+    GameState gameState;
+
+    // If the GameState is the settings menu render the previous game state
+    if (mCurrState == GameState::SETTINGS_MENU)
+    {
+        gameState = mPrevState;
+    }
+
+    // Otherwise render the current game state
+    else
+    {
+        gameState = mCurrState;
+    }
+
     // Draw the game world based on the current state of the game
-    switch (mCurrState)
+    switch (gameState)
     {
     case GameState::START:
         mBackgroundTexture.render(0, 0);
@@ -477,10 +509,17 @@ void UGame::render()
         mFonts.renderHighscore();
         break;
     }
+
+    if (mCurrState == GameState::SETTINGS_MENU)
+    {
+        mSettingsMenuTexture.render(0, 0);
+        mSettingsButton.render(1);
+    }
+    else
+    {
+        mSettingsButton.render(0);
+    }
 }
-
-
-
 
 // Free the game objects
 void UGame::close()
@@ -534,7 +573,8 @@ void UGame::close()
     mGlassCageTexture.free();
     mTitleTexture.free();
 
-    // Free the memeber variables
+    // Free the member variables
     mHamster.free();
     mFonts.free();
+    mSettingsButton.free();
 }

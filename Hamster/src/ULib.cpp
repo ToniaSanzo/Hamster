@@ -7,10 +7,5 @@
 */
 #include "Ulib.h"
 
-
-
-
 const std::string ULib::TITLE = "Hamster";
 const UVector3 ULib::SCREEN_DIMENSIONS(1280, 760, 0);
-
-

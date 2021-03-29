@@ -42,6 +42,9 @@
     <ClCompile Include="src\USound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ULib.h">
@@ -71,6 +74,9 @@
     <ClInclude Include="src\USound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\GButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\hamster_icon.png">
@@ -98,6 +104,15 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="assets\dustball.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\settings_button.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\settings_menu.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\sound_button.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

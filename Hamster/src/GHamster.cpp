@@ -7,9 +7,6 @@
 */
 #include "GHamster.h"
 
-
-
-
 // Class constants
 const int GHamster::STEP_SIZE = 20;
 const int GHamster::FRAME_WIDTH = 170;
@@ -23,9 +20,6 @@ const float GHamster::WHEEL_LEFT_POS = 860.f;
 const float GHamster::WHEEL_RIGHT_POS = 940.f;
 const float GHamster::CLIMB_UP_POS = 898;
 const float GHamster::CLIMB_DOWN_POS = 900;
-
-
-
 
 // Initializes the hamster's member variables
 GHamster::GHamster()
@@ -46,9 +40,6 @@ GHamster::GHamster()
         mAnimationFrames[i] = SDL_Rect();
     }
 }
-
-
-
 
 // Initialize the hamster object
 bool GHamster::init(SDL_Renderer *aRenderer, const std::string &path, USound *aSound)
@@ -93,9 +84,6 @@ bool GHamster::init(SDL_Renderer *aRenderer, const std::string &path, USound *aS
 
     return success;
 }
-
-
-
 
 // Updates the hamster
 void GHamster::update(const float &dt)
@@ -146,9 +134,6 @@ void GHamster::update(const float &dt)
         }
     }
 }
-
-
-
 
 // Handle the events
 void GHamster::handleEvent(SDL_Event &e)
@@ -408,9 +393,6 @@ void GHamster::handleEvent(SDL_Event &e)
     }
 }
 
-
-
-
 // Draw the hamster
 void GHamster::render()
 {
@@ -431,14 +413,8 @@ void GHamster::render()
     }
 }
 
-
-
-
 // If the hamster is currently sleeping
 bool GHamster::sleeping() { return (mCurrFrame == static_cast<int>(FRAMES::SLEEPING)); }
-
-
-
 
 // Generate a new DustBall to the hamster
 void GHamster::addDustBall()
@@ -447,9 +423,6 @@ void GHamster::addDustBall()
     tmpDustBall->init(mRenderer, UVector3{ mPosition.x + 65 + (rand() % 30), mPosition.y + 16 + (rand() % 20), 0 });
     mDustBalls.push_back(tmpDustBall);
 }
-
-
-
 
 // Deallocate the hamster's resources
 void GHamster::free()
@@ -473,17 +446,11 @@ void GHamster::free()
     mSpriteSheet.free();
 }
 
-
-
-
 const float DustBall::LIVE_TIME = .9f;    // How long the DustBall exists before  being deleted
 const int DustBall::X_RAND_VEL = 300;     // Used to randomly generate the initial X velocity of the DustBall
 const int DustBall::Y_RAND_VEL = 130;     // Used to randomly generate the initial Y velocity of the DustBall
 const int DustBall::DB_FRAME_WIDTH = 40;  // The width of the DustBall Frame
 const int DustBall::DB_FRAME_HEIGHT = 40; // The height of the DustBall Frame
-
-
-
 
 // Default intialize the DustBall values
 DustBall::DustBall()
@@ -497,9 +464,6 @@ DustBall::DustBall()
         mDBAnimationFrames[i] = SDL_Rect();
     }
 }
-
-
-
 
 // Initialize the DustBall
 bool DustBall::init(SDL_Renderer *aRenderer, const UVector3 &aInitialPosition)
@@ -543,17 +507,11 @@ bool DustBall::init(SDL_Renderer *aRenderer, const UVector3 &aInitialPosition)
     return success;
 }
 
-
-
-
 // Render the DustBall
 void DustBall::render()
 {
     mTexture.render(mPosition.x - (DB_FRAME_WIDTH / 2), mPosition.y - (DB_FRAME_HEIGHT / 2), &mDBAnimationFrames[mCurrFrame]);
 }
-
-
-
 
 // Update the DustBall
 void DustBall::update(const float &dt)
@@ -599,9 +557,6 @@ void DustBall::update(const float &dt)
         live = false;
     }
 }
-
-
-
 
 // Deallocate the resources used by the DustBall
 void DustBall::free()

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GButton.cpp" />
     <ClCompile Include="src\GHamster.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\UFont.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="src\UWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GButton.h" />
     <ClInclude Include="src\GHamster.h" />
     <ClInclude Include="src\UFont.h" />
     <ClInclude Include="src\UGame.h" />
@@ -170,6 +172,9 @@
     <Image Include="assets\hamster.png" />
     <Image Include="assets\hamster_icon.png" />
     <Image Include="assets\house_foreground.png" />
+    <Image Include="assets\settings_button.png" />
+    <Image Include="assets\settings_menu.png" />
+    <Image Include="assets\sound_button.png" />
     <Image Include="assets\title.png" />
     <Image Include="assets\wheel.png" />
     <Image Include="assets\wheel_arm.png" />
