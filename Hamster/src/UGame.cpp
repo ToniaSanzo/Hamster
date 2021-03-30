@@ -10,8 +10,13 @@
 // Seconds before the title fades out
 const float UGame::FADE_TIME = 3;
 
-// Dimensions of the settings button
-const UVector3 UGame::SETTINGS_DIMENSION = UVector3{ 65, 65, 0 };
+// Dimensions and positions of the buttons
+const UVector3 UGame::SETTINGS_BTN_DIMENSION = UVector3{ 65, 65, 0 };
+const UVector3 UGame::SETTINGS_BTN_POSITION  = UVector3{ 1220, 720, 0 };
+const UVector3 UGame::MUSIC_BTN_POSITION     = UVector3{ 742, 232, 0 };
+const UVector3 UGame::SFX_BTN_POSITION       = UVector3{ 976, 236, 0 };
+const UVector3 UGame::SOUND_BTN_DIMENSION    = UVector3{ 53, 53, 0 };
+
 
 // Default constructor
 UGame::UGame()
@@ -139,9 +144,23 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
         }
 
         // Initialize the settings button
-        if (!mSettingsButton.init(mRenderer, "assets/settings_button.png", UVector3{(ULib::SCREEN_DIMENSIONS.x * 16) / 17, (ULib::SCREEN_DIMENSIONS.y * 15) / 16, 0}, SETTINGS_DIMENSION))
+        if (!mSettingsButton.init(mRenderer, "assets/settings_button.png", SETTINGS_BTN_POSITION, SETTINGS_BTN_DIMENSION))
         {
             std::printf("Failed to load the settings button!\n");
+            success = false;
+        }
+
+        // Initialize the music button
+        if (!mMusicButton.init(mRenderer, "assets/sound_button.png", MUSIC_BTN_POSITION, SOUND_BTN_DIMENSION))
+        {
+            std::printf("Failed to load the music button!\n");
+            success = false;
+        }
+
+        // Initialize the sfx button
+        if (!mSFXButton.init(mRenderer, "assets/sound_button.png", SFX_BTN_POSITION, SOUND_BTN_DIMENSION))
+        {
+            std::printf("Failed to load the sfx button!\n");
             success = false;
         }
     }
@@ -510,11 +529,16 @@ void UGame::render()
         break;
     }
 
+    // Render the settings menu
     if (mCurrState == GameState::SETTINGS_MENU)
     {
         mSettingsMenuTexture.render(0, 0);
+        mMusicButton.render(0);
         mSettingsButton.render(1);
+        mSFXButton.render(0);
     }
+
+    // Otherwise just render the default settigns button
     else
     {
         mSettingsButton.render(0);
@@ -577,4 +601,6 @@ void UGame::close()
     mHamster.free();
     mFonts.free();
     mSettingsButton.free();
+    mMusicButton.free();
+    mSFXButton.free();
 }

@@ -7,18 +7,12 @@
 */
 #include "USound.h"
 
-
-
-
 // Initialize USound member variables
 USound::USound() {
     mWheelMusic = nullptr;
     mSoftStep = nullptr;
-    mute = false;
+    mMuteSFX = mMuteMusic = false;
 }
-
-
-
 
 // Initialize the USound object
 bool USound::init() {
@@ -41,11 +35,9 @@ bool USound::init() {
     return success;
 }
 
-
-
-
 // Play wheel music
-void USound::playWheelMusic() {
+void USound::playWheelMusic() 
+{
     // If there is music playing
     if (Mix_PlayingMusic() != 0) {
         // Stop the music
@@ -55,29 +47,24 @@ void USound::playWheelMusic() {
     // Play the wheel music
     Mix_PlayMusic(mWheelMusic, -1);
 
-    // If it is currently muted
-    if (mute) {
+    // If the music is currently muted
+    if (mMuteMusic) {
         // Pause the music
         Mix_PauseMusic();
     }
 }
 
-
-
-
 // Plays the soft step sfx
-void USound::playSoftStep() {
-    if (!mute)
+void USound::playSoftStep() 
+{
+    if (!mMuteSFX)
     {
         Mix_PlayChannel(-1, mSoftStep, 0);
     }
 }
 
-
-
-
 // Toggle the music
-void USound::toggleMusic() {
+void USound::toggleMusicMute() {
     // If the music is paused
     if (Mix_PausedMusic() == 1) {
         // Resume the music
@@ -88,27 +75,15 @@ void USound::toggleMusic() {
         // Pause the music
         Mix_PauseMusic();
     }
+
+    mMuteMusic = !mMuteMusic;
 }
-
-
-
 
 // Mute the sound
-void USound::toggleMute()
+void USound::toggleSFXMute()
 {
-    if (mute)
-    {
-        mute = false;
-    }
-
-    else
-    {
-        mute = true;
-    }
+    mMuteSFX = !mMuteSFX;
 }
-
-
-
 
 // Deallocate and destroy the sounds
 void USound::free(){

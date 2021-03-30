@@ -25,13 +25,22 @@ public:
     void playSoftStep();
 
     // Toggle the music
-    void toggleMusic();
+    void toggleMusicMute();
 
-    // Mute the sound
-    void toggleMute();
+    // Toggle the sound effects
+    void toggleSFXMute();
 
-    // Mute status
-    bool isMuted() { return mute; }
+    // SFX mute status
+    bool isSFXMuted() 
+    { 
+        return mMuteSFX; 
+    }
+
+    // Music mute status
+    bool isMusicMuted()
+    {
+        return mMuteMusic;
+    }
 
     // Deallocate and destroy the sounds
     void free();
@@ -40,5 +49,6 @@ private:
     Mix_Music *mWheelMusic;
     Mix_Chunk *mSoftStep;
 
-    bool mute;
+    // If the music or sound effects are muted
+    bool mMuteSFX, mMuteMusic;
 };

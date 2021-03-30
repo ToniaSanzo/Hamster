@@ -23,7 +23,7 @@ const SDL_Color UFont::BLACK_TEXT = SDL_Color{ 0, 0, 0, 0xFF };
 const SDL_Color UFont::ORANGE_TEXT = SDL_Color{ 0xFF, 0x95, 0, 0xFF };
 
 // The total play time in seconds
-const int UFont::PLAY_TIME_SECONDS = 3;/*68*/
+const int UFont::PLAY_TIME_SECONDS = 68;
 
 
 
