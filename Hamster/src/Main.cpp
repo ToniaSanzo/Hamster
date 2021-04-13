@@ -11,22 +11,30 @@
 #include "ULib.h"
 #include "UWindow.h"
 #include "UGame.h"
-
-
-
+#include "../../Steam/steam_api.h"
 
 // Our custom window and renderer
 UWindow gWindow;
 SDL_Renderer *gRenderer = nullptr;
 
-
-
-
 // initialize the SDL subsystems
 bool init() 
 {
+
     // Initialization flag
     bool success = true;
+
+    //// Initialize the steam API
+    //if (SteamAPI_RestartAppIfNecessary(1583410))
+    //{
+    //    printf("(SteamAPI_RestartAppIfNecessary(1583410)) returned true.\n");
+    //    success = false;
+    //}
+    //if (!SteamAPI_Init())
+    //{
+    //    printf("Fatal Error - Steam must be running to play this game (SteamAPI_Init() failed).\n");
+    //    success = false;
+    //}
 
     // Initialize SDL subsystems
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) 
@@ -84,9 +92,6 @@ bool init()
     return success;
 }
 
-
-
-
 // Closes and frees all the resources used to run the game
 void close() 
 {
@@ -103,9 +108,6 @@ void close()
     SDL_Quit();
     printf(" done.\n");
 }
-
-
-
 
 // Main Method
 int main(int argc, char *args[]) 

@@ -21,6 +21,9 @@ public:
     // Play the wheel music
     void playWheelMusic();
 
+    // Play the menu music
+    void playMenuMusic();
+
     // Play the soft step sfx
     void playSoftStep();
 
@@ -46,7 +49,7 @@ public:
     void free();
 private:
     // The music, and sound assets used
-    Mix_Music *mWheelMusic;
+    Mix_Music *mWheelMusic, *mMenuMusic;
     Mix_Chunk *mSoftStep;
 
     // If the music or sound effects are muted

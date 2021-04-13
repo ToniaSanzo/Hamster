@@ -10,6 +10,7 @@
 // Initialize USound member variables
 USound::USound() {
     mWheelMusic = nullptr;
+    mMenuMusic = nullptr;
     mSoftStep = nullptr;
     mMuteSFX = mMuteMusic = false;
 }
@@ -22,6 +23,14 @@ bool USound::init() {
     mWheelMusic = Mix_LoadMUS("assets/wheel_mus.wav");
     if (mWheelMusic == nullptr) {
         printf("Failed to load wheel music! SDL_mixer Error: %s\n", Mix_GetError());
+        success = false;
+    }
+
+    // Load the menu music
+    mMenuMusic = Mix_LoadMUS("assets/menu_mus.wav");
+    if (mMenuMusic == nullptr)
+    {
+        printf("Failed to load menu music! SDL_mixer Error: %s\n", Mix_GetError());
         success = false;
     }
 
@@ -46,6 +55,25 @@ void USound::playWheelMusic()
 
     // Play the wheel music
     Mix_PlayMusic(mWheelMusic, -1);
+
+    // If the music is currently muted
+    if (mMuteMusic) {
+        // Pause the music
+        Mix_PauseMusic();
+    }
+}
+
+// Play menu music
+void USound::playMenuMusic()
+{
+    // If there is music playing
+    if (Mix_PlayingMusic() != 0) {
+        // Stop the music
+        Mix_HaltMusic();
+    }
+
+    // Play the menu music
+    Mix_PlayMusic(mMenuMusic, -1);
 
     // If the music is currently muted
     if (mMuteMusic) {
@@ -96,6 +124,10 @@ void USound::free(){
     // Free wheel music
     Mix_FreeMusic(mWheelMusic);
     mWheelMusic = nullptr;
+
+    // Free menu music
+    Mix_FreeMusic(mMenuMusic);
+    mMenuMusic = nullptr;
 
     // Free the soft step sound effect
     Mix_FreeChunk(mSoftStep);

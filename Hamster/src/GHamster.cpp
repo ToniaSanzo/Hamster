@@ -360,9 +360,13 @@ void GHamster::handleEvent(SDL_Event &e)
 
             // Begin the transition into the wheel playing state
             case SDLK_SPACE:
+            if(mCurrFrame == static_cast<int>(FRAMES::SLEEPING))
+            {
+                mCurrFrame = static_cast<int>(FRAMES::STANDING);
+            }
+
                 mCurrState = GameState::WHEEL_PLAY_STARTING;
                 mFrameTime = 0;
-                printf("WHEEL_PLAY_STARTING\n");
                 break;
             }         
         }

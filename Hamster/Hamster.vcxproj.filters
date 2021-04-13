@@ -133,5 +133,13 @@
     <None Include="assets\save.bin">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="steam_api64.dll">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="steam_api64.lib">
+      <Filter>Resource Files</Filter>
+    </Library>
   </ItemGroup>
 </Project>

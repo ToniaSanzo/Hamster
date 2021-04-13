@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="isteamnetworkingsockets.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamnetworkingutils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamparentalsettings.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamps3overlayrenderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamremoteplay.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamremotestorage.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamscreenshots.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamugc.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamuser.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamuserstats.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamutils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamvideo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="matchmakingtypes.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steam_api.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steam_api_common.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steam_api_flat.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steam_api_internal.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steam_gameserver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steamclientpublic.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steamdatagram_tickets.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steamencryptedappticket.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steamhttpenums.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steamnetworkingtypes.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steamps3params.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steamtypes.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="steamuniverse.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamapplist.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamapps.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamappticket.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamclient.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamcontroller.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamfriends.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamgamecoordinator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamgameserver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamgameserverstats.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamhtmlsurface.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamhttp.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteaminput.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteaminventory.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteammasterserverupdater.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteammatchmaking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteammusic.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteammusicremote.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamnetworking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isteamnetworkingmessages.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="steam_api.json">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

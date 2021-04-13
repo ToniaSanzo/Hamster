@@ -23,7 +23,7 @@ const SDL_Color UFont::BLACK_TEXT = SDL_Color{ 0, 0, 0, 0xFF };
 const SDL_Color UFont::ORANGE_TEXT = SDL_Color{ 0xFF, 0x95, 0, 0xFF };
 
 // The total play time in seconds
-const int UFont::PLAY_TIME_SECONDS = 68;
+const int UFont::PLAY_TIME_SECONDS = 34;
 
 
 
@@ -390,8 +390,8 @@ void UFont::renderGameClock()
 // Render the number of loops of the last run
 void UFont::renderLoopCount()
 {
-    mLoopCountHeaderTexture.render((ULib::SCREEN_DIMENSIONS.x - mLoopCountHeaderTexture.getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y - mLoopCountTexture.getHeight()) / 2) - 35);
-    mLoopCountTexture.render((ULib::SCREEN_DIMENSIONS.x - mLoopCountTexture.getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y - mLoopCountTexture.getHeight()) / 2) + 35);
+    mLoopCountHeaderTexture.render((ULib::SCREEN_DIMENSIONS.x - mLoopCountHeaderTexture.getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y - mLoopCountTexture.getHeight()) / 2) - 135);
+    mLoopCountTexture.render((ULib::SCREEN_DIMENSIONS.x - mLoopCountTexture.getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y - mLoopCountTexture.getHeight()) / 2) - 35);
 }
 
 

@@ -11,11 +11,13 @@
 const float UGame::FADE_TIME = 3;
 
 // Dimensions and positions of the buttons
-const UVector3 UGame::SETTINGS_BTN_DIMENSION = UVector3{ 65, 65, 0 };
-const UVector3 UGame::SETTINGS_BTN_POSITION  = UVector3{ 1220, 720, 0 };
-const UVector3 UGame::MUSIC_BTN_POSITION     = UVector3{ 742, 232, 0 };
-const UVector3 UGame::SFX_BTN_POSITION       = UVector3{ 976, 236, 0 };
-const UVector3 UGame::SOUND_BTN_DIMENSION    = UVector3{ 53, 53, 0 };
+const UVector3 UGame::SETTINGS_BTN_DIMENSION   = UVector3{ 65, 65, 0 };
+const UVector3 UGame::SETTINGS_BTN_POSITION    = UVector3{ 1220, 720, 0 };
+const UVector3 UGame::MUSIC_BTN_POSITION       = UVector3{ 742, 232, 0 };
+const UVector3 UGame::SFX_BTN_POSITION         = UVector3{ 976, 236, 0 };
+const UVector3 UGame::SOUND_BTN_DIMENSION      = UVector3{ 53, 53, 0 };
+const UVector3 UGame::PLAY_AGAIN_BTN_POSITION  = UVector3{ 644, 450, 0 };
+const UVector3 UGame::PLAY_AGAIN_BTN_DIMENSION = UVector3{ 220, 85, 0 };
 
 
 // Default constructor
@@ -163,6 +165,13 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             std::printf("Failed to load the sfx button!\n");
             success = false;
         }
+
+        // Initialize the play again button
+        if (!mPlayAgainButton.init(mRenderer, "assets/play_again_button.png", PLAY_AGAIN_BTN_POSITION, PLAY_AGAIN_BTN_DIMENSION))
+        {
+            std::printf("Failed to load the play again button!\n");
+            success = false;
+        }
     }
 
     // Attempt to read pre-saved data
@@ -181,8 +190,6 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
 
             if (file != nullptr)
             {
-                printf("New file created!\n");
-
                 // Initialize data
                 long iData = 0;
                 SDL_RWwrite(file, &iData, sizeof(long), 2);
@@ -204,8 +211,6 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
         // File exists
         else
         {
-            // Load data
-            printf("Reading file...!\n");
             // Default initialize the savedData array
             unsigned int savedData[SAVED_DATA_COUNT] = {};
 
@@ -222,9 +227,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
 
             // Set the highscore and highscore username from the saved data
             mFonts.setHighscore(savedData[HI_SCORE_DATA]);
-            printf("HighScore: %d\n", savedData[HI_SCORE_DATA]);
             mFonts.setHighscoreUsername(usrnme);
-            printf("username: %s\n", usrnme.c_str());
 
             // Close file handler
             SDL_RWclose(file);
@@ -255,7 +258,7 @@ void UGame::update(const float &dt)
     }
 
     // Add sleep Z's if the hamster is currently sleeping
-    if (mHamster.sleeping())
+    if (mHamster.sleeping() && mCurrState != GameState::SETTINGS_MENU)
     {
         mFonts.addZ(mHamster.getPosition(), mHamster.directionForward());
     }
@@ -310,10 +313,9 @@ void UGame::update(const float &dt)
 
         break;
 
-    // Stop updating the hamster so the hamster does not enter a sleep
-    // state, and transition between the WHEEL_PLAY_STARTING or the
-    // WALKING state
+    // Update the states based on the state of the hamster
     case GameState::WHEEL_STOPPED:
+        mFonts.update(dt);
         if (mHamster.getState() == static_cast<int>(GameState::WALKING))
         {
             mCurrState = GameState::WALKING;
@@ -372,6 +374,13 @@ void UGame::update(const float &dt)
     case GameState::GAME_ENDED:
         mFonts.update(dt);
         mHamster.update(dt);
+        // Check to see if the user wants to play again
+        if (mPlayAgainButton.clicked())
+        {
+            mCurrState = GameState::WHEEL_STOPPED;
+            mHamster.setState(static_cast<int>(GameState::WHEEL_STOPPED));
+        }
+        break;
 
     // Update the hamster and mFonts so the screen doesn't freeze
     case GameState::NEW_HIGHSCORE:
@@ -381,6 +390,21 @@ void UGame::update(const float &dt)
         {
             mCurrState = GameState::GAME_ENDED;
             mHamster.setState(static_cast<int>(GameState::GAME_ENDED));
+        }
+        break;
+
+    // Check to see if the music or sfx button have been clicked
+    case GameState::SETTINGS_MENU:
+        // Toggle sfx on click
+        if (mSFXButton.clicked())
+        {
+            mSounds.toggleSFXMute();
+        }
+
+        // Toggle music on click
+        if (mMusicButton.clicked())
+        {
+            mSounds.toggleMusicMute();
         }
 
     default:
@@ -398,8 +422,8 @@ bool UGame::handleEvent(SDL_Event &e)
 
     if (mCurrState == GameState::WHEEL_PLAYING)
     {
-        // If the space key was pressed
-        if (e.type == SDL_KEYDOWN && e.key.repeat == 0/* && e.key.keysym.sym == SDLK_SPACE*/)
+        // If the any key was pressed
+        if (e.type == SDL_KEYDOWN && e.key.repeat == 0)
         {
             // Rotate the wheel of the hamster
             mDegree += 72;
@@ -411,6 +435,17 @@ bool UGame::handleEvent(SDL_Event &e)
     {
         // Handle the user entering their username
         mFonts.handleEventNewHighscore(e);
+    }
+    else if (mCurrState == GameState::GAME_ENDED)
+    {
+        // Handle the user clicking the play again button
+        mPlayAgainButton.handleEvent(e);
+    }
+    else if (mCurrState == GameState::SETTINGS_MENU)
+    {
+        // Handle the user clicking the sfx or music mute buttons
+        mSFXButton.handleEvent(e);
+        mMusicButton.handleEvent(e);
     }
 
     return false;
@@ -478,6 +513,7 @@ void UGame::render()
         mWheelTexture.render(728, 117);
         mHouseForegroundTexture.render(210, 352);
         mHamster.render();
+        mFonts.renderSleepZs();
         mWheelArmTexture.render(784, 281);
         mGlassCageTexture.render(16, -11);
         mFonts.renderHighscore();
@@ -488,6 +524,7 @@ void UGame::render()
         mWheelTexture.render(728, 117);
         mHouseForegroundTexture.render(210, 352);
         mHamster.render();
+        mFonts.renderSleepZs();
         mWheelArmTexture.render(784, 281);
         mGlassCageTexture.render(16, -11);
         mFonts.renderCountdown();
@@ -499,6 +536,7 @@ void UGame::render()
         mWheelTexture.render(728, 117, nullptr, mDegree);
         mHouseForegroundTexture.render(210, 352);
         mHamster.render();
+        mFonts.renderSleepZs();
         mWheelArmTexture.render(784, 281);
         mGlassCageTexture.render(16, -11);
         mFonts.renderCountdown();
@@ -511,10 +549,12 @@ void UGame::render()
         mWheelTexture.render(728, 117, nullptr, mDegree);
         mHouseForegroundTexture.render(210, 352);
         mHamster.render();
+        mFonts.renderSleepZs();
         mWheelArmTexture.render(784, 281);
         mGlassCageTexture.render(16, -11);
         mFonts.renderLoopCount();
         mFonts.renderHighscore();
+        mPlayAgainButton.render(0);
         break;
         
     case GameState::NEW_HIGHSCORE:
@@ -522,6 +562,7 @@ void UGame::render()
         mWheelTexture.render(728, 117, nullptr, mDegree);
         mHouseForegroundTexture.render(210, 352);
         mHamster.render();
+        mFonts.renderSleepZs();
         mWheelArmTexture.render(784, 281);
         mGlassCageTexture.render(16, -11);
         mFonts.renderNewHighScore();
@@ -533,9 +574,9 @@ void UGame::render()
     if (mCurrState == GameState::SETTINGS_MENU)
     {
         mSettingsMenuTexture.render(0, 0);
-        mMusicButton.render(0);
+        mMusicButton.render(mSounds.isMusicMuted());
         mSettingsButton.render(1);
-        mSFXButton.render(0);
+        mSFXButton.render(mSounds.isSFXMuted());
     }
 
     // Otherwise just render the default settigns button
@@ -567,7 +608,6 @@ void UGame::close()
         // Save the current window size, and the current high score
         for (int i = 0; i < SAVED_DATA_COUNT; ++i)
         {
-            printf("Writing: %d\n", sData[i]);
             SDL_RWwrite(file, &sData[i], sizeof(unsigned int), 1);
         }
 
@@ -603,4 +643,5 @@ void UGame::close()
     mSettingsButton.free();
     mMusicButton.free();
     mSFXButton.free();
+    mPlayAgainButton.free();
 }

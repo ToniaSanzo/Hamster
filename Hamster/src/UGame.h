@@ -59,6 +59,7 @@ private:
     const static UVector3 SETTINGS_BTN_DIMENSION, SETTINGS_BTN_POSITION;
     const static UVector3 MUSIC_BTN_POSITION, SFX_BTN_POSITION;
     const static UVector3 SOUND_BTN_DIMENSION;
+    const static UVector3 PLAY_AGAIN_BTN_DIMENSION, PLAY_AGAIN_BTN_POSITION;
 
     // Information used to make saving data easier
     const static int SAVED_DATA_COUNT = 4;
@@ -76,8 +77,7 @@ private:
     UWindow *mWindow;
 
     // Environment textures
-    UTexture mBackgroundTexture, mGlassCageTexture, mHouseForegroundTexture, mWheelTexture, mWheelArmTexture, 
-             mSettingsMenuTexture;
+    UTexture mBackgroundTexture, mGlassCageTexture, mHouseForegroundTexture, mWheelTexture, mWheelArmTexture, mSettingsMenuTexture;
 
     // Current rotation angle of the hamster wheel
     double mDegree;
@@ -93,8 +93,8 @@ private:
     GHamster mHamster;
     UFont mFonts;
 
-    // The settings, music, and sfx buttons
-    GButton mSettingsButton, mMusicButton, mSFXButton;
+    // The settings, music, sfx, and the play again buttons
+    GButton mSettingsButton, mMusicButton, mSFXButton, mPlayAgainButton;
 
     // Number of steps the hamster has made this playthrough
     int mStepCount;
