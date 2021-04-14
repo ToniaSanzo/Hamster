@@ -9,9 +9,8 @@
 #include "ULib.h"
 #include "UTexture.h"
 #include "UTimer.h"
-
-
-
+#include "UFont.h"
+#include "USound.h"
 
 class UFont;
 class SleepZ
@@ -52,9 +51,6 @@ private:
     UVector3 mPosition;
 };
 
-
-
-
 // Class used to render fonts
 class UFont
 {
@@ -63,7 +59,7 @@ public:
     UFont();
 
     // Initialize the font textures
-    bool init(SDL_Renderer *);
+    bool init(SDL_Renderer *, USound *);
 
     // Used so the player can enter a highscore username is necessary
     void handleEventNewHighscore(SDL_Event &);
@@ -186,4 +182,7 @@ private:
 
     // The collection of SleepZ's
     std::vector<SleepZ*>  mSleepZs;
+
+    // USound reference
+    USound *mSounds;
 };

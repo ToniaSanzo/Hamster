@@ -184,11 +184,11 @@
     <Font Include="assets\font.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <Media Include="assets\menu_mus0.wav" />
     <Media Include="assets\softstep.wav" />
     <Media Include="assets\wheel_mus.wav" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\save.bin" />
     <None Include="steam_api64.dll" />
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,8 @@
 USound::USound() {
     mWheelMusic = nullptr;
     mMenuMusic = nullptr;
+    mClick = nullptr;
+    mClack = nullptr;
     mSoftStep = nullptr;
     mMuteSFX = mMuteMusic = false;
 }
@@ -38,6 +40,22 @@ bool USound::init() {
     mSoftStep = Mix_LoadWAV("assets/softstep.wav");
     if (mSoftStep == nullptr) {
         printf("Failed to load soft step sound! SDL_mixer Error: %s\n", Mix_GetError());
+        success = false;
+    }
+
+    // Load the click sfx
+    mClick = Mix_LoadWAV("assets/click.wav");
+    if (mClick == nullptr)
+    {
+        printf("Failed to load click sound! SDL_mixer Error: %s\n", Mix_GetError());
+        success = false;
+    }
+
+    // Load the clack sfx
+    mClack = Mix_LoadWAV("assets/clack.wav");
+    if (mClack == nullptr)
+    {
+        printf("Failed to load clack sound! SDL_mixer Error: %s\n", Mix_GetError());
         success = false;
     }
 
@@ -82,12 +100,36 @@ void USound::playMenuMusic()
     }
 }
 
+// Stop the music
+void USound::stopMusic()
+{
+    Mix_HaltMusic();
+}
+
 // Plays the soft step sfx
 void USound::playSoftStep() 
 {
     if (!mMuteSFX)
     {
         Mix_PlayChannel(-1, mSoftStep, 0);
+    }
+}
+
+// Play the click sfx
+void USound::playClick()
+{
+    if (!mMuteSFX)
+    {
+        Mix_PlayChannel(-1, mClick, 0);
+    }
+}
+
+// Play the clack sfx
+void USound::playClack()
+{
+    if (!mMuteSFX)
+    {
+        Mix_PlayChannel(-1, mClack, 0);
     }
 }
 
@@ -132,4 +174,12 @@ void USound::free(){
     // Free the soft step sound effect
     Mix_FreeChunk(mSoftStep);
     mSoftStep = nullptr;
+
+    // Free the click sound effect
+    Mix_FreeChunk(mClick);
+    mClick = nullptr;
+
+    // Free the clack sound effect
+    Mix_FreeChunk(mClack);
+    mClack = nullptr;
 }

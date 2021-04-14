@@ -128,11 +128,11 @@
     <Media Include="assets\wheel_mus.wav">
       <Filter>Resource Files</Filter>
     </Media>
+    <Media Include="assets\menu_mus0.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\save.bin">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="steam_api64.dll">
       <Filter>Resource Files</Filter>
     </None>

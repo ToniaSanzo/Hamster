@@ -19,7 +19,6 @@ const UVector3 UGame::SOUND_BTN_DIMENSION      = UVector3{ 53, 53, 0 };
 const UVector3 UGame::PLAY_AGAIN_BTN_POSITION  = UVector3{ 644, 450, 0 };
 const UVector3 UGame::PLAY_AGAIN_BTN_DIMENSION = UVector3{ 220, 85, 0 };
 
-
 // Default constructor
 UGame::UGame()
 {
@@ -130,6 +129,10 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             printf("Failed to load sounds!\n");
             success = false;
         }
+        else
+        {
+            mSounds.playMenuMusic();
+        }
 
         // Initialize the hamster
         if (!mHamster.init(mRenderer, "assets/hamster.png", &mSounds))
@@ -139,7 +142,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
         }
 
         // Initialize the fonts
-        if (!mFonts.init(mRenderer))
+        if (!mFonts.init(mRenderer, &mSounds))
         {
             std::printf("Failed to load fonts!\n");
             success = false;
@@ -322,6 +325,7 @@ void UGame::update(const float &dt)
         }
         else if (mHamster.getState() == static_cast<int>(GameState::WHEEL_PLAY_STARTING))
         {
+            mSounds.playClack();
             mCurrState = GameState::WHEEL_PLAY_STARTING;
             mFonts.startCountdown();
         }
@@ -359,6 +363,7 @@ void UGame::update(const float &dt)
                 mCurrState = GameState::NEW_HIGHSCORE;
                 mHamster.setState(static_cast<int>(GameState::NEW_HIGHSCORE));
                 mFonts.setHighscore(mStepCount / 5);
+                mSounds.stopMusic();
             }
 
             // Enter game end state
@@ -366,6 +371,7 @@ void UGame::update(const float &dt)
             {
                 mCurrState = GameState::GAME_ENDED;
                 mHamster.setState(static_cast<int>(GameState::GAME_ENDED));
+                mSounds.stopMusic();
             }
         }
         break;

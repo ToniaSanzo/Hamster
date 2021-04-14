@@ -24,8 +24,17 @@ public:
     // Play the menu music
     void playMenuMusic();
 
+    // Stop the music
+    void stopMusic();
+
     // Play the soft step sfx
     void playSoftStep();
+
+    // Play the click sfx
+    void playClick();
+
+    // Play the clack sfx
+    void playClack();
 
     // Toggle the music
     void toggleMusicMute();
@@ -50,7 +59,7 @@ public:
 private:
     // The music, and sound assets used
     Mix_Music *mWheelMusic, *mMenuMusic;
-    Mix_Chunk *mSoftStep;
+    Mix_Chunk *mSoftStep, *mClick, *mClack;
 
     // If the music or sound effects are muted
     bool mMuteSFX, mMuteMusic;

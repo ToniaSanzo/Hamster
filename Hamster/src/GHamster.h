@@ -11,9 +11,6 @@
 #include "UFont.h"
 #include "USound.h"
 
-
-
-
 // Animates dust being kicked up by the hamsters
 class DustBall
 {
@@ -57,9 +54,6 @@ private:
     // Current position of the DustBall
     UVector3 mPosition;
 };
-
-
-
 
 // Hamster object
 class GHamster

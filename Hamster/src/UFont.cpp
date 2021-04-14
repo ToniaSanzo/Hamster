@@ -7,9 +7,6 @@
 */
 #include "UFont.h"
 
-
-
-
 // Position sleep z's spawn
 const UVector3 UFont::Z_SPAWN_POS = UVector3(380, 470, 0); 
 
@@ -25,12 +22,10 @@ const SDL_Color UFont::ORANGE_TEXT = SDL_Color{ 0xFF, 0x95, 0, 0xFF };
 // The total play time in seconds
 const int UFont::PLAY_TIME_SECONDS = 34;
 
-
-
-
 // Default constructor
 UFont::UFont() 
 {
+    mSounds = nullptr;
     mRenderer = nullptr;
     mSleepFont = nullptr;
     mMediumFont = nullptr;
@@ -54,15 +49,22 @@ UFont::UFont()
     }
 }
 
-
-
-
 // Initialize UFont class
-bool UFont::init(SDL_Renderer *aRenderer)
+bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
 {
     // Initialize the success flag
     bool success = true;
-    mRenderer = aRenderer;
+
+    // Confirm that aRenderer and aSounds are valid pointers
+    if (aRenderer && aSounds)
+    {
+        mRenderer = aRenderer;
+        mSounds = aSounds;
+    }
+    else
+    {
+        success = false;
+    }
 
     // Initialize the sleep font
     mSleepFont = TTF_OpenFont("assets/font.ttf", 18);
@@ -188,9 +190,6 @@ bool UFont::init(SDL_Renderer *aRenderer)
     return success;
 }
 
-
-
-
 void UFont::handleEventNewHighscore(SDL_Event &e)
 {
     // Special key input
@@ -230,9 +229,6 @@ void UFont::handleEventNewHighscore(SDL_Event &e)
     }
 
 }
-
-
-
 
 // Update the SleepZ's
 void UFont::update(const float &dt)
@@ -287,6 +283,7 @@ void UFont::update(const float &dt)
         // countdown is over
         else if (mCountdownText == 1 && mCountdownTime >= 3)
         {
+            mSounds->playClick();
             --mCountdownText;
             mCountdownTexture.loadFromRenderedText("Go!", BLACK_TEXT);
             mPlayingTime = 0.f;
@@ -298,12 +295,15 @@ void UFont::update(const float &dt)
         // text, update the countdown text
         else if (mCountdownText == 2 && mCountdownTime >= 2)
         {
+
+            mSounds->playClack();
             mCountdownTexture.loadFromRenderedText(std::to_string(--mCountdownText), BLACK_TEXT);
         }
         // If the countdown text has not changed to "1" yet, and it's time to change the countdown
         // text, update the countdown text
         else if (mCountdownText == 3 && mCountdownTime >= 1)
         {
+            mSounds->playClack();
             mCountdownTexture.loadFromRenderedText(std::to_string(--mCountdownText), BLACK_TEXT);
         }
     }
@@ -354,9 +354,6 @@ void UFont::update(const float &dt)
     }
 }
 
-
-
-
 // Render the sleep z's
 void UFont::renderSleepZs()
 {
@@ -366,17 +363,11 @@ void UFont::renderSleepZs()
     }
 }
 
-
-
-
 // Render the countdown text
 void UFont::renderCountdown()
 {
     mCountdownTexture.render((ULib::SCREEN_DIMENSIONS.x - mCountdownTexture.getWidth()) / 2, (ULib::SCREEN_DIMENSIONS.y - mCountdownTexture.getHeight()) / 2);
 }
-
-
-
 
 // Render the game clock
 void UFont::renderGameClock()
@@ -384,17 +375,12 @@ void UFont::renderGameClock()
     mGameClockTexture.render((ULib::SCREEN_DIMENSIONS.x - mGameClockTexture.getWidth()) / 2, (ULib::SCREEN_DIMENSIONS.y / 5.0) - (mGameClockTexture.getHeight() / 2.0));
 }
 
-
-
-
 // Render the number of loops of the last run
 void UFont::renderLoopCount()
 {
     mLoopCountHeaderTexture.render((ULib::SCREEN_DIMENSIONS.x - mLoopCountHeaderTexture.getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y - mLoopCountTexture.getHeight()) / 2) - 135);
     mLoopCountTexture.render((ULib::SCREEN_DIMENSIONS.x - mLoopCountTexture.getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y - mLoopCountTexture.getHeight()) / 2) - 35);
 }
-
-
 
 // Render the new high score text
 void UFont::renderNewHighScore()
@@ -404,17 +390,11 @@ void UFont::renderNewHighScore()
     mInputTextTexture.render((ULib::SCREEN_DIMENSIONS.x - mInputTextTexture.getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y - mInputTextTexture.getHeight()) / 2) + 35);
 }
 
-
-
-
 // Render the high score in the top right of the window
 void UFont::renderHighscore()
 {
     mHighscoreTexture.render(static_cast<int>(ULib::SCREEN_DIMENSIONS.x * ((9.0 / 12.0))), static_cast<int>(ULib::SCREEN_DIMENSIONS.y * ((1.0 / 25.0))));
 }
-
-
-
 
 // Will add a Z to the sleepZs collection at a steady pace
 void UFont::addZ(UVector3 aHamsterPosition, bool aHamsterDirectionForward)
@@ -448,9 +428,6 @@ void UFont::addZ(UVector3 aHamsterPosition, bool aHamsterDirectionForward)
     mPrevTime = currTime;
 }
 
-
-
-
 // Set the number of loops for this run
 void UFont::setLoopCount(int aLoops)
 {
@@ -458,9 +435,6 @@ void UFont::setLoopCount(int aLoops)
     mLoops = aLoops;
     mLoopCountTexture.loadFromRenderedText(std::to_string(mLoops), BLACK_TEXT);
 }
-
-
-
 
 // Start the countdown
 void UFont::startCountdown()
@@ -472,26 +446,17 @@ void UFont::startCountdown()
     mCountdownFlag = true;
 }
 
-
-
-
 // Get the current highscore
 unsigned int UFont::getHighscore()
 {
     return mHighscore;
 }
 
-
-
-
 // Get the current highscore username
 std::string UFont::getHighscoreUsername()
 {
     return mUsername;
 }
-
-
-
 
 // If the high score was passed set the new highscore
 void UFont::setHighscore(unsigned int aHighScore)
@@ -502,9 +467,6 @@ void UFont::setHighscore(unsigned int aHighScore)
     mHighscoreTexture.loadFromRenderedText(tmpStr.c_str(), BLACK_TEXT);
 }
 
-
-
-
 // Set the current highscore username
 void UFont::setHighscoreUsername(std::string aUsername)
 {
@@ -513,9 +475,6 @@ void UFont::setHighscoreUsername(std::string aUsername)
     tmpStr = "Hi-Score: " + tmpStr + " " + mUsername;
     mHighscoreTexture.loadFromRenderedText(tmpStr.c_str(), BLACK_TEXT);
 }
-
-
-
 
 // Deallocate the resources allocated for the UFont
 void UFont::free()
@@ -546,10 +505,10 @@ void UFont::free()
     TTF_CloseFont(mSleepFont);
     TTF_CloseFont(mCountdownFont);
     mSleepFont = nullptr;
+
+    // Prevent dangling pointers
+    mSounds = nullptr;
 }
-
-
-
 
 // How long the texture exists before being deleted
 const float SleepZ::LIVE_TIME = 3.5;
@@ -566,9 +525,6 @@ const SDL_Color SleepZ::WHITE_TEXT = SDL_Color{ 0xFF, 0xFF, 0xFF, 0xFF };
 // How fast the sleep z rises in the y-axis
 const float SleepZ::RISE_SPEED = -23;
 
-
-
-
 // Default constructor
 SleepZ::SleepZ()
 {
@@ -577,9 +533,6 @@ SleepZ::SleepZ()
     mLive = true;
     mPosition = UVector3(0, 0, 0);
 }
-
-
-
 
 // Initialize the SleepZ
 bool SleepZ::init(SDL_Renderer *aRenderer, TTF_Font *aFont, const std::string &aRenderText, const UVector3 &aPosition)
@@ -614,17 +567,11 @@ bool SleepZ::init(SDL_Renderer *aRenderer, TTF_Font *aFont, const std::string &a
     return success;
 }
 
-
-
-
 // Render the sleep z
 void SleepZ::render()
 {
     mTexture->render((mPosition.x - (mTexture->getWidth() / 2.0)) + (sin(mTime * PERIOD_AMPLIFIER) * SIN_WAVE_MAX_MIN_VAL), mPosition.y - (mTexture->getHeight() / 2.0));
 }
-
-
-
 
 // Update the sleep z
 void SleepZ::update(const float &dt)
@@ -646,9 +593,6 @@ void SleepZ::update(const float &dt)
         mLive = false;
     }
 }
-
-
-
 
 // Free the texture
 void SleepZ::free()
