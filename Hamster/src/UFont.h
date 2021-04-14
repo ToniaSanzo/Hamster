@@ -152,7 +152,7 @@ private:
     SDL_Renderer *mRenderer;
 
     // UFont textures
-    UTexture mCountdownTexture, mGameClockTexture, mLoopCountTexture, mLoopCountHeaderTexture, mInputTextTexture, mInputHeaderTexture, mHighscoreTexture;
+    UTexture mCountdownTexture, mGameClockTexture, mLoopCountTexture, mLoopCountHeaderTexture, mInputTextTexture, mInputHeaderTexture1, mInputHeaderTexture2, mHighscoreTexture;
 
     // UFont fonts
     TTF_Font *mSleepFont, *mMediumFont, *mCountdownFont;

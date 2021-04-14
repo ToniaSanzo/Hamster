@@ -20,7 +20,7 @@ const SDL_Color UFont::BLACK_TEXT = SDL_Color{ 0, 0, 0, 0xFF };
 const SDL_Color UFont::ORANGE_TEXT = SDL_Color{ 0xFF, 0x95, 0, 0xFF };
 
 // The total play time in seconds
-const int UFont::PLAY_TIME_SECONDS = 34;
+const int UFont::PLAY_TIME_SECONDS = 4/*34*/;
 
 // Default constructor
 UFont::UFont() 
@@ -154,15 +154,24 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
             mLoopCountTexture.setAlpha(mLoopCountAlpha);
         }
 
-        // Initialize the input header texture
-        mInputHeaderTexture.initUTexture(mRenderer);
-        mInputHeaderTexture.initFont(mMediumFont);
+        // Initialize the input header textures
+        mInputHeaderTexture1.initUTexture(mRenderer);
+        mInputHeaderTexture1.initFont(mMediumFont);
         // Load the input header text
-        if (!mInputHeaderTexture.loadFromRenderedText("New Hi-Score! Enter name.", BLACK_TEXT))
+        if (!mInputHeaderTexture1.loadFromRenderedText("New Hi-Score!", BLACK_TEXT))
         {
-            printf("Failed to load input header!\n");
+            printf("Failed to load input header 1!\n");
                 success = false;
         }
+        mInputHeaderTexture2.initUTexture(mRenderer);
+        mInputHeaderTexture2.initFont(mMediumFont);
+        // Load the input header text
+        if (!mInputHeaderTexture2.loadFromRenderedText("Enter name.", BLACK_TEXT))
+        {
+            printf("Failed to load input header 2!\n");
+            success = false;
+        }
+
 
         // Initialize the username input text
         mInputTextTexture.initUTexture(mRenderer);
@@ -387,8 +396,9 @@ void UFont::renderLoopCount()
 void UFont::renderNewHighScore()
 {
     // Render the new highscore screen
-    mInputHeaderTexture.render((ULib::SCREEN_DIMENSIONS.x - mInputHeaderTexture.getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y - mInputHeaderTexture.getHeight()) / 2) - 35);
-    mInputTextTexture.render((ULib::SCREEN_DIMENSIONS.x - mInputTextTexture.getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y - mInputTextTexture.getHeight()) / 2) + 35);
+    mInputHeaderTexture1.render((ULib::SCREEN_DIMENSIONS.x - mInputHeaderTexture1.getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y - mInputHeaderTexture1.getHeight()) / 2) - 190);
+    mInputHeaderTexture2.render((ULib::SCREEN_DIMENSIONS.x - mInputHeaderTexture2.getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y - mInputHeaderTexture2.getHeight()) / 2) - 95);
+    mInputTextTexture.render((ULib::SCREEN_DIMENSIONS.x - mInputTextTexture.getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y - mInputTextTexture.getHeight()) / 2) + 25);
 }
 
 // Render the high score in the top right of the window
@@ -492,7 +502,8 @@ void UFont::free()
     mLoopCountTexture.free();
     mLoopCountHeaderTexture.free();
     mInputTextTexture.free();
-    mInputHeaderTexture.free();
+    mInputHeaderTexture1.free();
+    mInputHeaderTexture2.free();
 
     // Delete the sleep z's
     for (SleepZ *z : mSleepZs)
