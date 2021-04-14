@@ -423,7 +423,10 @@ bool UGame::handleEvent(SDL_Event &e)
 {
     if (e.type == SDL_QUIT) { return true; }
 
-    mHamster.handleEvent(e);
+    if (mCurrState != GameState::SETTINGS_MENU)
+    {
+        mHamster.handleEvent(e);
+    }
     mSettingsButton.handleEvent(e);
 
     if (mCurrState == GameState::WHEEL_PLAYING)
