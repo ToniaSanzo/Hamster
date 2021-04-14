@@ -214,6 +214,7 @@ void UFont::handleEventNewHighscore(SDL_Event &e)
             // The user entered their username
             mUsername = mInputText;
             mInputText = "";
+            setHighscoreUsername(mUsername);
             mEnterGameEndState = true;
         }
     }
