@@ -373,7 +373,7 @@ void UGame::update(const float &dt)
                 mCurrState = GameState::NEW_HIGHSCORE;
                 mHamster.setState(static_cast<int>(GameState::NEW_HIGHSCORE));
                 mFonts.setHighscore(mStepCount / 5);
-                mSounds.stopMusic();
+                mSounds.playMenuMusic();
             }
 
             // Enter game end state
@@ -381,7 +381,7 @@ void UGame::update(const float &dt)
             {
                 mCurrState = GameState::GAME_ENDED;
                 mHamster.setState(static_cast<int>(GameState::GAME_ENDED));
-                mSounds.stopMusic();
+                mSounds.playMenuMusic();
             }
         }
         break;
