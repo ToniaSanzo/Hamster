@@ -232,6 +232,16 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             mFonts.setHighscore(savedData[HI_SCORE_DATA]);
             mFonts.setHighscoreUsername(usrnme);
 
+            // Set the music and sound effects to the previous save state
+            if (savedData[SFX_MUTED])
+            {
+                mSounds.toggleSFXMute();
+            }
+            if (savedData[MUSIC_MUTED])
+            {
+                mSounds. toggleMusicMute();
+            }
+
             // Close file handler
             SDL_RWclose(file);
         }
@@ -613,6 +623,10 @@ void UGame::close()
         sData[USERNAME_CHAR_1] = static_cast<unsigned int>(usrnme[0]);
         sData[USERNAME_CHAR_2] = static_cast<unsigned int>(usrnme[1]);
         sData[USERNAME_CHAR_3] = static_cast<unsigned int>(usrnme[2]);
+
+        // Get the mute status of the SFX and the Music
+        sData[SFX_MUTED]       = mSounds.isSFXMuted();
+        sData[MUSIC_MUTED]     = mSounds.isMusicMuted();
 
         // Save the current window size, and the current high score
         for (int i = 0; i < SAVED_DATA_COUNT; ++i)

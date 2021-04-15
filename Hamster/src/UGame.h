@@ -62,11 +62,13 @@ private:
     const static UVector3 PLAY_AGAIN_BTN_DIMENSION, PLAY_AGAIN_BTN_POSITION;
 
     // Information used to make saving data easier
-    const static int SAVED_DATA_COUNT = 4;
+    const static int SAVED_DATA_COUNT = 6;
     const static int HI_SCORE_DATA    = 0;
     const static int USERNAME_CHAR_1  = 1;
     const static int USERNAME_CHAR_2  = 2;
     const static int USERNAME_CHAR_3  = 3;
+    const static int MUSIC_MUTED      = 4;
+    const static int SFX_MUTED        = 5;
 
     // The current and previous state of the game
     GameState mCurrState;
