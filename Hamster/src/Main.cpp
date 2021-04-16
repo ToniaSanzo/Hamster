@@ -24,17 +24,22 @@ bool init()
     // Initialization flag
     bool success = true;
 
-    //// Initialize the steam API
-    //if (SteamAPI_RestartAppIfNecessary(1583410))
-    //{
-    //    printf("(SteamAPI_RestartAppIfNecessary(1583410)) returned true.\n");
-    //    success = false;
-    //}
-    //if (!SteamAPI_Init())
-    //{
-    //    printf("Fatal Error - Steam must be running to play this game (SteamAPI_Init() failed).\n");
-    //    success = false;
-    //}
+    // Checks if the game was launched through steam, and relaunches the game through steam
+    // if it wasn't
+    if (SteamAPI_RestartAppIfNecessary(1583410))
+    {
+        printf("(SteamAPI_RestartAppIfNecessary(1583410)) returned true.\n");
+        success = false;
+    }
+
+    // Initializes the Steam API, sets up the global state and populates the interface 
+    // pointers which are accessible via the global functions which match the name of the
+    // interface. Must return successfully to 
+    if (!SteamAPI_Init())
+    {
+        printf("Fatal Error - Steam must be running to play this game (SteamAPI_Init() failed).\n");
+        success = false;
+    }
 
     // Initialize SDL subsystems
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) 
@@ -106,6 +111,10 @@ void close()
     IMG_Quit();
     Mix_Quit();
     SDL_Quit();
+
+    // Free resources used by the steam API
+    SteamAPI_Shutdown();
+
     printf(" done.\n");
 }
 
