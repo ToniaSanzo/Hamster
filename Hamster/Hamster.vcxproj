@@ -146,6 +146,7 @@
     <ClCompile Include="src\GButton.cpp" />
     <ClCompile Include="src\GHamster.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\STEAM_StatsAchievements.cpp" />
     <ClCompile Include="src\UFont.cpp" />
     <ClCompile Include="src\UGame.cpp" />
     <ClCompile Include="src\ULib.cpp" />
@@ -157,6 +158,7 @@
   <ItemGroup>
     <ClInclude Include="src\GButton.h" />
     <ClInclude Include="src\GHamster.h" />
+    <ClInclude Include="src\STEAM_StatsAchievements.h" />
     <ClInclude Include="src\UFont.h" />
     <ClInclude Include="src\UGame.h" />
     <ClInclude Include="src\ULib.h" />

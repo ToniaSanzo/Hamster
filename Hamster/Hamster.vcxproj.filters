@@ -45,6 +45,9 @@
     <ClCompile Include="src\GButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\STEAM_StatsAchievements.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ULib.h">
@@ -75,6 +78,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STEAM_StatsAchievements.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

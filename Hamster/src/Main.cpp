@@ -1,12 +1,9 @@
 /**
-* Copyright 2021 Goblin HQ ©
-* Title: Em
-* Date: 2/20/2021
-* File: Em Main.cpp
-* 
-* Engineers: Charles Chiasson, Tonia Sanzo
-* Audio:     Ethan Schwabe
-* Art:       Bobbierre Heard, Bharati Mahajan, Ngan Nguyen
+* Copyright 2021 Tonia Sanzo ©
+* Title: Hamster
+* Author: Tonia Sanzo
+* Date: 2/17/2021
+* File: Hamster Main.cpp
 */
 #include "ULib.h"
 #include "UWindow.h"
