@@ -22,7 +22,7 @@ enum Achievements
 struct Achievement_t
 {
 	Achievements mAchievementID;
-	const char *mAchievementID;
+	const char *mAchievementIDChar;
 	char m_rgchName[128];
 	char m_rgchDescription[256];
 	bool m_bAchieved;
@@ -36,9 +36,9 @@ public:
 	STEAM_StatsAchievements();
 
 	// Our Steam callbacks
-	STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsReceived, UserStatsReceived_t);
-	STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsStored, UserStatsStored_t);
-	STEAM_CALLBACK(STEAM_StatsAchievements, OnAchievementStored, UserAchievementStored_t);
+	//STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsReceived, UserStatsReceived_t);
+	//STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsStored, UserStatsStored_t);
+	//STEAM_CALLBACK(STEAM_StatsAchievements, OnAchievementStored, UserAchievementStored_t);
 
 private:
 	// Our Game Id

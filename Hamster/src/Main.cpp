@@ -7,6 +7,7 @@
 */
 #include "ULib.h"
 #include "UWindow.h"
+#include "Windows.h"
 #include "UGame.h"
 #include "../../Steam/steam_api.h"
 
@@ -17,7 +18,6 @@ SDL_Renderer *gRenderer = nullptr;
 // initialize the SDL subsystems
 bool init() 
 {
-
     // Initialization flag
     bool success = true;
 
@@ -118,6 +118,9 @@ void close()
 // Main Method
 int main(int argc, char *args[]) 
 {
+    // Hide the console window at startup
+    ::ShowWindow(::GetConsoleWindow(), SW_HIDE);
+
     // Start up SDL and create window
     if (!init()) 
     {
