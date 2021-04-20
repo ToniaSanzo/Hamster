@@ -32,15 +32,19 @@ struct Achievement_t
 class STEAM_StatsAchievements
 {
 public:
-	// Constructore
+	// Number of unique achievements in the game
+	const static int ACH_COUNT = 4;
+
+	// Constructor
 	STEAM_StatsAchievements();
 
 	// Our Steam callbacks
-	//STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsReceived, UserStatsReceived_t);
-	//STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsStored, UserStatsStored_t);
-	//STEAM_CALLBACK(STEAM_StatsAchievements, OnAchievementStored, UserAchievementStored_t);
+	STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsReceived, UserStatsReceived_t, m_CallbackUserStatsReceived);
+	STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsStored, UserStatsStored_t, m_CallbackUserStatsStored);
+	STEAM_CALLBACK(STEAM_StatsAchievements, OnAchievementStored, UserAchievementStored_t, m_CallbackAchievementStored);
 
 private:
+
 	// Our Game Id
 	CGameID mGameId;
 
@@ -49,6 +53,13 @@ private:
 
 	// Steam UserStats interface
 	ISteamUserStats *mSteamUserStats;
+
+	// Did we get the stats from Steam?
+	bool m_bRequestedStats;
+	bool m_bStatsValid;
+
+	// Should we store stats this frame?
+	bool m_bStoreStats;
 
 	// Current Stat details
 	int mLoopsLastRun;

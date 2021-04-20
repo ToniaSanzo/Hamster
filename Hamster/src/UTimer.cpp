@@ -7,9 +7,6 @@
 */
 #include "UTimer.h"
 
-
-
-
 // Init UTimer
 UTimer::UTimer() {
     // Initialize the variables
@@ -19,9 +16,6 @@ UTimer::UTimer() {
     mPaused = false;
     mStarted = false;
 }
-
-
-
 
 // Start the clock
 void UTimer::start() {
@@ -36,9 +30,6 @@ void UTimer::start() {
     mPausedTicks = 0;
 }
 
-
-
-
 // Stop the clock
 void UTimer::stop() {
     // Stop the timer
@@ -52,9 +43,6 @@ void UTimer::stop() {
     mPausedTicks = 0;
 }
 
-
-
-
 // Pause the clock
 void UTimer::pause() {
     // If the timer is running and isn't already paused
@@ -67,9 +55,6 @@ void UTimer::pause() {
     }
 }
 
-
-
-
 // Unpause the clock
 void UTimer::unpause() {
     // aIf the timer is running and paused 
@@ -78,9 +63,6 @@ void UTimer::unpause() {
         mPaused = false;
     }
 }
-
-
-
 
 // Get the timer's time
 Uint32 UTimer::getTicks() {
@@ -102,17 +84,11 @@ Uint32 UTimer::getTicks() {
     return time;
 }
 
-
-
-
 // Return if the clock is running or paused
 bool UTimer::isStarted() {
     // Timer is running and paused or unpaused
     return mStarted;
 }
-
-
-
 
 // Return if the clock is paused
 bool UTimer::isPaused() {
