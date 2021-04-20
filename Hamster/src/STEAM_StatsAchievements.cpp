@@ -75,3 +75,31 @@ void STEAM_StatsAchievements::OnUserStatsReceived(UserStatsReceived_t *pCallback
         }
     }
 }
+
+// Our stats data was stored!
+void STEAM_StatsAchievements::OnUserStatsStored(UserStatsStored_t *pCallback)
+{
+    // We may get callbacks for other games' stats arriving, ignore them
+    if (mGameId.ToUint64() == pCallback->m_nGameID)
+    {
+        if (k_EResultOK == pCallback->m_eResult)
+        {
+            printf("StoreStats - success\n");
+        }
+        else if (k_EResultInvalidParam == pCallback->m_eResult)
+        {
+            // One or more stats we set broke a constraint. They've been reverted,
+            // and we should re-iterate the values now to keep in sync.
+            printf("StoreStats - some failed to validate\n");
+            // Fake up a callback here so that we re-load the values.
+            UserStatsReceived_t callback;
+            callback.m_eResult = k_EResultOK;
+            callback.m_nGameID = mGameId.ToUint64();
+            OnUserStatsReceived(&callback);
+        }
+        else
+        {
+            printf("StoreStats - failed, %d\n", pCallback->m_eResult);
+        }
+    }
+}
