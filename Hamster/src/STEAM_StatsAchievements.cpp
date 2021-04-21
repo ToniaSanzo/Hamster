@@ -133,6 +133,25 @@ void STEAM_StatsAchievements::UnlockAchievement(Achievement_t &achievement)
     m_bStoreStats = true;
 }
 
+// Store stats in the Steam database
+void STEAM_StatsAchievements::StoreStatsIfNecessary()
+{
+    if (m_bStoreStats)
+    {
+        // already set any achievements in UnlockAchievement
+
+        // set stats
+        mSteamUserStats->SetStat("GamesPlayed", mGamesPlayed);
+        mSteamUserStats->SetStat("TotalRuns", mTotalRuns);
+        mSteamUserStats->SetStat("TotalLoops", mTotalLoops);
+
+        bool bSuccess = mSteamUserStats->StoreStats();
+        // If this failed, we never sent anything to the server, try
+        // again later.
+        m_bStoreStats = !bSuccess;
+    }
+}
+
 
 // We have recieved stats data from Steam. We then immediately update our data.
 void STEAM_StatsAchievements::OnUserStatsReceived(UserStatsReceived_t *pCallback)
