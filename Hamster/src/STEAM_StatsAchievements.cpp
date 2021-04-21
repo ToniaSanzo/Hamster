@@ -81,12 +81,58 @@ void STEAM_StatsAchievements::RunFrame()
 // Accumulators
 void STEAM_StatsAchievements::AddLoops(int nLoops)
 {
+    mLoopsLastRun = nLoops;
     mTotalLoops += nLoops;
 }
 void STEAM_StatsAchievements::AddRun()
 {
     ++mTotalRuns;
 }
+
+// See if we should unlock this achievement
+void STEAM_StatsAchievements::EvaluateAchievement(Achievement_t &achievement)
+{
+    // Already achieved, done
+    if (achievement.m_bAchieved)
+        return;
+
+    switch (achievement.mAchievementID)
+    {
+    case ACH_FIRST_GAME:
+        UnlockAchievement(achievement);
+        break;
+    case ACH_FIRST_RUN:
+        if (mTotalRuns >= 1)
+            UnlockAchievement(achievement);
+        break;
+    case ACH_FAST_RUN:
+        if (mLoopsLastRun >= 450)
+            UnlockAchievement(achievement);
+        break;
+    case ACH_LONG_DISTANCE:
+        if (mTotalLoops >= 33000)
+            UnlockAchievement(achievement);
+        break;
+    default:
+        break;
+    }
+}
+
+// Unlock this achievement
+void STEAM_StatsAchievements::UnlockAchievement(Achievement_t &achievement)
+{
+    achievement.m_bAchieved = true;
+
+    // the icon may change once it's unlocked
+    achievement.m_iIconImage = 0;
+
+    // mark it down
+    mSteamUserStats->SetAchievement(achievement.mAchievementIDChar);
+
+    // Store stats end of frame
+    m_bStoreStats = true;
+}
+
 
 // We have recieved stats data from Steam. We then immediately update our data.
 void STEAM_StatsAchievements::OnUserStatsReceived(UserStatsReceived_t *pCallback)
