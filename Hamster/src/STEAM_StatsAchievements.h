@@ -38,12 +38,32 @@ public:
 	// Constructor
 	STEAM_StatsAchievements();
 
+	// Run a frame. Does not need to run at full frame rate.
+	void RunFrame();
+
+	// Display the stats and achievements
+	void Render();
+
+	// Accumulators
+	void AddDistanceTraveled(float flDistance);
+
+	// Accessors
+	float GetTotalRuns() { return mTotalRuns; }
+	double GetTotalLoops() { return mTotalLoops; }
+
 	// Our Steam callbacks
 	STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsReceived, UserStatsReceived_t, m_CallbackUserStatsReceived);
 	STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsStored, UserStatsStored_t, m_CallbackUserStatsStored);
 	STEAM_CALLBACK(STEAM_StatsAchievements, OnAchievementStored, UserAchievementStored_t, m_CallbackAchievementStored);
 
 private:
+
+	// Determine if we get this achievement now
+	void EvaluateAchievement(Achievement_t &achievement);
+	void UnlockAchievement(Achievement_t &achievement);
+
+	// Store stats
+	void StoreStatsIfNecessary();
 
 	// Our Game Id
 	CGameID mGameId;
