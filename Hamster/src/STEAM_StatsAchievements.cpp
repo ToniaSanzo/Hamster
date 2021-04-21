@@ -78,6 +78,16 @@ void STEAM_StatsAchievements::RunFrame()
     StoreStatsIfNecessary();
 }
 
+// Accumulators
+void STEAM_StatsAchievements::AddLoops(int nLoops)
+{
+    mTotalLoops += nLoops;
+}
+void STEAM_StatsAchievements::AddRun()
+{
+    ++mTotalRuns;
+}
+
 // We have recieved stats data from Steam. We then immediately update our data.
 void STEAM_StatsAchievements::OnUserStatsReceived(UserStatsReceived_t *pCallback)
 {

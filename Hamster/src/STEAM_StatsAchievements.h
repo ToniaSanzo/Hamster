@@ -45,11 +45,13 @@ public:
 	void Render();
 
 	// Accumulators
-	void AddDistanceTraveled(float flDistance);
+	void AddLoops(int nLoops);
+	void AddRun();
 
 	// Accessors
-	float GetTotalRuns() { return mTotalRuns; }
-	double GetTotalLoops() { return mTotalLoops; }
+	int GetTotalRuns() { return mTotalRuns; }
+	int GetTotalLoops() { return mTotalLoops; }
+	int GetGamesPlayed() { return mGamesPlayed; }
 
 	// Our Steam callbacks
 	STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsReceived, UserStatsReceived_t, m_CallbackUserStatsReceived);
