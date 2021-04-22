@@ -54,22 +54,68 @@ bool STEAM_StatsAchievements::init(SDL_Renderer *aRenderer)
         success = false;
     }
 
-    // else SteamUser setup 
+    // Otherwise continue setup 
     else
     {
+        // Set SteamUserStats interface
         mSteamUserStats = SteamUserStats();
+        // If setting up SteamUserStats interface failed
         if (mSteamUserStats == nullptr)
         {
             printf("Failed to load Steam UserStats interface!\n");
             success = false;
         }
+
+        // Otherwise continue setup
         else
         {
+            // Set the SDL renderer
             mRenderer = aRenderer;
+            // If non valid SDL renderer
             if (mRenderer == nullptr)
             {
                 printf("Did not pass in a valid renderer when initializing STEAM_StatsAchievements!\n");
                 success = false;
+            }
+            
+            // Otherwise, set the achivement textures
+            else
+            {
+                // Initialize the first game achievement texture
+                m_utFirstGameAch.initUTexture(aRenderer);
+                // Load the achievement texture with the file path
+                if (!m_utFirstGameAch.loadFromFile("assets/first_game_ach.png"))
+                {
+                    printf("Failed to load achievement first game achievement texture!\n");
+                    success = false;
+                }
+
+                // Initialize the first run achievement texture
+                m_utFirstRunAch.initUTexture(aRenderer);
+                // Load the achievement texture with the file path
+                if (!m_utFirstRunAch.loadFromFile("assets/first_run_ach.png"))
+                {
+                    printf("Failed to load achievement firstv run achievement texture!\n");
+                    success = false;
+                }
+
+                // Initialize the fast run achievement texture
+                m_utFastRunAch.initUTexture(aRenderer);
+                // Load the achievement texture with the file path
+                if (!m_utFastRunAch.loadFromFile("assets/fast_run_ach.png"))
+                {
+                    printf("Failed to load achievement fast run achievement texture!\n");
+                    success = false;
+                }
+
+                // Initialize the long distance achievement texture
+                m_utLongDistanceAch.initUTexture(aRenderer);
+                // Load the achievement texture with the file path
+                if (!m_utLongDistanceAch.loadFromFile("assets/long_distance_ach.png"))
+                {
+                    printf("Failed to load achievement long distance achievement texture!\n");
+                    success = false;
+                }
             }
         }
     }
@@ -276,7 +322,14 @@ void STEAM_StatsAchievements::OnAchievementStored(UserAchievementStored_t *pCall
 // Free allocated resources
 void STEAM_StatsAchievements::free()
 {
-    mSteamUser = nullptr;
+    // Prevent dangling pointers, their resources are deallocated later in the program
     mSteamUserStats = nullptr;
+    mSteamUser = nullptr;
     mRenderer = nullptr;
+
+    // Free the textures
+    m_utFastRunAch.free();
+    m_utFirstRunAch.free();
+    m_utFirstGameAch.free();
+    m_utLongDistanceAch.free();
 }

@@ -679,5 +679,6 @@ void UGame::close()
     mSFXButton.free();
     mPlayAgainButton.free();
 
+    // Free the Stam utility classes
     m_pStatsAndAchievements->free();
 }

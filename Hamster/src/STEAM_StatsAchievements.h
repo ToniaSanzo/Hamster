@@ -7,6 +7,7 @@
 */
 #pragma once
 #include "ULib.h"
+#include "UTexture.h"
 #include "../../Steam/steam_api.h"
 #include "../../Steam/isteamuser.h"
 #include "../../Steam/isteamuserstats.h"
@@ -100,5 +101,8 @@ private:
 	int mGamesPlayed;
 	int mTotalRuns;
 	int mTotalLoops;
+
+	// Achievement textures
+	UTexture m_utFirstGameAch, m_utFirstRunAch, m_utFastRunAch, m_utLongDistanceAch;
 };
 
