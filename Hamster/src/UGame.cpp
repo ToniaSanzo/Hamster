@@ -37,6 +37,9 @@ UGame::UGame()
 
     // Set the number of steps the hamster has made on this playthrough
     mStepCount = 0;
+
+    // Pointer to the Steam utility classes
+    m_pStatsAndAchievements = nullptr;
 }
 
 // Initializes and loads all the game objects
@@ -173,6 +176,14 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
         if (!mPlayAgainButton.init(mRenderer, "assets/play_again_button.png", PLAY_AGAIN_BTN_POSITION, PLAY_AGAIN_BTN_DIMENSION))
         {
             std::printf("Failed to load the play again button!\n");
+            success = false;
+        }
+
+        // Initialize the Steam utility classes
+        m_pStatsAndAchievements = new STEAM_StatsAchievements();
+        if (!m_pStatsAndAchievements->init(mRenderer))
+        {
+            std::printf("Failed to initialize the stats and achievements!\n");
             success = false;
         }
     }
@@ -667,4 +678,6 @@ void UGame::close()
     mMusicButton.free();
     mSFXButton.free();
     mPlayAgainButton.free();
+
+    m_pStatsAndAchievements->free();
 }

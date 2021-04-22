@@ -13,8 +13,7 @@
 #include "USound.h"
 #include "UTexture.h"
 #include "UWindow.h"
-
-
+#include "STEAM_StatsAchievements.h"
 
 class UGame
 {
@@ -100,4 +99,7 @@ private:
 
     // Number of steps the hamster has made this playthrough
     int mStepCount;
+
+    // Steam utility objects
+    STEAM_StatsAchievements *m_pStatsAndAchievements;
 };

@@ -20,6 +20,7 @@ Achievement_t g_rgAchievements[] =
 // Constructor
 STEAM_StatsAchievements::STEAM_StatsAchievements()
     :
+    mRenderer(nullptr),
     mSteamUser(nullptr),
     mSteamUserStats(nullptr),
     mGameId(SteamUtils()->GetAppID()),
@@ -27,9 +28,6 @@ STEAM_StatsAchievements::STEAM_StatsAchievements()
     m_CallbackUserStatsStored(this, &STEAM_StatsAchievements::OnUserStatsStored),
     m_CallbackAchievementStored(this, &STEAM_StatsAchievements::OnAchievementStored)
 {
-    mSteamUser = SteamUser();
-    mSteamUserStats = SteamUserStats();
-
     m_bRequestedStats = false;
     m_bStatsValid = false;
     m_bStoreStats = false;
@@ -39,6 +37,44 @@ STEAM_StatsAchievements::STEAM_StatsAchievements()
     mGamesPlayed = 0;
     mTotalRuns = 0;
     mTotalLoops = 0;
+}
+
+// Initialize the STEAM_StatsAchievements
+bool STEAM_StatsAchievements::init(SDL_Renderer *aRenderer)
+{
+    // Initialize the success flag
+    bool success = true;
+
+    // Set SteamUser interface
+    mSteamUser = SteamUser();
+    // If setting up SteamUser interface failed
+    if (mSteamUser == nullptr)
+    {
+        printf("Failed to load Steam User interface!\n");
+        success = false;
+    }
+
+    // else SteamUser setup 
+    else
+    {
+        mSteamUserStats = SteamUserStats();
+        if (mSteamUserStats == nullptr)
+        {
+            printf("Failed to load Steam UserStats interface!\n");
+            success = false;
+        }
+        else
+        {
+            mRenderer = aRenderer;
+            if (mRenderer == nullptr)
+            {
+                printf("Did not pass in a valid renderer when initializing STEAM_StatsAchievements!\n");
+                success = false;
+            }
+        }
+    }
+
+    return success;
 }
 
 // Run a frame. Does not need to run at full frame rate.
@@ -235,4 +271,12 @@ void STEAM_StatsAchievements::OnAchievementStored(UserAchievementStored_t *pCall
             printf("Achievement '%s' progress callback, (%d / %d)\n", pCallback->m_rgchAchievementName, pCallback->m_nCurProgress, pCallback->m_nMaxProgress);
         }
     }
+}
+
+// Free allocated resources
+void STEAM_StatsAchievements::free()
+{
+    mSteamUser = nullptr;
+    mSteamUserStats = nullptr;
+    mRenderer = nullptr;
 }

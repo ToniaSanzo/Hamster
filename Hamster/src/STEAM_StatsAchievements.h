@@ -6,6 +6,7 @@
 * File: Hamster STEAM_StatsAchievements.h
 */
 #pragma once
+#include "ULib.h"
 #include "../../Steam/steam_api.h"
 #include "../../Steam/isteamuser.h"
 #include "../../Steam/isteamuserstats.h"
@@ -38,6 +39,9 @@ public:
 	// Constructor
 	STEAM_StatsAchievements();
 
+	// Initialize the STEAM_StatsAchievements
+	bool init(SDL_Renderer *);
+
 	// Run a frame. Does not need to run at full frame rate.
 	void RunFrame();
 
@@ -52,6 +56,9 @@ public:
 	int GetTotalRuns() { return mTotalRuns; }
 	int GetTotalLoops() { return mTotalLoops; }
 	int GetGamesPlayed() { return mGamesPlayed; }
+
+	// Free allocated resources
+	void free();
 
 	// Our Steam callbacks
 	STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsReceived, UserStatsReceived_t, m_CallbackUserStatsReceived);
@@ -75,6 +82,9 @@ private:
 
 	// Steam UserStats interface
 	ISteamUserStats *mSteamUserStats;
+
+	// Pointer to the SDL renderer
+	SDL_Renderer *mRenderer;
 
 	// Did we get the stats from Steam?
 	bool m_bRequestedStats;
