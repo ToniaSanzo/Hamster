@@ -6,10 +6,19 @@
 * File: Hamster STEAM_StatsAchievements.cpp
 */
 #include "STEAM_StatsAchievements.h"
+#include <cmath>
 
 #define _ACH_ID( id, name ) { id, #id, name, "", 0, 0 }
 
-const float STEAM_StatsAchievements::ACH_RENDER_TIME = 4.5f;
+
+#ifndef ACH_COUNT 
+#define ACH_COUNT 4 // Achievement count
+#endif
+
+
+#ifndef ACH_RENDER_TIME 
+#define ACH_RENDER_TIME 4.5f // Achievement render time
+#endif
 
 Achievement_t g_rgAchievements[] =
 {
@@ -36,6 +45,7 @@ STEAM_StatsAchievements::STEAM_StatsAchievements()
     m_bStoreStats = false;
 
     m_flCurrAchTime = 0.f;
+    m_bFullyOpaque = false;
 
     mLoopsLastRun = 0;
     
@@ -94,14 +104,24 @@ bool STEAM_StatsAchievements::init(SDL_Renderer *aRenderer)
                     printf("Failed to load achievement first game achievement texture!\n");
                     success = false;
                 }
+                else
+                {
+                    m_utFirstGameAch.setBlendMode(SDL_BLENDMODE_BLEND);
+                    m_utFirstGameAch.setAlpha(SDL_MAX_UINT8);
+                }
 
                 // Initialize the first run achievement texture
                 m_utFirstRunAch.initUTexture(aRenderer);
                 // Load the achievement texture with the file path
                 if (!m_utFirstRunAch.loadFromFile("assets/first_run_ach.png"))
                 {
-                    printf("Failed to load achievement firstv run achievement texture!\n");
+                    printf("Failed to load achievement first run achievement texture!\n");
                     success = false;
+                }
+                else
+                {
+                    m_utFirstRunAch.setBlendMode(SDL_BLENDMODE_BLEND);
+                    m_utFirstRunAch.setAlpha(SDL_MAX_UINT8);
                 }
 
                 // Initialize the fast run achievement texture
@@ -171,6 +191,7 @@ void STEAM_StatsAchievements::update(const float &dt)
         m_enCurrAch = m_dqUnlockedAch.front();
         m_dqUnlockedAch.pop_front();
         m_flCurrAchTime = 0.f;
+        m_bFullyOpaque = false;
     }
     else if (m_enCurrAch != nullptr)
     {
@@ -182,6 +203,12 @@ void STEAM_StatsAchievements::update(const float &dt)
             delete m_enCurrAch;
             m_enCurrAch = nullptr;
         }
+        
+        // Set the achievements opacity
+        else
+        {
+            setOpacity(getAchTexture(*m_enCurrAch));
+        }
     }
 }
 
@@ -189,6 +216,48 @@ void STEAM_StatsAchievements::update(const float &dt)
 void STEAM_StatsAchievements::render()
 {
     TODO: ADD THE RENDER
+}
+
+// Set the opacity of an achievement based on the time the achievement's been alive
+void STEAM_StatsAchievements::setOpacity(UTexture *aText)
+{
+    // Fade achievement into the scene. SDL_MAX_UINT8 is the amplitude. To get the angular frequency we divide (2 * pi)
+    // by our target period. Our target period is 4 * (ACH_RENDER_TIME / 5.f). Finally we multiply the angular frequency
+    // by the current achievement time, take the sin of that value, multiply this value by the amplitude and we get the
+    // period of the function.
+    if (m_flCurrAchTime < (ACH_RENDER_TIME / 5.f))
+        aText->setAlpha(static_cast<int>(static_cast<float>(SDL_MAX_UINT8) * sin(((2.f * M_PI) / (4.f * (ACH_RENDER_TIME / 5.f))) * m_flCurrAchTime)));
+    // Fade achievement out of the scene
+    if (m_flCurrAchTime > (4.f * ACH_RENDER_TIME / 5.f))
+    {
+        if (m_bFullyOpaque)
+            m_bFullyOpaque = false;
+
+        aText->setAlpha(static_cast<int>(static_cast<float>(SDL_MAX_UINT8) * sin(((2.f * M_PI) / (4.f * (ACH_RENDER_TIME / 5.f))) * (m_flCurrAchTime - ((3.f * ACH_RENDER_TIME) / 5.f)))));
+    }
+    else if (!m_bFullyOpaque)
+    {
+        m_bFullyOpaque = true;
+        aText->setAlpha(SDL_MAX_UINT8);
+    }
+}
+
+// Giving an achievement id return the corresponding achievement texture
+UTexture* STEAM_StatsAchievements::getAchTexture(const Achievements &aAch_id)
+{
+    switch (aAch_id)
+    {
+    case ACH_FIRST_GAME:
+        return &m_utFirstGameAch;
+    case ACH_FIRST_RUN:
+        return &m_utFirstRunAch;
+    case ACH_FAST_RUN:
+        return &m_utFastRunAch;
+    case ACH_LONG_DISTANCE:
+        return &m_utLongDistanceAch;
+    default:
+        return nullptr;
+    }
 }
 
 // Accumulators

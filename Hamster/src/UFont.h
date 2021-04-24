@@ -25,7 +25,7 @@ public:
     // Render the SleepZ
     void render();
 
-    // Update the trick texture
+    // Update the trick texture 
     void update(const float &);
 
     // Free the texture

@@ -35,10 +35,6 @@ struct Achievement_t
 class STEAM_StatsAchievements
 {
 public:
-	// Number of unique achievements in the game
-	const static int ACH_COUNT = 4;
-	const static float ACH_RENDER_TIME;
-
 	// Constructor
 	STEAM_StatsAchievements();
 
@@ -50,6 +46,12 @@ public:
 
 	// Display the stats and achievements
 	void render();
+
+	// Set the opacity of an achievement based on the time the achievement's been alive
+	void setOpacity(UTexture *);
+
+	// Giving an achievement id return the corresponding achievement texture
+	UTexture* getAchTexture(const Achievements &);
 
 	// Accumulators
 	void addLoops(int nLoops);
@@ -104,10 +106,15 @@ private:
 	int mTotalRuns;
 	int mTotalLoops;
 
-	// Achievement textures, and variables to assist in rendering
+	// Achievement textures
 	UTexture m_utFirstGameAch, m_utFirstRunAch, m_utFastRunAch, m_utLongDistanceAch;
+	
+	// Currently unlocked achievement references
 	Achievements *m_enCurrAch;
 	std::deque<Achievements*> m_dqUnlockedAch;
+	
+	// Render helper variables
 	float m_flCurrAchTime;
+	bool m_bFullyOpaque;
 };
 
