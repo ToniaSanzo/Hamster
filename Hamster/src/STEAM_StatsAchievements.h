@@ -8,6 +8,7 @@
 #pragma once
 #include "ULib.h"
 #include "UTexture.h"
+#include <deque>
 #include "../../Steam/steam_api.h"
 #include "../../Steam/isteamuser.h"
 #include "../../Steam/isteamuserstats.h"
@@ -36,6 +37,7 @@ class STEAM_StatsAchievements
 public:
 	// Number of unique achievements in the game
 	const static int ACH_COUNT = 4;
+	const static float ACH_RENDER_TIME;
 
 	// Constructor
 	STEAM_StatsAchievements();
@@ -44,36 +46,36 @@ public:
 	bool init(SDL_Renderer *);
 
 	// Run a frame. Does not need to run at full frame rate.
-	void RunFrame();
+	void update(const float &);
 
 	// Display the stats and achievements
-	void Render();
+	void render();
 
 	// Accumulators
-	void AddLoops(int nLoops);
-	void AddRun();
+	void addLoops(int nLoops);
+	void addRun();
 
 	// Accessors
-	int GetTotalRuns() { return mTotalRuns; }
-	int GetTotalLoops() { return mTotalLoops; }
-	int GetGamesPlayed() { return mGamesPlayed; }
+	int getTotalRuns() { return mTotalRuns; }
+	int getTotalLoops() { return mTotalLoops; }
+	int getGamesPlayed() { return mGamesPlayed; }
 
 	// Free allocated resources
 	void free();
 
 	// Our Steam callbacks
-	STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsReceived, UserStatsReceived_t, m_CallbackUserStatsReceived);
-	STEAM_CALLBACK(STEAM_StatsAchievements, OnUserStatsStored, UserStatsStored_t, m_CallbackUserStatsStored);
-	STEAM_CALLBACK(STEAM_StatsAchievements, OnAchievementStored, UserAchievementStored_t, m_CallbackAchievementStored);
+	STEAM_CALLBACK(STEAM_StatsAchievements, onUserStatsReceived, UserStatsReceived_t, m_CallbackUserStatsReceived);
+	STEAM_CALLBACK(STEAM_StatsAchievements, onUserStatsStored, UserStatsStored_t, m_CallbackUserStatsStored);
+	STEAM_CALLBACK(STEAM_StatsAchievements, onAchievementStored, UserAchievementStored_t, m_CallbackAchievementStored);
 
 private:
 
 	// Determine if we get this achievement now
-	void EvaluateAchievement(Achievement_t &achievement);
-	void UnlockAchievement(Achievement_t &achievement);
+	void evaluateAchievement(Achievement_t &achievement);
+	void unlockAchievement(Achievement_t &achievement);
 
 	// Store stats
-	void StoreStatsIfNecessary();
+	void storeStatsIfNecessary();
 
 	// Our Game Id
 	CGameID mGameId;
@@ -102,7 +104,10 @@ private:
 	int mTotalRuns;
 	int mTotalLoops;
 
-	// Achievement textures
+	// Achievement textures, and variables to assist in rendering
 	UTexture m_utFirstGameAch, m_utFirstRunAch, m_utFastRunAch, m_utLongDistanceAch;
+	Achievements *m_enCurrAch;
+	std::deque<Achievements*> m_dqUnlockedAch;
+	float m_flCurrAchTime;
 };
 

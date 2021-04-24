@@ -9,6 +9,8 @@
 
 #define _ACH_ID( id, name ) { id, #id, name, "", 0, 0 }
 
+const float STEAM_StatsAchievements::ACH_RENDER_TIME = 4.5f;
+
 Achievement_t g_rgAchievements[] =
 {
     _ACH_ID(ACH_FIRST_GAME, "Good Morning"),
@@ -20,17 +22,20 @@ Achievement_t g_rgAchievements[] =
 // Constructor
 STEAM_StatsAchievements::STEAM_StatsAchievements()
     :
+    m_enCurrAch(nullptr),
     mRenderer(nullptr),
     mSteamUser(nullptr),
     mSteamUserStats(nullptr),
     mGameId(SteamUtils()->GetAppID()),
-    m_CallbackUserStatsReceived(this, &STEAM_StatsAchievements::OnUserStatsReceived),
-    m_CallbackUserStatsStored(this, &STEAM_StatsAchievements::OnUserStatsStored),
-    m_CallbackAchievementStored(this, &STEAM_StatsAchievements::OnAchievementStored)
+    m_CallbackUserStatsReceived(this, &STEAM_StatsAchievements::onUserStatsReceived),
+    m_CallbackUserStatsStored(this, &STEAM_StatsAchievements::onUserStatsStored),
+    m_CallbackAchievementStored(this, &STEAM_StatsAchievements::onAchievementStored)
 {
     m_bRequestedStats = false;
     m_bStatsValid = false;
     m_bStoreStats = false;
+
+    m_flCurrAchTime = 0.f;
 
     mLoopsLastRun = 0;
     
@@ -124,8 +129,9 @@ bool STEAM_StatsAchievements::init(SDL_Renderer *aRenderer)
 }
 
 // Run a frame. Does not need to run at full frame rate.
-void STEAM_StatsAchievements::RunFrame()
+void STEAM_StatsAchievements::update(const float &dt)
 {
+
     if (!m_bRequestedStats)
     {
         // Is Steam Loaded? if no, can't get stats, done
@@ -153,26 +159,51 @@ void STEAM_StatsAchievements::RunFrame()
     // Evaluate achievements
     for (int iAch = 0; iAch < ACH_COUNT; ++iAch)
     {
-        EvaluateAchievement(g_rgAchievements[iAch]);
+        evaluateAchievement(g_rgAchievements[iAch]);
     }
 
     // Store stats
-    StoreStatsIfNecessary();
+    storeStatsIfNecessary();
+
+    // Determine if any achievements need to be rendered
+    if (m_enCurrAch == nullptr && !m_dqUnlockedAch.empty())
+    {
+        m_enCurrAch = m_dqUnlockedAch.front();
+        m_dqUnlockedAch.pop_front();
+        m_flCurrAchTime = 0.f;
+    }
+    else if (m_enCurrAch != nullptr)
+    {
+        m_flCurrAchTime += dt;
+
+        // Delete the current achievement if necessary
+        if (m_flCurrAchTime > ACH_RENDER_TIME)
+        {
+            delete m_enCurrAch;
+            m_enCurrAch = nullptr;
+        }
+    }
+}
+
+// Display the stats to the achioevements
+void STEAM_StatsAchievements::render()
+{
+    TODO: ADD THE RENDER
 }
 
 // Accumulators
-void STEAM_StatsAchievements::AddLoops(int nLoops)
+void STEAM_StatsAchievements::addLoops(int nLoops)
 {
     mLoopsLastRun = nLoops;
     mTotalLoops += nLoops;
 }
-void STEAM_StatsAchievements::AddRun()
+void STEAM_StatsAchievements::addRun()
 {
     ++mTotalRuns;
 }
 
 // See if we should unlock this achievement
-void STEAM_StatsAchievements::EvaluateAchievement(Achievement_t &achievement)
+void STEAM_StatsAchievements::evaluateAchievement(Achievement_t &achievement)
 {
     // Already achieved, done
     if (achievement.m_bAchieved)
@@ -181,19 +212,23 @@ void STEAM_StatsAchievements::EvaluateAchievement(Achievement_t &achievement)
     switch (achievement.mAchievementID)
     {
     case ACH_FIRST_GAME:
-        UnlockAchievement(achievement);
+        m_dqUnlockedAch.push_back(new Achievements(ACH_FIRST_GAME));
+        unlockAchievement(achievement);
         break;
     case ACH_FIRST_RUN:
         if (mTotalRuns >= 1)
-            UnlockAchievement(achievement);
+            m_dqUnlockedAch.push_back(new Achievements(ACH_FIRST_RUN));
+            unlockAchievement(achievement);
         break;
     case ACH_FAST_RUN:
         if (mLoopsLastRun >= 450)
-            UnlockAchievement(achievement);
+            m_dqUnlockedAch.push_back(new Achievements(ACH_FAST_RUN));
+            unlockAchievement(achievement);
         break;
     case ACH_LONG_DISTANCE:
         if (mTotalLoops >= 33000)
-            UnlockAchievement(achievement);
+            m_dqUnlockedAch.push_back(new Achievements(ACH_LONG_DISTANCE));
+            unlockAchievement(achievement);
         break;
     default:
         break;
@@ -201,7 +236,7 @@ void STEAM_StatsAchievements::EvaluateAchievement(Achievement_t &achievement)
 }
 
 // Unlock this achievement
-void STEAM_StatsAchievements::UnlockAchievement(Achievement_t &achievement)
+void STEAM_StatsAchievements::unlockAchievement(Achievement_t &achievement)
 {
     achievement.m_bAchieved = true;
 
@@ -216,7 +251,7 @@ void STEAM_StatsAchievements::UnlockAchievement(Achievement_t &achievement)
 }
 
 // Store stats in the Steam database
-void STEAM_StatsAchievements::StoreStatsIfNecessary()
+void STEAM_StatsAchievements::storeStatsIfNecessary()
 {
     if (m_bStoreStats)
     {
@@ -236,7 +271,7 @@ void STEAM_StatsAchievements::StoreStatsIfNecessary()
 
 
 // We have recieved stats data from Steam. We then immediately update our data.
-void STEAM_StatsAchievements::OnUserStatsReceived(UserStatsReceived_t *pCallback)
+void STEAM_StatsAchievements::onUserStatsReceived(UserStatsReceived_t *pCallback)
 {
     printf("OnUserStatsReceived Callback\n");
     if (!mSteamUserStats)
@@ -271,7 +306,7 @@ void STEAM_StatsAchievements::OnUserStatsReceived(UserStatsReceived_t *pCallback
 }
 
 // Our stats data was stored!
-void STEAM_StatsAchievements::OnUserStatsStored(UserStatsStored_t *pCallback)
+void STEAM_StatsAchievements::onUserStatsStored(UserStatsStored_t *pCallback)
 {
     printf("OnUserStatsStored Callback\n");
 
@@ -291,7 +326,7 @@ void STEAM_StatsAchievements::OnUserStatsStored(UserStatsStored_t *pCallback)
             UserStatsReceived_t callback;
             callback.m_eResult = k_EResultOK;
             callback.m_nGameID = mGameId.ToUint64();
-            OnUserStatsReceived(&callback);
+            onUserStatsReceived(&callback);
         }
         else
         {
@@ -301,7 +336,7 @@ void STEAM_StatsAchievements::OnUserStatsStored(UserStatsStored_t *pCallback)
 }
 
 // An achievements was stored
-void STEAM_StatsAchievements::OnAchievementStored(UserAchievementStored_t *pCallback)
+void STEAM_StatsAchievements::onAchievementStored(UserAchievementStored_t *pCallback)
 {
     printf("OnAchievementStored Callback\n");
 
@@ -332,4 +367,17 @@ void STEAM_StatsAchievements::free()
     m_utFirstRunAch.free();
     m_utFirstGameAch.free();
     m_utLongDistanceAch.free();
+
+    // Clean up the achievement information
+    for (auto &e : m_dqUnlockedAch)
+    {
+        delete e;
+        e = nullptr;
+    }
+    m_dqUnlockedAch.clear();
+    if (m_enCurrAch)
+    {
+        delete m_enCurrAch;
+        m_enCurrAch = nullptr;
+    }
 }

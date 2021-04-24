@@ -44,7 +44,7 @@ private:
     // Pointer to the texture
     UTexture *mTexture;
 
-    // How long  sleep z has been created
+    // How long  sleep z has been live
     float mTime;
 
     // Current position of the SleepZ
