@@ -6,6 +6,7 @@
 * File: Hamster STEAM_StatsAchievements.cpp
 */
 #include "STEAM_StatsAchievements.h"
+#include "ULib.h"
 #include <cassert>
 #include <cmath>
 
@@ -216,16 +217,23 @@ void STEAM_StatsAchievements::update(const float &dt)
 // Display the stats to the achioevements
 void STEAM_StatsAchievements::render()
 {
-    TODO: ADD THE RENDER
+    // If no current achievement, exit
+    if (m_enCurrAch == nullptr)
+        return;
+
+    UTexture *texture = getAchTexture(*m_enCurrAch);
+    assert(texture != nullptr);
+
+    texture->render((ULib::SCREEN_DIMENSIONS.x - texture->getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y * 6) / 7) -(texture->getHeight() / 2));
 }
 
 // Set the opacity of an achievement based on the time the achievement's been alive
 void STEAM_StatsAchievements::setOpacity(UTexture *aText)
 {
+    // Intentionally crash the program if aText is a nullptr reference
     if (aText == nullptr)
     {
         printf("ERROR: setOpacity(UTexture*) was passed a nullptr argument, make sure to pass in a valid UTexture reference.\n");
-        // Intentionally crash the program here
         assert(aText != nullptr);
     }
 
