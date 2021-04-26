@@ -6,6 +6,7 @@
 * File: Hamster STEAM_StatsAchievements.cpp
 */
 #include "STEAM_StatsAchievements.h"
+#include <cassert>
 #include <cmath>
 
 #define _ACH_ID( id, name ) { id, #id, name, "", 0, 0 }
@@ -221,6 +222,13 @@ void STEAM_StatsAchievements::render()
 // Set the opacity of an achievement based on the time the achievement's been alive
 void STEAM_StatsAchievements::setOpacity(UTexture *aText)
 {
+    if (aText == nullptr)
+    {
+        printf("ERROR: setOpacity(UTexture*) was passed a nullptr argument, make sure to pass in a valid UTexture reference.\n");
+        // Intentionally crash the program here
+        assert(aText != nullptr);
+    }
+
     // Fade achievement into the scene. SDL_MAX_UINT8 is the amplitude. To get the angular frequency we divide (2 * pi)
     // by our target period. Our target period is 4 * (ACH_RENDER_TIME / 5.f). Finally we multiply the angular frequency
     // by the current achievement time, take the sin of that value, multiply this value by the amplitude and we get the
@@ -337,7 +345,6 @@ void STEAM_StatsAchievements::storeStatsIfNecessary()
         m_bStoreStats = !bSuccess;
     }
 }
-
 
 // We have recieved stats data from Steam. We then immediately update our data.
 void STEAM_StatsAchievements::onUserStatsReceived(UserStatsReceived_t *pCallback)
