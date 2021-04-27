@@ -380,6 +380,10 @@ void UGame::update(const float &dt)
         {
             mFonts.setLoopCount(mStepCount / 5);
 
+            // Update the Steam stats
+            m_pStatsAndAchievements->addLoops(mStepCount / 5);
+            m_pStatsAndAchievements->addRun();
+
             // Enter new high score state
             if (mFonts.getHighscore() < mStepCount / 5)
             {
@@ -616,8 +620,6 @@ void UGame::render()
     {
         mSettingsButton.render(0);
     }
-
-    m_pStatsAndAchievements->render();
 }
 
 // Free the game objects

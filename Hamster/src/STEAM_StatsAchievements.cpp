@@ -45,6 +45,7 @@ STEAM_StatsAchievements::STEAM_StatsAchievements()
     m_bRequestedStats = false;
     m_bStatsValid = false;
     m_bStoreStats = false;
+    m_bNewGame = true;
 
     m_flCurrAchTime = 0.f;
     m_bFullyOpaque = false;
@@ -350,7 +351,6 @@ void STEAM_StatsAchievements::storeStatsIfNecessary()
         // already set any achievements in UnlockAchievement
 
         // set stats
-        mSteamUserStats->SetStat("GamesPlayed", mGamesPlayed);
         mSteamUserStats->SetStat("TotalRuns", mTotalRuns);
         mSteamUserStats->SetStat("TotalLoops", mTotalLoops);
 
@@ -364,12 +364,12 @@ void STEAM_StatsAchievements::storeStatsIfNecessary()
 // We have recieved stats data from Steam. We then immediately update our data.
 void STEAM_StatsAchievements::onUserStatsReceived(UserStatsReceived_t *pCallback)
 {
-    printf("OnUserStatsReceived Callback\n");
+      printf("OnUserStatsReceived Callback\n");
     if (!mSteamUserStats)
         return;
 
     // we may get callbacks for other games' stats arriving, ignore them
-    if (mGameId.ToUint64() == pCallback->m_eResult)
+    if (mGameId.ToUint64() == pCallback->m_nGameID)
     {
         if (k_EResultOK == pCallback->m_eResult)
         {
@@ -388,6 +388,15 @@ void STEAM_StatsAchievements::onUserStatsReceived(UserStatsReceived_t *pCallback
             mSteamUserStats->GetStat("GamesPlayed", &mGamesPlayed);
             mSteamUserStats->GetStat("TotalRuns", &mTotalRuns);
             mSteamUserStats->GetStat("TotalLoops", &mTotalLoops);
+
+            // Increment the number of games played if this is a new game
+            if (m_bNewGame)
+            {
+                ++mGamesPlayed;
+                mSteamUserStats->SetStat("GamesPlayed", mGamesPlayed);
+                storeStatsIfNecessary();
+                m_bNewGame = false;
+            }
         }
         else
         {

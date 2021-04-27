@@ -106,6 +106,9 @@ private:
 	int mTotalRuns;
 	int mTotalLoops;
 
+	// Used to increment the mGamesPlayed count
+	bool m_bNewGame;
+
 	// Achievement textures
 	UTexture m_utFirstGameAch, m_utFirstRunAch, m_utFastRunAch, m_utLongDistanceAch;
 	
