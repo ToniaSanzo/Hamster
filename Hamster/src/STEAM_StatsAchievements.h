@@ -116,5 +116,8 @@ private:
 	// Render helper variables
 	float m_flCurrAchTime;
 	bool m_bFullyOpaque;
+	
+	// Used to update the STEAM_StatsAchievements once every second
+	unsigned short m_shUpdateCount;
 };
 

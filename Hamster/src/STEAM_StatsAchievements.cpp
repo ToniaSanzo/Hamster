@@ -50,6 +50,8 @@ STEAM_StatsAchievements::STEAM_StatsAchievements()
     m_bFullyOpaque = false;
 
     mLoopsLastRun = 0;
+
+    m_shUpdateCount = 0;
     
     mGamesPlayed = 0;
     mTotalRuns = 0;
@@ -153,7 +155,12 @@ bool STEAM_StatsAchievements::init(SDL_Renderer *aRenderer)
 // Run a frame. Does not need to run at full frame rate.
 void STEAM_StatsAchievements::update(const float &dt)
 {
+    // If the update count is not 60, exit
+    if ((++m_shUpdateCount) < 60)
+        return;
 
+    m_shUpdateCount = 0;
+    SteamAPI_RunCallbacks();
     if (!m_bRequestedStats)
     {
         // Is Steam Loaded? if no, can't get stats, done
@@ -224,7 +231,7 @@ void STEAM_StatsAchievements::render()
     UTexture *texture = getAchTexture(*m_enCurrAch);
     assert(texture != nullptr);
 
-    texture->render((ULib::SCREEN_DIMENSIONS.x - texture->getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y * 6) / 7) -(texture->getHeight() / 2));
+    texture->render((ULib::SCREEN_DIMENSIONS.x - texture->getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y * 6) / 7) - (texture->getHeight() / 2));
 }
 
 // Set the opacity of an achievement based on the time the achievement's been alive

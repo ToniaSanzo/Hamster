@@ -281,6 +281,8 @@ void UGame::update(const float &dt)
         }
     }
 
+    m_pStatsAndAchievements->update(dt);
+
     // Add sleep Z's if the hamster is currently sleeping
     if (mHamster.sleeping() && mCurrState != GameState::SETTINGS_MENU)
     {
@@ -614,6 +616,8 @@ void UGame::render()
     {
         mSettingsButton.render(0);
     }
+
+    m_pStatsAndAchievements->render();
 }
 
 // Free the game objects
@@ -681,4 +685,5 @@ void UGame::close()
 
     // Free the Stam utility classes
     m_pStatsAndAchievements->free();
+    delete m_pStatsAndAchievements;
 }
