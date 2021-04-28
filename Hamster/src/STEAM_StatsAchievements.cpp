@@ -89,6 +89,11 @@ bool STEAM_StatsAchievements::init(SDL_Renderer *aRenderer)
         // Otherwise continue setup
         else
         {
+            // DEBUG: Reset stats remove before final release
+            clearStatsAchievements();
+            std::printf("stats reset.\n");
+            // END DEBUG
+            
             // Set the SDL renderer
             mRenderer = aRenderer;
             // If non valid SDL renderer
@@ -452,6 +457,12 @@ void STEAM_StatsAchievements::onAchievementStored(UserAchievementStored_t *pCall
             printf("Achievement '%s' progress callback, (%d / %d)\n", pCallback->m_rgchAchievementName, pCallback->m_nCurProgress, pCallback->m_nMaxProgress);
         }
     }
+}
+
+// Clear all stats and achievements
+void STEAM_StatsAchievements::clearStatsAchievements()
+{
+    mSteamUserStats->ResetAllStats(true);
 }
 
 // Free allocated resources

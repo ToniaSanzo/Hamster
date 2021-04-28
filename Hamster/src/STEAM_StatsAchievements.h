@@ -62,6 +62,9 @@ public:
 	int getTotalLoops() { return mTotalLoops; }
 	int getGamesPlayed() { return mGamesPlayed; }
 
+	// Clear all stats and achievements
+	void clearStatsAchievements();
+
 	// Free allocated resources
 	void free();
 
