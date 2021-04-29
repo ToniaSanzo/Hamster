@@ -44,15 +44,6 @@ public:
 	// Run a frame. Does not need to run at full frame rate.
 	void update(const float &);
 
-	// Display the stats and achievements
-	void render();
-
-	// Set the opacity of an achievement based on the time the achievement's been alive
-	void setOpacity(UTexture *);
-
-	// Giving an achievement id return the corresponding achievement texture
-	UTexture* getAchTexture(const Achievements &);
-
 	// Accumulators
 	void addLoops(int nLoops);
 	void addRun();
@@ -111,13 +102,6 @@ private:
 
 	// Used to increment the mGamesPlayed count
 	bool m_bNewGame;
-
-	// Achievement textures
-	UTexture m_utFirstGameAch, m_utFirstRunAch, m_utFastRunAch, m_utLongDistanceAch;
-	
-	// Currently unlocked achievement references
-	Achievements *m_enCurrAch;
-	std::deque<Achievements*> m_dqUnlockedAch;
 	
 	// Render helper variables
 	float m_flCurrAchTime;

@@ -33,7 +33,6 @@ Achievement_t g_rgAchievements[] =
 // Constructor
 STEAM_StatsAchievements::STEAM_StatsAchievements()
     :
-    m_enCurrAch(nullptr),
     mRenderer(nullptr),
     mSteamUser(nullptr),
     mSteamUserStats(nullptr),
@@ -102,56 +101,6 @@ bool STEAM_StatsAchievements::init(SDL_Renderer *aRenderer)
                 printf("Did not pass in a valid renderer when initializing STEAM_StatsAchievements!\n");
                 success = false;
             }
-            
-            // Otherwise, set the achivement textures
-            else
-            {
-                // Initialize the first game achievement texture
-                m_utFirstGameAch.initUTexture(aRenderer);
-                // Load the achievement texture with the file path
-                if (!m_utFirstGameAch.loadFromFile("assets/first_game_ach.png"))
-                {
-                    printf("Failed to load achievement first game achievement texture!\n");
-                    success = false;
-                }
-                else
-                {
-                    m_utFirstGameAch.setBlendMode(SDL_BLENDMODE_BLEND);
-                    m_utFirstGameAch.setAlpha(SDL_MAX_UINT8);
-                }
-
-                // Initialize the first run achievement texture
-                m_utFirstRunAch.initUTexture(aRenderer);
-                // Load the achievement texture with the file path
-                if (!m_utFirstRunAch.loadFromFile("assets/first_run_ach.png"))
-                {
-                    printf("Failed to load achievement first run achievement texture!\n");
-                    success = false;
-                }
-                else
-                {
-                    m_utFirstRunAch.setBlendMode(SDL_BLENDMODE_BLEND);
-                    m_utFirstRunAch.setAlpha(SDL_MAX_UINT8);
-                }
-
-                // Initialize the fast run achievement texture
-                m_utFastRunAch.initUTexture(aRenderer);
-                // Load the achievement texture with the file path
-                if (!m_utFastRunAch.loadFromFile("assets/fast_run_ach.png"))
-                {
-                    printf("Failed to load achievement fast run achievement texture!\n");
-                    success = false;
-                }
-
-                // Initialize the long distance achievement texture
-                m_utLongDistanceAch.initUTexture(aRenderer);
-                // Load the achievement texture with the file path
-                if (!m_utLongDistanceAch.loadFromFile("assets/long_distance_ach.png"))
-                {
-                    printf("Failed to load achievement long distance achievement texture!\n");
-                    success = false;
-                }
-            }
         }
     }
 
@@ -199,94 +148,6 @@ void STEAM_StatsAchievements::update(const float &dt)
 
     // Store stats
     storeStatsIfNecessary();
-
-    // Determine if any achievements need to be rendered
-    if (m_enCurrAch == nullptr && !m_dqUnlockedAch.empty())
-    {
-        m_enCurrAch = m_dqUnlockedAch.front();
-        m_dqUnlockedAch.pop_front();
-        m_flCurrAchTime = 0.f;
-        m_bFullyOpaque = false;
-    }
-    else if (m_enCurrAch != nullptr)
-    {
-        m_flCurrAchTime += dt;
-
-        // Delete the current achievement if necessary
-        if (m_flCurrAchTime > ACH_RENDER_TIME)
-        {
-            delete m_enCurrAch;
-            m_enCurrAch = nullptr;
-        }
-        
-        // Set the achievements opacity
-        else
-        {
-            setOpacity(getAchTexture(*m_enCurrAch));
-        }
-    }
-}
-
-// Display the stats to the achioevements
-void STEAM_StatsAchievements::render()
-{
-    // If no current achievement, exit
-    if (m_enCurrAch == nullptr)
-        return;
-
-    UTexture *texture = getAchTexture(*m_enCurrAch);
-    assert(texture != nullptr);
-
-    texture->render((ULib::SCREEN_DIMENSIONS.x - texture->getWidth()) / 2, ((ULib::SCREEN_DIMENSIONS.y * 6) / 7) - (texture->getHeight() / 2));
-}
-
-// Set the opacity of an achievement based on the time the achievement's been alive
-void STEAM_StatsAchievements::setOpacity(UTexture *aText)
-{
-    // Intentionally crash the program if aText is a nullptr reference
-    if (aText == nullptr)
-    {
-        printf("ERROR: setOpacity(UTexture*) was passed a nullptr argument, make sure to pass in a valid UTexture reference.\n");
-        assert(aText != nullptr);
-    }
-
-    // Fade achievement into the scene. SDL_MAX_UINT8 is the amplitude. To get the angular frequency we divide (2 * pi)
-    // by our target period. Our target period is 4 * (ACH_RENDER_TIME / 5.f). Finally we multiply the angular frequency
-    // by the current achievement time, take the sin of that value, multiply this value by the amplitude and we get the
-    // period of the function.
-    if (m_flCurrAchTime < (ACH_RENDER_TIME / 5.f))
-        aText->setAlpha(static_cast<int>(static_cast<float>(SDL_MAX_UINT8) * sin(((2.f * M_PI) / (4.f * (ACH_RENDER_TIME / 5.f))) * m_flCurrAchTime)));
-    // Fade achievement out of the scene
-    if (m_flCurrAchTime > (4.f * ACH_RENDER_TIME / 5.f))
-    {
-        if (m_bFullyOpaque)
-            m_bFullyOpaque = false;
-
-        aText->setAlpha(static_cast<int>(static_cast<float>(SDL_MAX_UINT8) * sin(((2.f * M_PI) / (4.f * (ACH_RENDER_TIME / 5.f))) * (m_flCurrAchTime - ((3.f * ACH_RENDER_TIME) / 5.f)))));
-    }
-    else if (!m_bFullyOpaque)
-    {
-        m_bFullyOpaque = true;
-        aText->setAlpha(SDL_MAX_UINT8);
-    }
-}
-
-// Giving an achievement id return the corresponding achievement texture
-UTexture* STEAM_StatsAchievements::getAchTexture(const Achievements &aAch_id)
-{
-    switch (aAch_id)
-    {
-    case ACH_FIRST_GAME:
-        return &m_utFirstGameAch;
-    case ACH_FIRST_RUN:
-        return &m_utFirstRunAch;
-    case ACH_FAST_RUN:
-        return &m_utFastRunAch;
-    case ACH_LONG_DISTANCE:
-        return &m_utLongDistanceAch;
-    default:
-        return nullptr;
-    }
 }
 
 // Accumulators
@@ -310,27 +171,23 @@ void STEAM_StatsAchievements::evaluateAchievement(Achievement_t &achievement)
     switch (achievement.mAchievementID)
     {
     case ACH_FIRST_GAME:
-        m_dqUnlockedAch.push_back(new Achievements(ACH_FIRST_GAME));
         unlockAchievement(achievement);
         break;
     case ACH_FIRST_RUN:
         if (mTotalRuns >= 1)
         {
-            m_dqUnlockedAch.push_back(new Achievements(ACH_FIRST_RUN));
             unlockAchievement(achievement);
         }
         break;
     case ACH_FAST_RUN:
         if (mLoopsLastRun >= 405)
         {
-            m_dqUnlockedAch.push_back(new Achievements(ACH_FAST_RUN));
             unlockAchievement(achievement);
         }
         break;
     case ACH_LONG_DISTANCE:
         if (mTotalLoops >= 3300)
         {
-            m_dqUnlockedAch.push_back(new Achievements(ACH_LONG_DISTANCE));
             unlockAchievement(achievement);
         }
         break;
@@ -478,23 +335,4 @@ void STEAM_StatsAchievements::free()
     mSteamUserStats = nullptr;
     mSteamUser = nullptr;
     mRenderer = nullptr;
-
-    // Free the textures
-    m_utFastRunAch.free();
-    m_utFirstRunAch.free();
-    m_utFirstGameAch.free();
-    m_utLongDistanceAch.free();
-
-    // Clean up the achievement information
-    for (auto &e : m_dqUnlockedAch)
-    {
-        delete e;
-        e = nullptr;
-    }
-    m_dqUnlockedAch.clear();
-    if (m_enCurrAch)
-    {
-        delete m_enCurrAch;
-        m_enCurrAch = nullptr;
-    }
 }
