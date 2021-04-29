@@ -33,7 +33,6 @@ Achievement_t g_rgAchievements[] =
 // Constructor
 STEAM_StatsAchievements::STEAM_StatsAchievements()
     :
-    mRenderer(nullptr),
     mSteamUser(nullptr),
     mSteamUserStats(nullptr),
     mGameId(SteamUtils()->GetAppID()),
@@ -59,7 +58,7 @@ STEAM_StatsAchievements::STEAM_StatsAchievements()
 }
 
 // Initialize the STEAM_StatsAchievements
-bool STEAM_StatsAchievements::init(SDL_Renderer *aRenderer)
+bool STEAM_StatsAchievements::init()
 {
     // Initialize the success flag
     bool success = true;
@@ -92,15 +91,6 @@ bool STEAM_StatsAchievements::init(SDL_Renderer *aRenderer)
             // clearStatsAchievements();
             // std::printf("stats reset.\n");
             // END DEBUG
-            
-            // Set the SDL renderer
-            mRenderer = aRenderer;
-            // If non valid SDL renderer
-            if (mRenderer == nullptr)
-            {
-                printf("Did not pass in a valid renderer when initializing STEAM_StatsAchievements!\n");
-                success = false;
-            }
         }
     }
 
@@ -334,5 +324,4 @@ void STEAM_StatsAchievements::free()
     // Prevent dangling pointers, their resources are deallocated later in the program
     mSteamUserStats = nullptr;
     mSteamUser = nullptr;
-    mRenderer = nullptr;
 }

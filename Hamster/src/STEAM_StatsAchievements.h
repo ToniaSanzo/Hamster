@@ -39,7 +39,7 @@ public:
 	STEAM_StatsAchievements();
 
 	// Initialize the STEAM_StatsAchievements
-	bool init(SDL_Renderer *);
+	bool init();
 
 	// Run a frame. Does not need to run at full frame rate.
 	void update(const float &);
@@ -81,9 +81,6 @@ private:
 
 	// Steam UserStats interface
 	ISteamUserStats *mSteamUserStats;
-
-	// Pointer to the SDL renderer
-	SDL_Renderer *mRenderer;
 
 	// Did we get the stats from Steam?
 	bool m_bRequestedStats;

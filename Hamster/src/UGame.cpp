@@ -181,7 +181,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
 
         // Initialize the Steam utility classes
         m_pStatsAndAchievements = new STEAM_StatsAchievements();
-        if (!m_pStatsAndAchievements->init(mRenderer))
+        if (!m_pStatsAndAchievements->init())
         {
             std::printf("Failed to initialize the stats and achievements!\n");
             success = false;

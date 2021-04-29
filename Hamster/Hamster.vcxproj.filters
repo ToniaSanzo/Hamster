@@ -48,6 +48,9 @@
     <ClCompile Include="src\STEAM_StatsAchievements.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\STEAM_Leaderboards.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ULib.h">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\STEAM_StatsAchievements.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STEAM_Leaderboards.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
