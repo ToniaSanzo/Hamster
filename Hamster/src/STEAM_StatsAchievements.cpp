@@ -90,8 +90,8 @@ bool STEAM_StatsAchievements::init(SDL_Renderer *aRenderer)
         else
         {
             // DEBUG: Reset stats remove before final release
-            clearStatsAchievements();
-            std::printf("stats reset.\n");
+            // clearStatsAchievements();
+            // std::printf("stats reset.\n");
             // END DEBUG
             
             // Set the SDL renderer
@@ -177,7 +177,7 @@ void STEAM_StatsAchievements::update(const float &dt)
         }
 
         // If yes, request our stats
-        bool bSuccess = mSteamUserStats->RequestCurrentStats();
+         bool bSuccess = mSteamUserStats->RequestCurrentStats();
 
         // This function  should only return galse if we werent logged in, and we 
         // already checked that. But handle it being false again anyway, just ask 
@@ -315,18 +315,24 @@ void STEAM_StatsAchievements::evaluateAchievement(Achievement_t &achievement)
         break;
     case ACH_FIRST_RUN:
         if (mTotalRuns >= 1)
+        {
             m_dqUnlockedAch.push_back(new Achievements(ACH_FIRST_RUN));
             unlockAchievement(achievement);
+        }
         break;
     case ACH_FAST_RUN:
-        if (mLoopsLastRun >= 450)
+        if (mLoopsLastRun >= 405)
+        {
             m_dqUnlockedAch.push_back(new Achievements(ACH_FAST_RUN));
             unlockAchievement(achievement);
+        }
         break;
     case ACH_LONG_DISTANCE:
-        if (mTotalLoops >= 33000)
+        if (mTotalLoops >= 3300)
+        {
             m_dqUnlockedAch.push_back(new Achievements(ACH_LONG_DISTANCE));
             unlockAchievement(achievement);
+        }
         break;
     default:
         break;
