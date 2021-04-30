@@ -145,6 +145,7 @@ void STEAM_StatsAchievements::addLoops(int nLoops)
 {
     mLoopsLastRun = nLoops;
     mTotalLoops += nLoops;
+    mLoopsLastRun = nLoops;
 }
 void STEAM_StatsAchievements::addRun()
 {

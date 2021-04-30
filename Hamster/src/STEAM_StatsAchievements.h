@@ -52,6 +52,7 @@ public:
 	int getTotalRuns() { return mTotalRuns; }
 	int getTotalLoops() { return mTotalLoops; }
 	int getGamesPlayed() { return mGamesPlayed; }
+	int getLoopsLastRun() { return mLoopsLastRun; }
 
 	// Clear all stats and achievements
 	void clearStatsAchievements();
@@ -96,6 +97,7 @@ private:
 	int mGamesPlayed;
 	int mTotalRuns;
 	int mTotalLoops;
+	int mLoopsLastRun;
 
 	// Used to increment the mGamesPlayed count
 	bool m_bNewGame;
