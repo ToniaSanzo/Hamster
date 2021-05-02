@@ -15,14 +15,13 @@ struct LeaderboardMenuItem_t
     bool m_bNextLeaderboard;
 };
 
+class STEAM_LeaderboardMenu;
+
 class STEAM_Leaderboards
 {
 public:
     // Constructor
     STEAM_Leaderboards();
-
-    // Initialize the STEAM_Leaderboard
-    bool init();
 
     // Run a frame. Does not need t orun at full frame rate.
     void update(const float &);
@@ -47,5 +46,6 @@ private:
 
     int m_bLoading;                            // True if we're looking up a leaderboard handle
 
+    STEAM_LeaderboardMenu* m_pLeaderboardMenu; // Displays the current leaderboard
     int m_nCurrentLeaderboard;                 // Index for leaderboard the user is currently viewing 
 };

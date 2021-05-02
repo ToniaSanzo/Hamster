@@ -22,8 +22,8 @@ const UVector3 UGame::PLAY_AGAIN_BTN_DIMENSION = UVector3{ 220, 85, 0 };
 // Default constructor
 UGame::UGame()
 {
-    mRenderer          = nullptr;
-    mWindow            = nullptr;
+    mRenderer = nullptr;
+    mWindow   = nullptr;
 
     // Set the game state to start
     mCurrState = GameState::START;
@@ -40,6 +40,7 @@ UGame::UGame()
 
     // Pointer to the Steam utility classes
     m_pStatsAndAchievements = nullptr;
+    m_pLeaderboards = nullptr;
 }
 
 // Initializes and loads all the game objects
@@ -186,6 +187,8 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             std::printf("Failed to initialize the stats and achievements!\n");
             success = false;
         }
+
+        m_pLeaderboards = new STEAM_Leaderboards();
     }
 
     // Attempt to read pre-saved data
@@ -282,6 +285,7 @@ void UGame::update(const float &dt)
     }
 
     m_pStatsAndAchievements->update(dt);
+    m_pLeaderboards->update(dt);
 
     // Add sleep Z's if the hamster is currently sleeping
     if (mHamster.sleeping() && mCurrState != GameState::SETTINGS_MENU)
@@ -391,6 +395,9 @@ void UGame::update(const float &dt)
                 mHamster.setState(static_cast<int>(GameState::NEW_HIGHSCORE));
                 mFonts.setHighscore(mStepCount / 5);
                 mSounds.playMenuMusic();
+
+                // Update the Steam leaderboards (fastest run, and longest distance)
+                m_pLeaderboards->UpdateLeaderboards(m_pStatsAndAchievements, true);
             }
 
             // Enter game end state
@@ -399,6 +406,9 @@ void UGame::update(const float &dt)
                 mCurrState = GameState::GAME_ENDED;
                 mHamster.setState(static_cast<int>(GameState::GAME_ENDED));
                 mSounds.playMenuMusic();
+
+                // Update the Steam leaderboard (longest distance)
+                m_pLeaderboards->UpdateLeaderboards(m_pStatsAndAchievements, false);
             }
         }
         break;
@@ -685,7 +695,8 @@ void UGame::close()
     mSFXButton.free();
     mPlayAgainButton.free();
 
-    // Free the Stam utility classes
+    // Free the Steam utility classes
     m_pStatsAndAchievements->free();
     delete m_pStatsAndAchievements;
+    delete m_pLeaderboards;
 }

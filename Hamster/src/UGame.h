@@ -14,6 +14,7 @@
 #include "UTexture.h"
 #include "UWindow.h"
 #include "STEAM_StatsAchievements.h"
+#include "STEAM_Leaderboards.h"
 
 class UGame
 {
@@ -101,5 +102,6 @@ private:
     int mStepCount;
 
     // Steam utility objects
-    STEAM_StatsAchievements *m_pStatsAndAchievements;
+    STEAM_StatsAchievements* m_pStatsAndAchievements;
+    STEAM_Leaderboards* m_pLeaderboards;
 };

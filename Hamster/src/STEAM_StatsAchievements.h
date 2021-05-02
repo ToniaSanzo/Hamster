@@ -90,9 +90,6 @@ private:
 	// Should we store stats this frame?
 	bool m_bStoreStats;
 
-	// Current Stat details
-	int mLoopsLastRun;
-
 	// Persisted Stat details
 	int mGamesPlayed;
 	int mTotalRuns;
