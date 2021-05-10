@@ -143,12 +143,8 @@ void STEAM_StatsAchievements::update(const float &dt)
 // Accumulators
 void STEAM_StatsAchievements::addLoops(int nLoops)
 {
-    mLoopsLastRun = nLoops;
     mTotalLoops += nLoops;
     mLoopsLastRun = nLoops;
-}
-void STEAM_StatsAchievements::addRun()
-{
     ++mTotalRuns;
 }
 

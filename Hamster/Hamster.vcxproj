@@ -173,16 +173,22 @@
   <ItemGroup>
     <Image Include="assets\background.png" />
     <Image Include="assets\dustball.png" />
+    <Image Include="assets\fastest_run_leaderboard.png" />
     <Image Include="assets\glass_cage.png" />
     <Image Include="assets\hamster.png" />
     <Image Include="assets\hamster_icon.png" />
     <Image Include="assets\house_foreground.png" />
+    <Image Include="assets\leaderboard_button.png" />
+    <Image Include="assets\left_arrow_button.png" />
+    <Image Include="assets\longest_distance_leaderboard.png" />
+    <Image Include="assets\right_arrow_button.png" />
     <Image Include="assets\settings_button.png" />
     <Image Include="assets\settings_menu.png" />
     <Image Include="assets\sound_button.png" />
     <Image Include="assets\title.png" />
     <Image Include="assets\wheel.png" />
     <Image Include="assets\wheel_arm.png" />
+    <Image Include="assets\x_button.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\font.ttf" />

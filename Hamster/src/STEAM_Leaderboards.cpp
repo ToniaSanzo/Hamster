@@ -24,16 +24,25 @@ class STEAM_LeaderboardMenu
     bool m_bIOFailure;								// last attempt to retrieve the leaderboard failed
 
     CCallResult<STEAM_LeaderboardMenu, LeaderboardScoresDownloaded_t> m_callResultDownloadEntries;
+
+    // Leaderboard menu texture assets
+    UTexture m_texFastRunBoard, m_texLongDistanceBoard, m_texLeaderboardBtn, m_texLeftArrowBtn, m_texRightArrowBtn, m_texExitBtn;
 public:
 
     // Constructor
     STEAM_LeaderboardMenu()
     {
         m_hSteamLeaderboard = 0;
-        m_eLeaderboardData = k_ELeaderboardDataRequestGlobalAroundUser;
         m_nLeaderboardEntries = 0;
         m_bLoading = false;
         m_bIOFailure = false;
+        ... TODO INIT TEXTURES
+    }
+
+    // Destructor
+    ~STEAM_Leaderboards()
+    {
+        ... TODO DELETE TEXTURES
     }
 
     // Menu that shows a leaderboard
@@ -78,7 +87,6 @@ public:
         }
 
         // Create leaderboard
-        // create leaderboard
         if (!m_hSteamLeaderboard || m_bLoading)
         {
             printf("Loading...\n");
@@ -94,8 +102,7 @@ public:
                 // Requesting for global scores around the user will return successfully with 0 results if the
                 // user does not have an entry on the leaderboard
 
-                std::string strText;
-             
+                std::string strText;         
                 if (m_eLeaderboardData != k_ELeaderboardDataRequestGlobalAroundUser)
                 {
                     strText = "No scores for this leaderboard\n";
@@ -108,19 +115,18 @@ public:
 
                 printf(strText.c_str());
             }
-        }
 
-        for (int index = 0; index < m_nLeaderboardEntries; index++)
-        {
-            std::string name(SteamFriends()->GetFriendPersonaName(m_leaderboardEntries[index].m_steamIDUser));
-            printf("(%d) %s - %d\n", m_leaderboardEntries[index].m_nGlobalRank, name.c_str(), m_leaderboardEntries[index].m_nScore);
-        }
+            for (int index = 0; index < m_nLeaderboardEntries; index++)
+            {
+                std::string name(SteamFriends()->GetFriendPersonaName(m_leaderboardEntries[index].m_steamIDUser));
+                printf("(%d) %s - %d\n", m_leaderboardEntries[index].m_nGlobalRank, name.c_str(), m_leaderboardEntries[index].m_nScore);
+            }
+        }  
     }
 
     // Called when SteamUserStats()->DownloadLeaderboardEntries() returns asynchronously
     void OnLeaderboardDownloadedEntries(LeaderboardScoresDownloaded_t* pLeaderboardScoresDownloaded, bool bIOFailure)
     {
-        printf("OnLeaderboardDownloadedEntries callback.\n");
         m_bLoading = false;
         m_bIOFailure = bIOFailure;
 
@@ -137,6 +143,7 @@ public:
     }
 };
 
+// Constructor
 STEAM_Leaderboards::STEAM_Leaderboards()
 {
     m_hFastestRunLeaderboard = 0;
@@ -144,17 +151,43 @@ STEAM_Leaderboards::STEAM_Leaderboards()
     m_nCurrentLeaderboard = 0;
 
     m_bLoading = false;
+    m_pLeaderboardMenu = new STEAM_LeaderboardMenu();
     
     FindLeaderboards();
 }
 
+// Destructor
+STEAM_Leaderboards::~STEAM_Leaderboards()
+{
+    delete m_pLeaderboardMenu;
+}
+
 // Run a frame for the STEAM_Leaderboards
+
+/**
+* Run a frame for the STEAM_Leaderboards
+* @param {float} dt delta time, time passed since last frame was run
+*/
 void STEAM_Leaderboards::update(const float &dt)
 {
     //printf("STEAM_Leaderboards RunFrame called.\n");
 }
 
-// Gets handles for our leaderboards. If the leaderboards don't exist, creates them.
+// Shows / refreshes leaderboard (fastest run)
+void STEAM_Leaderboards::ShowFastestRun()
+{
+    // we want to show the top 10 fastest run. To do so, we request global score data beginning at 0
+    m_pLeaderboardMenu->ShowLeaderboard(m_hFastestRunLeaderboard, k_ELeaderboardDataRequestGlobalAroundUser, -5);
+}
+
+// Shows / refreshes leaderboard (longest distance)
+void STEAM_Leaderboards::ShowLongestDistance()
+{
+    // we want to show the 10 users around us
+    m_pLeaderboardMenu->ShowLeaderboard(m_hLongDistanceLeaderboard, k_ELeaderboardDataRequestGlobalAroundUser, -5);
+}
+
+// Gets handles for our leaderboards. If the leaderboards doesn't exist, creates them.
 // Each time this is called, we look up another leaderboard.
 void STEAM_Leaderboards::FindLeaderboards()
 {
@@ -185,12 +218,13 @@ void STEAM_Leaderboards::FindLeaderboards()
 // Called when SteamUserStats()->FindLeader() returns asynchronously
 void STEAM_Leaderboards::OnFindLeaderboard(LeaderboardFindResult_t *pFindLeaderboardResult, bool bIOFailure)
 {
-    printf("Find leaderboard callback.\n");
     m_bLoading = false;
 
     // see if we encountered an error during the call
     if (!pFindLeaderboardResult->m_bLeaderboardFound || bIOFailure)
+    {
         return;
+    }
 
     // check to see which leaderboard handle we just retrieved
     const char *pchName = SteamUserStats()->GetLeaderboardName(pFindLeaderboardResult->m_hSteamLeaderboard);
@@ -205,10 +239,11 @@ void STEAM_Leaderboards::OnFindLeaderboard(LeaderboardFindResult_t *pFindLeaderb
 
     // look up any other leaderboards
     FindLeaderboards();
+ 
 }
 
 // Updates leaderboards with stats from our just finished game
-void STEAM_Leaderboards::UpdateLeaderboards(STEAM_StatsAchievements *pStats, bool bNewHighscore)
+void STEAM_Leaderboards::UpdateLeaderboards(STEAM_StatsAchievements *pStats)
 {
     // Each game the user finishes update the users longest distance leaderboard entry.
     if (m_hLongDistanceLeaderboard)
@@ -218,9 +253,10 @@ void STEAM_Leaderboards::UpdateLeaderboards(STEAM_StatsAchievements *pStats, boo
     }
 
     // If the user has a new high score update the fast run leaderboard as well
-    if (bNewHighscore && m_hFastestRunLeaderboard)
+    if (m_hFastestRunLeaderboard)
     {
-        SteamUserStats()->UploadLeaderboardScore(m_hFastestRunLeaderboard, k_ELeaderboardUploadScoreMethodKeepBest, (int)pStats->getLoopsLastRun(), NULL, 0);
+        SteamAPICall_t hSteamAPICall = SteamUserStats()->UploadLeaderboardScore(m_hFastestRunLeaderboard, k_ELeaderboardUploadScoreMethodKeepBest, (int)pStats->getLoopsLastRun(), NULL, 0);
+        m_SteamCallResultUploadScore.Set(hSteamAPICall, this, &STEAM_Leaderboards::OnUploadScore);
     }
 
 }
@@ -228,8 +264,6 @@ void STEAM_Leaderboards::UpdateLeaderboards(STEAM_StatsAchievements *pStats, boo
 // Called when SteamUserStats(0->UploadLeaderboardScore() returns asynchronously
 void STEAM_Leaderboards::OnUploadScore(LeaderboardScoreUploaded_t *pScoreUploadedResult, bool bIOFailure)
 {
-    printf("Upload score callback.\n");
-
     if (!pScoreUploadedResult->m_bSuccess)
     {
         printf("error\n");
@@ -240,5 +274,3 @@ void STEAM_Leaderboards::OnUploadScore(LeaderboardScoreUploaded_t *pScoreUploade
         printf("could display new rank");
     }
 }
-
-

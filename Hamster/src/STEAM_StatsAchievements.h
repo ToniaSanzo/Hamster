@@ -46,7 +46,6 @@ public:
 
 	// Accumulators
 	void addLoops(int nLoops);
-	void addRun();
 
 	// Accessors
 	int getTotalRuns() { return mTotalRuns; }

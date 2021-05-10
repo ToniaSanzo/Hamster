@@ -22,12 +22,23 @@ class STEAM_Leaderboards
 public:
     // Constructor
     STEAM_Leaderboards();
+    // Destructor
+    ~STEAM_Leaderboards();
 
-    // Run a frame. Does not need t orun at full frame rate.
+    /**
+    * Run a frame for the STEAM_Leaderboards
+    * @param {float} dt delta time, time passed since last frame was run
+    */
     void update(const float &);
 
+    // Shows / refreshes leaderboard (fastest run)
+    void ShowFastestRun();
+
+    // Shows / refreshes leaderboard (longest distance)
+    void ShowLongestDistance();
+
     // Updates leaderboards with stats from our just finished game
-    void UpdateLeaderboards(STEAM_StatsAchievements *pStats, bool bNewHighScore);
+    void UpdateLeaderboards(STEAM_StatsAchievements *pStats);
 
 private:
     void FindLeaderboards();

@@ -365,6 +365,7 @@ void GHamster::handleEvent(SDL_Event &e)
                 mCurrFrame = static_cast<int>(FRAMES::STANDING);
             }
 
+                mSound->stopMusic();
                 mCurrState = GameState::WHEEL_PLAY_STARTING;
                 mFrameTime = 0;
                 break;

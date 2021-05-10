@@ -386,7 +386,6 @@ void UGame::update(const float &dt)
 
             // Update the Steam stats
             m_pStatsAndAchievements->addLoops(mStepCount / 5);
-            m_pStatsAndAchievements->addRun();
 
             // Enter new high score state
             if (mFonts.getHighscore() < mStepCount / 5)
@@ -395,9 +394,6 @@ void UGame::update(const float &dt)
                 mHamster.setState(static_cast<int>(GameState::NEW_HIGHSCORE));
                 mFonts.setHighscore(mStepCount / 5);
                 mSounds.playMenuMusic();
-
-                // Update the Steam leaderboards (fastest run, and longest distance)
-                m_pLeaderboards->UpdateLeaderboards(m_pStatsAndAchievements, true);
             }
 
             // Enter game end state
@@ -406,10 +402,10 @@ void UGame::update(const float &dt)
                 mCurrState = GameState::GAME_ENDED;
                 mHamster.setState(static_cast<int>(GameState::GAME_ENDED));
                 mSounds.playMenuMusic();
-
-                // Update the Steam leaderboard (longest distance)
-                m_pLeaderboards->UpdateLeaderboards(m_pStatsAndAchievements, false);
             }
+
+            // Update the Steam leaderboards (fastest run, and longest distance)
+            m_pLeaderboards->UpdateLeaderboards(m_pStatsAndAchievements);
         }
         break;
 
@@ -492,6 +488,16 @@ bool UGame::handleEvent(SDL_Event &e)
         // Handle the user clicking the sfx or music mute buttons
         mSFXButton.handleEvent(e);
         mMusicButton.handleEvent(e);
+// #if DEBUG
+        if (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_l)
+        {
+            m_pLeaderboards->ShowLongestDistance();
+        }
+        else if (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_f)
+        {
+            m_pLeaderboards->ShowFastestRun();
+        }
+// #endif
     }
 
     return false;

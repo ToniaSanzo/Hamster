@@ -127,6 +127,24 @@
     <Image Include="assets\sound_button.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="assets\fastest_run_leaderboard.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\leaderboard_button.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\left_arrow_button.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\longest_distance_leaderboard.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\right_arrow_button.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\x_button.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\font.ttf">
