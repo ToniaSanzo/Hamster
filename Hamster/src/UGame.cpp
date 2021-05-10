@@ -187,8 +187,12 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             std::printf("Failed to initialize the stats and achievements!\n");
             success = false;
         }
-
         m_pLeaderboards = new STEAM_Leaderboards();
+        if (m_pLeaderboards->init(mRenderer))
+        {
+            std::printf("Failed to initialize the leaderboards!\n");
+            success = false;
+        }
     }
 
     // Attempt to read pre-saved data

@@ -32,17 +32,74 @@ public:
     // Constructor
     STEAM_LeaderboardMenu()
     {
+        m_eLeaderboardData = k_ELeaderboardDataRequestGlobal;
         m_hSteamLeaderboard = 0;
         m_nLeaderboardEntries = 0;
         m_bLoading = false;
         m_bIOFailure = false;
-        ... TODO INIT TEXTURES
     }
 
     // Destructor
-    ~STEAM_Leaderboards()
+    ~STEAM_LeaderboardMenu()
     {
-        ... TODO DELETE TEXTURES
+        m_texFastRunBoard.free();
+        m_texLongDistanceBoard.free();
+        m_texLeaderboardBtn.free();
+        m_texLeftArrowBtn.free();
+        m_texRightArrowBtn.free();
+        m_texExitBtn.free();
+    }
+
+    // Initialize the Leaderboard menu's textures
+    bool init(SDL_Renderer* m_pRenderer)
+    {
+        // Success is true if m_pRenderer is valid
+        bool success = m_pRenderer;
+        if (success)
+        {
+            m_texFastRunBoard.initUTexture(m_pRenderer);
+            if (!m_texFastRunBoard.loadFromFile("assets/fastest_run_leaderboard.png"))
+            {
+                std::printf("Failed to load fastest run leaderboard!\n");
+                success = false;
+            }
+
+            m_texLongDistanceBoard.initUTexture(m_pRenderer);
+            if (!m_texLongDistanceBoard.loadFromFile("assets/longest_distance_leaderboard.png"))
+            {
+                std::printf("Failed to load longest distance leaderboard!\n");
+                success = false;
+            }
+
+            m_texLeaderboardBtn.initUTexture(m_pRenderer);
+            if (!m_texLeaderboardBtn.loadFromFile("assets/leaderboard_button.png"))
+            {
+                std::printf("Failed to load leaderboard button!\n");
+                success = false;
+            }
+
+            m_texLeftArrowBtn.initUTexture(m_pRenderer);
+            if (!m_texLeftArrowBtn.loadFromFile("assets/left_arrow_button.png"))
+            {
+                std::printf("Failed to load left arrow button!\n");
+                success = false;
+            }
+
+            m_texRightArrowBtn.initUTexture(m_pRenderer);
+            if (!m_texRightArrowBtn.loadFromFile("assets/right_arrow_button.png"))
+            {
+                std::printf("Failed to load right arrow button!\n");
+                success = false;
+            }
+
+            m_texExitBtn.initUTexture(m_pRenderer);
+            if (!m_texExitBtn.loadFromFile("assets/x_button.png"))
+            {
+                std::printf("Failed to load exit button!\n");
+                success = false;
+            }
+        }
+        return success;
     }
 
     // Menu that shows a leaderboard
@@ -151,23 +208,28 @@ STEAM_Leaderboards::STEAM_Leaderboards()
     m_nCurrentLeaderboard = 0;
 
     m_bLoading = false;
-    m_pLeaderboardMenu = new STEAM_LeaderboardMenu();
-    
+    m_pLeaderboardMenu = nullptr;
+
     FindLeaderboards();
 }
 
 // Destructor
 STEAM_Leaderboards::~STEAM_Leaderboards()
 {
-    delete m_pLeaderboardMenu;
+    if (m_pLeaderboardMenu)
+    {
+        delete m_pLeaderboardMenu;
+    }
+}
+
+// Properly initialize the leaderboard menu
+bool STEAM_Leaderboards::init(SDL_Renderer* a_pRenderer)
+{
+    m_pLeaderboardMenu = new STEAM_LeaderboardMenu();
+    return m_pLeaderboardMenu->init(a_pRenderer);
 }
 
 // Run a frame for the STEAM_Leaderboards
-
-/**
-* Run a frame for the STEAM_Leaderboards
-* @param {float} dt delta time, time passed since last frame was run
-*/
 void STEAM_Leaderboards::update(const float &dt)
 {
     //printf("STEAM_Leaderboards RunFrame called.\n");

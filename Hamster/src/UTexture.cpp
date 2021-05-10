@@ -27,7 +27,7 @@ UTexture::UTexture() {
 
 // UTexture destructor
 UTexture::~UTexture() {
-    // Deallocate texture
+    // Deallocate texture if the texture exists
     free();
 
     // Free renderer and font if necessary

@@ -26,6 +26,14 @@ public:
     ~STEAM_Leaderboards();
 
     /**
+    * Properly initialize the leaderboard menu
+    * 
+    * @param {SDL_Renderer*} a_pRenderer reference to the game renderer
+    * @return {bool} If the initialization was succesful
+    */
+    bool init(SDL_Renderer*);
+
+    /**
     * Run a frame for the STEAM_Leaderboards
     * @param {float} dt delta time, time passed since last frame was run
     */
