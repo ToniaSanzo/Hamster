@@ -38,7 +38,13 @@ public:
     * Run a frame for the STEAM_Leaderboards
     * @param {float} dt delta time, time passed since last frame was run
     */
-    void update(const float &);
+    void update(const float&);
+
+    /**
+    * Handle user events, specifically clicking the leaderboard direction button
+    * @param {SDL_Event&} The user input event
+    */
+    void handleEvent(SDL_Event&);
 
     // Shows / refreshes leaderboard (fastest run)
     void ShowFastestRun();

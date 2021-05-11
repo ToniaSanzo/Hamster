@@ -237,6 +237,10 @@ bool STEAM_Leaderboards::init(SDL_Renderer* a_pRenderer)
 void STEAM_Leaderboards::update(const float &dt)
 {
     //printf("STEAM_Leaderboards RunFrame called.\n");
+    if (m_btnDirectionArrow.clicked())
+    {
+        m_bRenderFastRunLeaderboard = !m_bRenderFastRunLeaderboard;
+    }
 }
 
 // Shows / refreshes leaderboard (fastest run)
@@ -265,6 +269,12 @@ void STEAM_Leaderboards::render()
     {
         m_btnDirectionArrow.render(0);
     }
+}
+
+// Handle user events, specifically clicking the leaderboard direction button
+void STEAM_Leaderboards::handleEvent(SDL_Event& e)
+{
+    m_btnDirectionArrow.handleEvent(e);
 }
 
 // Gets handles for our leaderboards. If the leaderboards doesn't exist, creates them.
