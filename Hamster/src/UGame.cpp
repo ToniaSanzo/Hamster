@@ -291,7 +291,11 @@ void UGame::update(const float &dt)
         // Open the settings menu
         else
         {
-            mPrevState = mCurrState;
+            if (mPrevState == GameState::LEADERBOARD_MENU)
+            {
+                mPrevState = mCurrState;
+            }
+
             mCurrState = GameState::SETTINGS_MENU;
         }
     }
@@ -299,16 +303,19 @@ void UGame::update(const float &dt)
     // Check if the leaderboard button has been clicked
     if (mLeaderboardButton.clicked())
     {
-        // Close the settings menu
+        // Close the leaderboard menu
         if (mCurrState == GameState::LEADERBOARD_MENU)
         {
             mCurrState = mPrevState;
         }
 
-        // Open the settings menu
+        // Open the leaderboard menu
         else
         {
-            mPrevState = mCurrState;
+            if (mPrevState == GameState::SETTINGS_MENU)
+            {
+                mPrevState = mCurrState;
+            }
             mCurrState = GameState::LEADERBOARD_MENU;
         }
     }
@@ -539,7 +546,7 @@ void UGame::render()
     // Used to render either the current or previous game state
     GameState gameState;
 
-    // If the GameState is the settings menu render the previous game state
+    // If the GameState is the settings or leaderboard menu render the previous game state
     if (mCurrState == GameState::SETTINGS_MENU || mCurrState == GameState::LEADERBOARD_MENU)
     {
         gameState = mPrevState;
