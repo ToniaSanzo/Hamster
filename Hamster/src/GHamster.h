@@ -84,7 +84,8 @@ public:
         WHEEL_PLAYING,
         GAME_ENDED,
         NEW_HIGHSCORE,
-        SETTINGS_MENU
+        SETTINGS_MENU,
+        LEADERBOARD_MENU,
     };
 
     // Hamster frames

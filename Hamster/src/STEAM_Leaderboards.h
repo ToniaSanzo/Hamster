@@ -45,6 +45,9 @@ public:
     // Shows / refreshes leaderboard (longest distance)
     void ShowLongestDistance();
 
+    // Render the leaderboard menu's
+    void render();
+
     // Updates leaderboards with stats from our just finished game
     void UpdateLeaderboards(STEAM_StatsAchievements *pStats);
 
@@ -67,4 +70,6 @@ private:
 
     STEAM_LeaderboardMenu* m_pLeaderboardMenu; // Displays the current leaderboard
     int m_nCurrentLeaderboard;                 // Index for leaderboard the user is currently viewing 
+
+    bool m_bRenderFastRunLeaderboard;          // If true render fast run leaderboard, otherwise render long distance leaderboard
 };

@@ -11,8 +11,9 @@
 const float UGame::FADE_TIME = 3;
 
 // Dimensions and positions of the buttons
-const UVector3 UGame::SETTINGS_BTN_DIMENSION   = UVector3{ 65, 65, 0 };
+const UVector3 UGame::OPTION_BTN_DIMENSION     = UVector3{ 65, 65, 0 };
 const UVector3 UGame::SETTINGS_BTN_POSITION    = UVector3{ 1220, 720, 0 };
+const UVector3 UGame::LEADERBOARD_BTN_POSITION = UVector3{ 1120, 720, 0 };
 const UVector3 UGame::MUSIC_BTN_POSITION       = UVector3{ 742, 232, 0 };
 const UVector3 UGame::SFX_BTN_POSITION         = UVector3{ 976, 236, 0 };
 const UVector3 UGame::SOUND_BTN_DIMENSION      = UVector3{ 53, 53, 0 };
@@ -153,9 +154,16 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
         }
 
         // Initialize the settings button
-        if (!mSettingsButton.init(mRenderer, "assets/settings_button.png", SETTINGS_BTN_POSITION, SETTINGS_BTN_DIMENSION))
+        if (!mSettingsButton.init(mRenderer, "assets/settings_button.png", SETTINGS_BTN_POSITION, OPTION_BTN_DIMENSION))
         {
             std::printf("Failed to load the settings button!\n");
+            success = false;
+        }
+
+        // Initialize the leaderboard button
+        if (!mLeaderboardButton.init(mRenderer, "assets/leaderboard_button.png", LEADERBOARD_BTN_POSITION, OPTION_BTN_DIMENSION))
+        {
+            std::printf("Failed to load the leaderboard button!\n");
             success = false;
         }
 
@@ -188,7 +196,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             success = false;
         }
         m_pLeaderboards = new STEAM_Leaderboards();
-        if (m_pLeaderboards->init(mRenderer))
+        if (!m_pLeaderboards->init(mRenderer))
         {
             std::printf("Failed to initialize the leaderboards!\n");
             success = false;
@@ -285,6 +293,23 @@ void UGame::update(const float &dt)
         {
             mPrevState = mCurrState;
             mCurrState = GameState::SETTINGS_MENU;
+        }
+    }
+
+    // Check if the leaderboard button has been clicked
+    if (mLeaderboardButton.clicked())
+    {
+        // Close the settings menu
+        if (mCurrState == GameState::LEADERBOARD_MENU)
+        {
+            mCurrState = mPrevState;
+        }
+
+        // Open the settings menu
+        else
+        {
+            mPrevState = mCurrState;
+            mCurrState = GameState::LEADERBOARD_MENU;
         }
     }
 
@@ -465,6 +490,7 @@ bool UGame::handleEvent(SDL_Event &e)
         mHamster.handleEvent(e);
     }
     mSettingsButton.handleEvent(e);
+    mLeaderboardButton.handleEvent(e);
 
     if (mCurrState == GameState::WHEEL_PLAYING)
     {
@@ -514,7 +540,7 @@ void UGame::render()
     GameState gameState;
 
     // If the GameState is the settings menu render the previous game state
-    if (mCurrState == GameState::SETTINGS_MENU)
+    if (mCurrState == GameState::SETTINGS_MENU || mCurrState == GameState::LEADERBOARD_MENU)
     {
         gameState = mPrevState;
     }
@@ -635,10 +661,18 @@ void UGame::render()
         mSFXButton.render(mSounds.isSFXMuted());
     }
 
-    // Otherwise just render the default settigns button
+    // Render the leaderboard menu
+    else if (mCurrState == GameState::LEADERBOARD_MENU)
+    {
+        m_pLeaderboards->render();
+        mLeaderboardButton.render(1);
+    }
+
+    // Otherwise just render the default button
     else
     {
         mSettingsButton.render(0);
+        mLeaderboardButton.render(0);
     }
 }
 

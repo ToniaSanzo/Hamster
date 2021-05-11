@@ -26,7 +26,7 @@ class STEAM_LeaderboardMenu
     CCallResult<STEAM_LeaderboardMenu, LeaderboardScoresDownloaded_t> m_callResultDownloadEntries;
 
     // Leaderboard menu texture assets
-    UTexture m_texFastRunBoard, m_texLongDistanceBoard, m_texLeaderboardBtn, m_texLeftArrowBtn, m_texRightArrowBtn, m_texExitBtn;
+    UTexture m_texFastRunBoard, m_texLongDistanceBoard, m_texLeftArrowBtn, m_texRightArrowBtn, m_texExitBtn;
 public:
 
     // Constructor
@@ -44,55 +44,47 @@ public:
     {
         m_texFastRunBoard.free();
         m_texLongDistanceBoard.free();
-        m_texLeaderboardBtn.free();
         m_texLeftArrowBtn.free();
         m_texRightArrowBtn.free();
         m_texExitBtn.free();
     }
 
     // Initialize the Leaderboard menu's textures
-    bool init(SDL_Renderer* m_pRenderer)
+    bool init(SDL_Renderer* a_pRenderer)
     {
         // Success is true if m_pRenderer is valid
-        bool success = m_pRenderer;
+        bool success = a_pRenderer;
         if (success)
         {
-            m_texFastRunBoard.initUTexture(m_pRenderer);
+            m_texFastRunBoard.initUTexture(a_pRenderer);
             if (!m_texFastRunBoard.loadFromFile("assets/fastest_run_leaderboard.png"))
             {
                 std::printf("Failed to load fastest run leaderboard!\n");
                 success = false;
             }
 
-            m_texLongDistanceBoard.initUTexture(m_pRenderer);
+            m_texLongDistanceBoard.initUTexture(a_pRenderer);
             if (!m_texLongDistanceBoard.loadFromFile("assets/longest_distance_leaderboard.png"))
             {
                 std::printf("Failed to load longest distance leaderboard!\n");
                 success = false;
             }
 
-            m_texLeaderboardBtn.initUTexture(m_pRenderer);
-            if (!m_texLeaderboardBtn.loadFromFile("assets/leaderboard_button.png"))
-            {
-                std::printf("Failed to load leaderboard button!\n");
-                success = false;
-            }
-
-            m_texLeftArrowBtn.initUTexture(m_pRenderer);
+            m_texLeftArrowBtn.initUTexture(a_pRenderer);
             if (!m_texLeftArrowBtn.loadFromFile("assets/left_arrow_button.png"))
             {
                 std::printf("Failed to load left arrow button!\n");
                 success = false;
             }
 
-            m_texRightArrowBtn.initUTexture(m_pRenderer);
+            m_texRightArrowBtn.initUTexture(a_pRenderer);
             if (!m_texRightArrowBtn.loadFromFile("assets/right_arrow_button.png"))
             {
                 std::printf("Failed to load right arrow button!\n");
                 success = false;
             }
 
-            m_texExitBtn.initUTexture(m_pRenderer);
+            m_texExitBtn.initUTexture(a_pRenderer);
             if (!m_texExitBtn.loadFromFile("assets/x_button.png"))
             {
                 std::printf("Failed to load exit button!\n");
@@ -121,6 +113,19 @@ public:
         }
 
         Rebuild();
+    }
+
+    // Render the leaderboard menu
+    void Render(bool a_bRenderFastRunLeaderboard) 
+    {
+        if (a_bRenderFastRunLeaderboard)
+        {
+            m_texFastRunBoard.render((ULib::SCREEN_DIMENSIONS.x - m_texFastRunBoard.getWidth()) / 2.f, (ULib::SCREEN_DIMENSIONS.y - m_texFastRunBoard.getHeight()) / 2.f);
+        }
+        else
+        {
+            m_texLongDistanceBoard.render((ULib::SCREEN_DIMENSIONS.x - m_texLongDistanceBoard.getWidth()) / 2.f, (ULib::SCREEN_DIMENSIONS.y - m_texLongDistanceBoard.getHeight()) / 2.f);
+        }
     }
 
     // Creates a leaderboard menu
@@ -208,6 +213,7 @@ STEAM_Leaderboards::STEAM_Leaderboards()
     m_nCurrentLeaderboard = 0;
 
     m_bLoading = false;
+    m_bRenderFastRunLeaderboard = true;
     m_pLeaderboardMenu = nullptr;
 
     FindLeaderboards();
@@ -247,6 +253,12 @@ void STEAM_Leaderboards::ShowLongestDistance()
 {
     // we want to show the 10 users around us
     m_pLeaderboardMenu->ShowLeaderboard(m_hLongDistanceLeaderboard, k_ELeaderboardDataRequestGlobalAroundUser, -5);
+}
+
+// Render the leaderboard menu
+void STEAM_Leaderboards::render()
+{
+    m_pLeaderboardMenu->Render(m_bRenderFastRunLeaderboard);
 }
 
 // Gets handles for our leaderboards. If the leaderboards doesn't exist, creates them.
