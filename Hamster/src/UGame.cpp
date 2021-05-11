@@ -11,7 +11,7 @@
 const float UGame::FADE_TIME = 3;
 
 // Dimensions and positions of the buttons
-const UVector3 UGame::OPTION_BTN_DIMENSION     = UVector3{ 65, 65, 0 };
+//const UVector3 UGame::OPTION_BTN_DIMENSION     = UVector3{ 65, 65, 0 };
 const UVector3 UGame::SETTINGS_BTN_POSITION    = UVector3{ 1220, 720, 0 };
 const UVector3 UGame::LEADERBOARD_BTN_POSITION = UVector3{ 1120, 720, 0 };
 const UVector3 UGame::MUSIC_BTN_POSITION       = UVector3{ 742, 232, 0 };

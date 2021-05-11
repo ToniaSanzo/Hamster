@@ -17,8 +17,13 @@
 #include "UVector3.h"
 #include <vector>
 
+// Determine the max and min of two variables
 #define MAX(a,b)  (((a) > (b)) ? (a) : (b))
 #define MIN(a,b)  (((a) < (b)) ? (a) : (b))
+
+// Button Dimensions
+#define OPTION_BTN_DIMENSION UVector3{65, 65, 0}
+#define DIRECTION_BTN_POSITON UVector3{817, 92, 0}
 
 struct ULib
 {

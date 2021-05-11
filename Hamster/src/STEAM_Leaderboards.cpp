@@ -215,8 +215,22 @@ STEAM_Leaderboards::~STEAM_Leaderboards()
 // Properly initialize the leaderboard menu
 bool STEAM_Leaderboards::init(SDL_Renderer* a_pRenderer)
 {
+    bool success = true;
+
     m_pLeaderboardMenu = new STEAM_LeaderboardMenu();
-    return m_pLeaderboardMenu->init(a_pRenderer);
+    if (!m_pLeaderboardMenu->init(a_pRenderer))
+    {
+        printf("Failed to load the leaderboard menu!\n");
+        success = false;
+    }
+
+    if (!m_btnDirectionArrow.init(a_pRenderer, "assets/direction_arrows.png", DIRECTION_BTN_POSITON, OPTION_BTN_DIMENSION))
+    {
+        printf("Failed to load the direction arrow button!\n");
+        success = false;
+    }
+
+    return success;
 }
 
 // Run a frame for the STEAM_Leaderboards
@@ -229,20 +243,28 @@ void STEAM_Leaderboards::update(const float &dt)
 void STEAM_Leaderboards::ShowFastestRun()
 {
     // we want to show the top 10 fastest run. To do so, we request global score data beginning at 0
-    m_pLeaderboardMenu->ShowLeaderboard(m_hFastestRunLeaderboard, k_ELeaderboardDataRequestGlobalAroundUser, -5);
+    m_pLeaderboardMenu->ShowLeaderboard(m_hFastestRunLeaderboard, k_ELeaderboardDataRequestGlobal, 0);
 }
 
 // Shows / refreshes leaderboard (longest distance)
 void STEAM_Leaderboards::ShowLongestDistance()
 {
     // we want to show the 10 users around us
-    m_pLeaderboardMenu->ShowLeaderboard(m_hLongDistanceLeaderboard, k_ELeaderboardDataRequestGlobalAroundUser, -5);
+    m_pLeaderboardMenu->ShowLeaderboard(m_hLongDistanceLeaderboard, k_ELeaderboardDataRequestGlobal, 0);
 }
 
 // Render the leaderboard menu
 void STEAM_Leaderboards::render()
 {
     m_pLeaderboardMenu->Render(m_bRenderFastRunLeaderboard);
+    if (m_bRenderFastRunLeaderboard)
+    {
+        m_btnDirectionArrow.render(0);
+    }
+    else
+    {
+        m_btnDirectionArrow.render(0);
+    }
 }
 
 // Gets handles for our leaderboards. If the leaderboards doesn't exist, creates them.

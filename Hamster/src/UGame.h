@@ -57,7 +57,7 @@ private:
     const static float FADE_TIME;
 
     // Positions and dimensions of the buttons
-    const static UVector3 OPTION_BTN_DIMENSION, SETTINGS_BTN_POSITION, LEADERBOARD_BTN_POSITION;
+    const static UVector3 /*OPTION_BTN_DIMENSION,*/ SETTINGS_BTN_POSITION, LEADERBOARD_BTN_POSITION;
     const static UVector3 MUSIC_BTN_POSITION, SFX_BTN_POSITION;
     const static UVector3 SOUND_BTN_DIMENSION;
     const static UVector3 PLAY_AGAIN_BTN_DIMENSION, PLAY_AGAIN_BTN_POSITION;

@@ -7,6 +7,7 @@
 */
 #pragma once
 #include "STEAM_StatsAchievements.h"
+#include "GButton.h"
 
 // A leaderboard item
 struct LeaderboardMenuItem_t
@@ -72,4 +73,6 @@ private:
     int m_nCurrentLeaderboard;                 // Index for leaderboard the user is currently viewing 
 
     bool m_bRenderFastRunLeaderboard;          // If true render fast run leaderboard, otherwise render long distance leaderboard
+
+    GButton m_btnDirectionArrow;               // Button alternates between leaderboards
 };
