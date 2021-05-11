@@ -26,7 +26,7 @@ class STEAM_LeaderboardMenu
     CCallResult<STEAM_LeaderboardMenu, LeaderboardScoresDownloaded_t> m_callResultDownloadEntries;
 
     // Leaderboard menu texture assets
-    UTexture m_texFastRunBoard, m_texLongDistanceBoard, m_texLeftArrowBtn, m_texRightArrowBtn, m_texExitBtn;
+    UTexture m_texFastRunBoard, m_texLongDistanceBoard, m_texExitBtn;
 public:
 
     // Constructor
@@ -44,8 +44,6 @@ public:
     {
         m_texFastRunBoard.free();
         m_texLongDistanceBoard.free();
-        m_texLeftArrowBtn.free();
-        m_texRightArrowBtn.free();
         m_texExitBtn.free();
     }
 
@@ -67,20 +65,6 @@ public:
             if (!m_texLongDistanceBoard.loadFromFile("assets/longest_distance_leaderboard.png"))
             {
                 std::printf("Failed to load longest distance leaderboard!\n");
-                success = false;
-            }
-
-            m_texLeftArrowBtn.initUTexture(a_pRenderer);
-            if (!m_texLeftArrowBtn.loadFromFile("assets/left_arrow_button.png"))
-            {
-                std::printf("Failed to load left arrow button!\n");
-                success = false;
-            }
-
-            m_texRightArrowBtn.initUTexture(a_pRenderer);
-            if (!m_texRightArrowBtn.loadFromFile("assets/right_arrow_button.png"))
-            {
-                std::printf("Failed to load right arrow button!\n");
                 success = false;
             }
 

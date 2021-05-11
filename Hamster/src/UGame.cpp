@@ -666,6 +666,7 @@ void UGame::render()
         mMusicButton.render(mSounds.isMusicMuted());
         mSettingsButton.render(1);
         mSFXButton.render(mSounds.isSFXMuted());
+        mLeaderboardButton.render(0);
     }
 
     // Render the leaderboard menu
@@ -673,6 +674,7 @@ void UGame::render()
     {
         m_pLeaderboards->render();
         mLeaderboardButton.render(1);
+        mSettingsButton.render(0);
     }
 
     // Otherwise just render the default button
