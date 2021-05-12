@@ -321,7 +321,6 @@ void UGame::update(const float &dt)
     }
 
     m_pStatsAndAchievements->update(dt);
-    m_pLeaderboards->update(dt);
 
     // Add sleep Z's if the hamster is currently sleeping
     if (mHamster.sleeping() && mCurrState != GameState::SETTINGS_MENU)
@@ -482,6 +481,10 @@ void UGame::update(const float &dt)
             mSounds.toggleMusicMute();
         }
 
+    // Update the leaderboard
+    case GameState::LEADERBOARD_MENU:
+        m_pLeaderboards->update();
+
     default:
         break;
     }
@@ -492,7 +495,7 @@ bool UGame::handleEvent(SDL_Event &e)
 {
     if (e.type == SDL_QUIT) { return true; }
 
-    if (mCurrState != GameState::SETTINGS_MENU)
+    if (mCurrState != GameState::SETTINGS_MENU || mCurrState != GameState::LEADERBOARD_MENU)
     {
         mHamster.handleEvent(e);
     }
@@ -535,6 +538,11 @@ bool UGame::handleEvent(SDL_Event &e)
             m_pLeaderboards->ShowFastestRun();
         }
 // #endif
+    }
+    else if (mCurrState == GameState::LEADERBOARD_MENU)
+    {
+        // Handle the leaderboard events
+        m_pLeaderboards->handleEvent(e);
     }
 
     return false;

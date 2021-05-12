@@ -124,6 +124,14 @@ bool GButton::clicked()
     }
 }
 
+// Set the buttons position
+void GButton::setPosition(const UVector3& aPosition)
+{
+    // Center buttons position around the argument's position value
+    mPosition.x = aPosition.x - (mTileWidth / 2.0);
+    mPosition.y = aPosition.y - (mTileHeight / 2.0);
+}
+
 // Deallocate the resources allocated for this file
 void GButton::free()
 {

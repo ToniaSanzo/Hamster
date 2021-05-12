@@ -6,17 +6,55 @@
 * File: Hamster STEAM_Leaderbaords.cpp
 */
 #include "STEAM_Leaderboards.h"
+#include "cassert"
 
 // Leaderboard names
 #define LEADERBOARD_FASTEST_RUN "FastestRun"
 #define LEADERBOARD_LONGEST_DISTANCE "TotalLoops"
 
+// Metadata about leaderboard entries
+struct LeaderboardEntry
+{
+    ELeaderboardEntryOption m_eOption;
+    std::string m_name;
+    int32 m_nScore;
+    int32 m_nGlobalRank;
+
+    // Default Constructor
+    LeaderboardEntry()
+    {
+        m_eOption = ELeaderboardEntryOption::k_EInvalid;
+        m_name = "";
+        m_nScore = 0;
+        m_nGlobalRank = 0;
+    }
+
+    // Construct a valid leaderboard entry
+    LeaderboardEntry(std::string a_name, int32 a_nScore, int32 m_nGlobalRank)
+    {
+        m_eOption = ELeaderboardEntryOption::k_EValid;
+        m_name = a_name;
+        m_nScore = a_nScore;
+        m_nGlobalRank = m_nGlobalRank;
+    } 
+
+    // Construct an empty leaderboard entry, with a specified option
+    LeaderboardEntry(ELeaderboardEntryOption a_eOption)
+    {
+        m_eOption = a_eOption;
+        m_name = "";
+        m_nScore = 0;
+        m_nGlobalRank = 0;
+    }
+};
+
 // Menu that shows a leaderboard
 class STEAM_LeaderboardMenu
 {
-    static const int k_nMaxLeaderboardEntries = 10;						// maximum number of leaderboard entries we can display
-    LeaderboardEntry_t m_leaderboardEntries[k_nMaxLeaderboardEntries];	// leaderboard entries we received from DownloadLeaderboardEntries
-    int m_nLeaderboardEntries;											// number of leaderboard entries we received
+    static const int k_nMaxLeaderboardEntries = 10;		// maximum number of leaderboard entries we can display
+    std::vector<LeaderboardEntry> m_leaderboardEntries;	// leaderboard entries we received from DownloadLeaderboardEntries
+    LeaderboardEntry* m_usersEntry;                     // The current user's leaderboard entry
+    int m_nLeaderboardEntries;							// number of leaderboard entries we received
 
     SteamLeaderboard_t m_hSteamLeaderboard;			// handle to the leaderboard we are displaying
     ELeaderboardDataRequest m_eLeaderboardData;		// type of data we are displaying
@@ -37,11 +75,18 @@ public:
         m_nLeaderboardEntries = 0;
         m_bLoading = false;
         m_bIOFailure = false;
+        m_usersEntry = nullptr;
     }
 
     // Destructor
     ~STEAM_LeaderboardMenu()
     {
+        if (m_usersEntry)
+        {
+            delete m_usersEntry;
+            m_usersEntry = nullptr;
+        }
+
         m_texFastRunBoard.free();
         m_texLongDistanceBoard.free();
         m_texExitBtn.free();
@@ -115,57 +160,89 @@ public:
     // Creates a leaderboard menu
     void Rebuild()
     {
-        if (m_hSteamLeaderboard)
-        {
-            // create a header for the leaderboard
-
-            std::string strName = "Leaderboard: ";
-            strName += SteamUserStats()->GetLeaderboardName(m_hSteamLeaderboard);
-
-            if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobal)
-                strName += ", Top 10\n";
-            else if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobalAroundUser)
-                strName += ", Around User\n";
-            else if (m_eLeaderboardData == k_ELeaderboardDataRequestFriends)
-                strName += ", Friends of User\n";
-
-            printf(strName.c_str());
-        }
-
-        // Create leaderboard
+        // If the Leaderboard is loading set the user xor leaderboard entry as loading
         if (!m_hSteamLeaderboard || m_bLoading)
         {
-            printf("Loading...\n");
+            // Make sure to only erase the leaderboard entries if not requesting just
+            // the current user
+            if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobal)
+            {
+                m_leaderboardEntries.clear();
+                m_leaderboardEntries.push_back(LeaderboardEntry(ELeaderboardEntryOption::k_ELoading));
+            }
+
+            // Make sure to only erase the user entry if requesting just the current user
+            else if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobalAroundUser)
+            {
+                if (m_usersEntry)
+                {
+                    delete m_usersEntry;
+                    m_usersEntry = nullptr;
+                }
+                m_usersEntry = new LeaderboardEntry(ELeaderboardEntryOption::k_ELoading);
+            }
         }
+
+        // If an IO Failure occurs set the user and leaderboard entries as IO failure
         else if (m_bIOFailure)
         {
-            printf("Network failure!\n");
+            m_leaderboardEntries.clear();
+            m_leaderboardEntries.push_back(LeaderboardEntry(ELeaderboardEntryOption::k_EIOFail));
+
+            if (m_usersEntry)
+            {
+                delete m_usersEntry;
+                m_usersEntry = nullptr;
+            }
+            m_usersEntry = new LeaderboardEntry(ELeaderboardEntryOption::k_EIOFail);
         }
+
+        // Populate the leaderboard entries
         else
         {
             if (m_nLeaderboardEntries == 0)
             {
-                // Requesting for global scores around the user will return successfully with 0 results if the
-                // user does not have an entry on the leaderboard
-
+                // If requesting global scores around the user returns successfully with 0 results
+                // the user does not have an entry on the leaderboard
                 std::string strText;         
-                if (m_eLeaderboardData != k_ELeaderboardDataRequestGlobalAroundUser)
+                if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobalAroundUser)
                 {
-                    strText = "No scores for this leaderboard\n";
-                }
-                else
-                {
-                    strText = SteamFriends()->GetPersonaName();
-                    strText += " does not have a score for this leaderboard\n";
+                    if (m_usersEntry)
+                    {
+                        delete m_usersEntry;
+                        m_usersEntry = nullptr;
+                    }
+                    m_usersEntry = new LeaderboardEntry(ELeaderboardEntryOption::k_ENoScore);
                 }
 
-                printf(strText.c_str());
+                // If not requesting global scores aro
+                else if(m_eLeaderboardData == k_ELeaderboardDataRequestGlobal)
+                {
+                    m_leaderboardEntries.clear();
+                    m_leaderboardEntries.push_back(LeaderboardEntry(ELeaderboardEntryOption::k_ENoScore));
+                }
             }
 
             for (int index = 0; index < m_nLeaderboardEntries; index++)
             {
-                std::string name(SteamFriends()->GetFriendPersonaName(m_leaderboardEntries[index].m_steamIDUser));
-                printf("(%d) %s - %d\n", m_leaderboardEntries[index].m_nGlobalRank, name.c_str(), m_leaderboardEntries[index].m_nScore);
+                switch(m_leaderboardEntries[index].m_eOption)
+                {
+                case ELeaderboardEntryOption::k_ELoading:
+                    printf("Loading...\n");
+                    break;
+                case ELeaderboardEntryOption::k_EIOFail:
+                    printf("Network failure\n");
+                    break;
+                case ELeaderboardEntryOption::k_ENoScore:
+                    printf("No score\n");
+                    break;
+                case ELeaderboardEntryOption::k_EInvalid:
+                    printf("Invalid\n");
+                    break;
+                case ELeaderboardEntryOption::k_EValid:
+                    printf("(%d) %s - %d\n", m_leaderboardEntries[index].m_nGlobalRank, m_leaderboardEntries[index].m_name.c_str(), m_leaderboardEntries[index].m_nScore);
+                    break;
+                }
             }
         }  
     }
@@ -173,15 +250,46 @@ public:
     // Called when SteamUserStats()->DownloadLeaderboardEntries() returns asynchronously
     void OnLeaderboardDownloadedEntries(LeaderboardScoresDownloaded_t* pLeaderboardScoresDownloaded, bool bIOFailure)
     {
+        LeaderboardEntry_t tmpLdBdEntry;
         m_bLoading = false;
         m_bIOFailure = bIOFailure;
+
+        // Make sure that the leaderboard entries are empty
+        if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobal)
+        {
+            if (m_leaderboardEntries.empty())
+            {
+                for (LeaderboardEntry& e : m_leaderboardEntries)
+                {
+                    printf("%d\n", e.m_eOption);
+                }
+            }
+
+        }
 
         // leaderboard entries handle will be invalid once we return from this function. Copy all data now.
         m_nLeaderboardEntries = MIN(pLeaderboardScoresDownloaded->m_cEntryCount, k_nMaxLeaderboardEntries);
         for (int index = 0; index < m_nLeaderboardEntries; index++)
         {
+            // Store the downloaded leaderboard entry in tmpLBEntry
             SteamUserStats()->GetDownloadedLeaderboardEntry(pLeaderboardScoresDownloaded->m_hSteamLeaderboardEntries,
-                index, &m_leaderboardEntries[index], NULL, 0);
+                index, &tmpLdBdEntry, NULL, 0);
+
+            // Parse the data from tmpLdBdEntry into the appropriate LeaderboardEntry(s)
+            if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobal)
+            {
+                m_leaderboardEntries.push_back(LeaderboardEntry(SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser), tmpLdBdEntry.m_nScore, tmpLdBdEntry.m_nGlobalRank));
+            }
+
+            // Used to get the users leaderboard entry
+            else if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobalAroundUser)
+            {
+                // Assert m_usersEntry is the nullptr
+                assert(!m_usersEntry);
+
+                // Load the users entry
+                m_usersEntry = new LeaderboardEntry(SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser), tmpLdBdEntry.m_nScore, tmpLdBdEntry.m_nGlobalRank);
+            }
         }
 
         // show our new data
@@ -224,7 +332,7 @@ bool STEAM_Leaderboards::init(SDL_Renderer* a_pRenderer)
         success = false;
     }
 
-    if (!m_btnDirectionArrow.init(a_pRenderer, "assets/direction_arrows.png", DIRECTION_BTN_POSITON, OPTION_BTN_DIMENSION))
+    if (!m_btnDirectionArrow.init(a_pRenderer, "assets/direction_arrows.png", DIRECTION_BTN_POSITON_1, OPTION_BTN_DIMENSION))
     {
         printf("Failed to load the direction arrow button!\n");
         success = false;
@@ -234,12 +342,21 @@ bool STEAM_Leaderboards::init(SDL_Renderer* a_pRenderer)
 }
 
 // Run a frame for the STEAM_Leaderboards
-void STEAM_Leaderboards::update(const float &dt)
+void STEAM_Leaderboards::update()
 {
-    //printf("STEAM_Leaderboards RunFrame called.\n");
     if (m_btnDirectionArrow.clicked())
     {
-        m_bRenderFastRunLeaderboard = !m_bRenderFastRunLeaderboard;
+        if (m_bRenderFastRunLeaderboard)
+        {
+            m_bRenderFastRunLeaderboard = false;
+            m_btnDirectionArrow.setPosition(DIRECTION_BTN_POSITION_2);
+        }
+        else
+        {
+            m_bRenderFastRunLeaderboard = true;
+            m_btnDirectionArrow.setPosition(DIRECTION_BTN_POSITON_1);
+
+        }
     }
 }
 
@@ -263,7 +380,7 @@ void STEAM_Leaderboards::render()
     m_pLeaderboardMenu->Render(m_bRenderFastRunLeaderboard);
     if (m_bRenderFastRunLeaderboard)
     {
-        m_btnDirectionArrow.render(0);
+        m_btnDirectionArrow.render(1);
     }
     else
     {

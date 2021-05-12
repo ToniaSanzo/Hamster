@@ -23,7 +23,18 @@
 
 // Button Dimensions
 #define OPTION_BTN_DIMENSION UVector3{65, 65, 0}
-#define DIRECTION_BTN_POSITON UVector3{817, 92, 0}
+#define DIRECTION_BTN_POSITON_1 UVector3{817, 92, 0}
+#define DIRECTION_BTN_POSITION_2 UVector3{472, 92, 0}
+
+// Options for different leaderboard entries
+enum ELeaderboardEntryOption
+{
+    k_ELoading = 0,
+    k_EIOFail = 1,
+    k_ENoScore = 2,
+    k_EValid = 3,
+    k_EInvalid = 4
+};
 
 struct ULib
 {

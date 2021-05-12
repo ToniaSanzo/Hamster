@@ -29,6 +29,9 @@ public:
     // Checks if the button was clicked, and reset's the button
     bool clicked();
 
+    // Set the buttons position 
+    void setPosition(const UVector3 &);
+
     // Free the resources allocated to the GButton
     void free();
 
