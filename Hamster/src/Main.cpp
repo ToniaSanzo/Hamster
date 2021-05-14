@@ -120,7 +120,7 @@ void close()
 int main(int argc, char *args[]) 
 {
     // Hide the console window at startup
-    // ::ShowWindow(::GetConsoleWindow(), SW_HIDE);
+    ::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 
     // Start up SDL and create window
     if (!init()) 
