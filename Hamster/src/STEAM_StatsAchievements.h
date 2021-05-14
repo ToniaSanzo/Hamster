@@ -59,6 +59,9 @@ public:
 	// Free allocated resources
 	void free();
 
+	// used to prevent the user from clicking the trophies too soon
+	bool m_bUsersStatsRecieved = false;
+
 	// Our Steam callbacks
 	STEAM_CALLBACK(STEAM_StatsAchievements, onUserStatsReceived, UserStatsReceived_t, m_CallbackUserStatsReceived);
 	STEAM_CALLBACK(STEAM_StatsAchievements, onUserStatsStored, UserStatsStored_t, m_CallbackUserStatsStored);

@@ -152,7 +152,7 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
         mInputHeaderTexture1.initUTexture(mRenderer);
         mInputHeaderTexture1.initFont(mMediumFont);
         // Load the input header text
-        if (!mInputHeaderTexture1.loadFromRenderedText("New Hi-Score!", BLACK_TEXT))
+        if (!mInputHeaderTexture1.loadFromRenderedText("New Local Hi-Score!", BLACK_TEXT))
         {
             printf("Failed to load input header 1!\n");
                 success = false;
@@ -468,7 +468,7 @@ void UFont::setHighscore(unsigned int aHighScore)
 {
     mHighscore = aHighScore;
     std::string tmpStr = std::to_string(mHighscore);
-    tmpStr = "Hi-Score: " + tmpStr + " " + mUsername;
+    tmpStr = "Local Hi-Score: " + tmpStr + " " + mUsername;
     mHighscoreTexture.loadFromRenderedText(tmpStr.c_str(), BLACK_TEXT);
 }
 
@@ -477,7 +477,7 @@ void UFont::setHighscoreUsername(std::string aUsername)
 {
     mUsername = aUsername;
     std::string tmpStr = std::to_string(mHighscore);
-    tmpStr = "Hi-Score: " + tmpStr + " " + mUsername;
+    tmpStr = "Local Hi-Score: " + tmpStr + " " + mUsername;
     mHighscoreTexture.loadFromRenderedText(tmpStr.c_str(), BLACK_TEXT);
 }
 

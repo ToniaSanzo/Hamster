@@ -267,14 +267,14 @@ public:
 
         for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
         {
-            m_texLeaderboardEntriesRank[i].render(200, 160 + (25 * i));
-            m_texLeaderboardEntriesName[i].render(250, 160 + (25 * i));
-            m_texLeaderboardEntriesScore[i].render(800, 160 + (25 * i));
+            m_texLeaderboardEntriesRank[i].render(446, 137 + (36 * i));
+            m_texLeaderboardEntriesName[i].render(515, 137 + (36 * i));
+            m_texLeaderboardEntriesScore[i].render(762, 137 + (36 * i));
         }
 
-        m_texUserEntryRank.render(200, 600);
-        m_texUserEntryName.render(250, 600);
-        m_texUserEntryScore.render(800, 600);
+        m_texUserEntryRank.render(460, 620);
+        m_texUserEntryName.render(520, 620);
+        m_texUserEntryScore.render(770, 620);
     }
 
     // Creates a leaderboard menu
@@ -292,7 +292,7 @@ public:
                 
                 for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
                 {
-                    assert(m_texLeaderboardEntriesName[i].loadFromRenderedText("Loading...", BLACK_TEXT));
+                    assert(m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT));
                     assert(m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT));
                     assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT));
                 }
@@ -307,9 +307,9 @@ public:
                     m_usersEntry = nullptr;
                 }
                 m_usersEntry = new LeaderboardEntry(ELeaderboardEntryOption::k_ELoading);
-                assert(m_texUserEntryName.loadFromRenderedText("Loading...", BLACK_TEXT));
                 assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
-                assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
+                assert(m_texUserEntryRank.loadFromRenderedText(" ", BLACK_TEXT));
+                assert(m_texUserEntryScore.loadFromRenderedText(" ", BLACK_TEXT));
             }
         }
 
@@ -321,7 +321,7 @@ public:
 
             for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
             {
-                assert(m_texLeaderboardEntriesName[i].loadFromRenderedText("Network IO Failure", BLACK_TEXT));
+                assert(m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT));
                 assert(m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT));
                 assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT));
             }
@@ -332,9 +332,9 @@ public:
                 m_usersEntry = nullptr;
             }
             m_usersEntry = new LeaderboardEntry(ELeaderboardEntryOption::k_EIOFail);
-            assert(m_texUserEntryName.loadFromRenderedText("Network IO Failure", BLACK_TEXT));
             assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
-            assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
+            assert(m_texUserEntryRank.loadFromRenderedText(" ", BLACK_TEXT));
+            assert(m_texUserEntryScore.loadFromRenderedText(" ", BLACK_TEXT));
         }
 
         // Populate the leaderboard entries
@@ -355,8 +355,8 @@ public:
 
                     m_usersEntry = new LeaderboardEntry(ELeaderboardEntryOption::k_ENoScore);
                     assert(m_texUserEntryName.loadFromRenderedText("No score", BLACK_TEXT));
-                    assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
-                    assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
+                    assert(m_texUserEntryRank.loadFromRenderedText(" ", BLACK_TEXT));
+                    assert(m_texUserEntryScore.loadFromRenderedText(" ", BLACK_TEXT));
                 }
 
                 // If not requesting global scores aro
@@ -372,7 +372,7 @@ public:
                         assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT));
                     }
 
-                    assert(m_texLeaderboardEntriesName[0].loadFromRenderedText("No score", BLACK_TEXT));
+                    assert(m_texLeaderboardEntriesName[0].loadFromRenderedText(" ", BLACK_TEXT));
                 }
             }
 
@@ -527,7 +527,21 @@ void STEAM_Leaderboards::update()
         {
             m_bRenderFastRunLeaderboard = true;
             m_btnDirectionArrow.setPosition(DIRECTION_BTN_POSITON_1);
+            ShowFastestRun();
         }
+    }
+}
+
+// Shows / refreshes leaderboard (depends on current leaderboard status)
+void STEAM_Leaderboards::ShowLeaderboardData()
+{
+    if (m_bRenderFastRunLeaderboard)
+    {
+        ShowFastestRun();
+    }
+    else
+    {
+        ShowLongestDistance();
     }
 }
 

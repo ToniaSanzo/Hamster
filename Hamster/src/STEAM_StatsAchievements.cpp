@@ -219,7 +219,8 @@ void STEAM_StatsAchievements::storeStatsIfNecessary()
 // We have recieved stats data from Steam. We then immediately update our data.
 void STEAM_StatsAchievements::onUserStatsReceived(UserStatsReceived_t *pCallback)
 {
-      printf("OnUserStatsReceived Callback\n");
+    printf("OnUserStatsReceived Callback\n");
+    m_bUsersStatsRecieved = true;
     if (!mSteamUserStats)
         return;
 

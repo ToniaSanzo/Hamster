@@ -45,6 +45,9 @@ public:
     */
     void handleEvent(SDL_Event&);
 
+    // Shows / refreshes leaderboard (depends on current leaderboard status)
+    void ShowLeaderboardData();
+
     // Shows / refreshes leaderboard (fastest run)
     void ShowFastestRun();
 

@@ -301,7 +301,7 @@ void UGame::update(const float &dt)
     }
 
     // Check if the leaderboard button has been clicked
-    if (mLeaderboardButton.clicked())
+    if (m_pStatsAndAchievements->m_bUsersStatsRecieved && mLeaderboardButton.clicked())
     {
         // Close the leaderboard menu
         if (mCurrState == GameState::LEADERBOARD_MENU)
