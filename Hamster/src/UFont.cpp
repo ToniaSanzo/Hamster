@@ -13,12 +13,6 @@ const UVector3 UFont::Z_SPAWN_POS = UVector3(380, 470, 0);
 // The SleepZ string to render
 const std::string UFont::Z_STRING = "z";
 
-// The countdown text is black
-const SDL_Color UFont::BLACK_TEXT = SDL_Color{ 0, 0, 0, 0xFF };
-
-// The game clock is orange
-const SDL_Color UFont::ORANGE_TEXT = SDL_Color{ 0xFF, 0x95, 0, 0xFF };
-
 // The total play time in seconds
 const int UFont::PLAY_TIME_SECONDS = 34;
 
@@ -516,6 +510,7 @@ void UFont::free()
     // Free fonts
     TTF_CloseFont(mSleepFont);
     TTF_CloseFont(mCountdownFont);
+    mCountdownFont = nullptr;
     mSleepFont = nullptr;
 
     // Prevent dangling pointers

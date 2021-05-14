@@ -10,6 +10,7 @@
 #include "Windows.h"
 #include "UGame.h"
 #include "../../Steam/steam_api.h"
+#define _CRT_SECURE_NO_WARNINGS
 
 // Our custom window and renderer
 UWindow gWindow;
@@ -119,7 +120,7 @@ void close()
 int main(int argc, char *args[]) 
 {
     // Hide the console window at startup
-    //::ShowWindow(::GetConsoleWindow(), SW_HIDE);
+    // ::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 
     // Start up SDL and create window
     if (!init()) 

@@ -30,12 +30,12 @@ struct LeaderboardEntry
     }
 
     // Construct a valid leaderboard entry
-    LeaderboardEntry(std::string a_name, int32 a_nScore, int32 m_nGlobalRank)
+    LeaderboardEntry(std::string a_name, int32 a_nScore, int32 a_nGlobalRank)
     {
         m_eOption = ELeaderboardEntryOption::k_EValid;
         m_name = a_name;
         m_nScore = a_nScore;
-        m_nGlobalRank = m_nGlobalRank;
+        m_nGlobalRank = a_nGlobalRank;
     } 
 
     // Construct an empty leaderboard entry, with a specified option
@@ -61,6 +61,12 @@ class STEAM_LeaderboardMenu
     bool m_bLoading;								// waiting to receive leaderboard results
     bool m_bIOFailure;								// last attempt to retrieve the leaderboard failed
 
+    TTF_Font* m_fntLeaderboard;                                           // Leaderboard font
+    std::vector<UTexture> m_texLeaderboardEntriesRank;                    // Top ten leaderboard entry rank texture
+    std::vector<UTexture> m_texLeaderboardEntriesName;                    // Top ten leaderboard entry name texture
+    std::vector<UTexture> m_texLeaderboardEntriesScore;                   // Top ten leaderboard entry score texture
+    UTexture m_texUserEntryRank, m_texUserEntryName, m_texUserEntryScore; // Users leaderboard entry
+
     CCallResult<STEAM_LeaderboardMenu, LeaderboardScoresDownloaded_t> m_callResultDownloadEntries;
 
     // Leaderboard menu texture assets
@@ -76,6 +82,7 @@ public:
         m_bLoading = false;
         m_bIOFailure = false;
         m_usersEntry = nullptr;
+        m_fntLeaderboard = nullptr;
     }
 
     // Destructor
@@ -87,6 +94,28 @@ public:
             m_usersEntry = nullptr;
         }
 
+        if (m_fntLeaderboard)
+        {
+            TTF_CloseFont(m_fntLeaderboard);
+            m_fntLeaderboard = nullptr;
+        }
+
+        // Free textures
+        for (UTexture& e : m_texLeaderboardEntriesRank)
+        {
+            e.free();
+        }
+        for (UTexture& e : m_texLeaderboardEntriesName)
+        {
+            e.free();
+        }
+        for (UTexture& e : m_texLeaderboardEntriesScore)
+        {
+            e.free();
+        }
+        m_texUserEntryRank.free();
+        m_texUserEntryName.free();
+        m_texUserEntryScore.free();
         m_texFastRunBoard.free();
         m_texLongDistanceBoard.free();
         m_texExitBtn.free();
@@ -119,12 +148,84 @@ public:
                 std::printf("Failed to load exit button!\n");
                 success = false;
             }
+
+            // Init leaderboard font
+            m_fntLeaderboard = TTF_OpenFont("assets/font.ttf", 18);
+            if (!m_fntLeaderboard)
+            {
+                printf("Failed to load leaderboard font, SDL_ttf Error: %s\n", TTF_GetError());
+                success = false;
+            }
+
+            // Init the leaderboard textures
+            for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
+            {
+                m_texLeaderboardEntriesRank.push_back(UTexture());
+                m_texLeaderboardEntriesRank.back().initUTexture(a_pRenderer);
+                m_texLeaderboardEntriesRank.back().initFont(m_fntLeaderboard);
+
+                if (!m_texLeaderboardEntriesRank.back().loadFromRenderedText(" ", BLACK_TEXT))
+                {
+                    printf("Failed to load leaderboard entry rank texture!\n");
+                    success = false;
+                }
+
+                m_texLeaderboardEntriesName.push_back(UTexture());
+                m_texLeaderboardEntriesName.back().initUTexture(a_pRenderer);
+                m_texLeaderboardEntriesName.back().initFont(m_fntLeaderboard);
+
+                if (!m_texLeaderboardEntriesName.back().loadFromRenderedText(" ", BLACK_TEXT))
+                {
+                    printf("Failed to load leaderboard entry name texture!\n");
+                    success = false;
+                }
+
+                m_texLeaderboardEntriesScore.push_back(UTexture());
+                m_texLeaderboardEntriesScore.back().initUTexture(a_pRenderer);
+                m_texLeaderboardEntriesScore.back().initFont(m_fntLeaderboard);
+
+                if (!m_texLeaderboardEntriesScore.back().loadFromRenderedText(" ", BLACK_TEXT))
+                {
+                    printf("Failed to load leaderboard entry score texture!\n");
+                    success = false;
+                }
+            }
+
+            m_texUserEntryRank = UTexture();
+            m_texUserEntryRank.initUTexture(a_pRenderer);
+            m_texUserEntryRank.initFont(m_fntLeaderboard);
+
+            if (!m_texUserEntryRank.loadFromRenderedText(" ", BLACK_TEXT))
+            {
+                printf("Failed to load user entry rank texture!\n");
+                success = false;
+            }
+
+            m_texUserEntryName = UTexture();
+            m_texUserEntryName.initUTexture(a_pRenderer);
+            m_texUserEntryName.initFont(m_fntLeaderboard);
+
+            if (!m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT))
+            {
+                printf("Failed to load user entry name texture!\n");
+                success = false;
+            }
+
+            m_texUserEntryScore = UTexture();
+            m_texUserEntryScore.initUTexture(a_pRenderer);
+            m_texUserEntryScore.initFont(m_fntLeaderboard);
+
+            if (!m_texUserEntryScore.loadFromRenderedText(" ", BLACK_TEXT))
+            {
+                printf("Failed to load user entry score texture!\n");
+                success = false;
+            }
         }
         return success;
     }
 
     // Menu that shows a leaderboard
-    void ShowLeaderboard(SteamLeaderboard_t hLeaderboard, ELeaderboardDataRequest eLeaderboardData, int offset)
+    void ShowLeaderboard(SteamLeaderboard_t hLeaderboard, ELeaderboardDataRequest eLeaderboardData)
     {
         m_hSteamLeaderboard = hLeaderboard;
         m_eLeaderboardData = eLeaderboardData;
@@ -133,12 +234,20 @@ public:
 
         if (hLeaderboard)
         {
-            // load the specified leaderboard data. We only display k_nMaxLeaderboardEntries entries at a time
-            SteamAPICall_t hSteamAPICall = SteamUserStats()->DownloadLeaderboardEntries(hLeaderboard, eLeaderboardData,
-                offset, offset + k_nMaxLeaderboardEntries);
-
-            // Register for the async callback
-            m_callResultDownloadEntries.Set(hSteamAPICall, this, &STEAM_LeaderboardMenu::OnLeaderboardDownloadedEntries);
+            // load the top ten leaderboard data. We only display k_nMaxLeaderboardEntries entries at a time
+            if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobal)
+            {
+                SteamAPICall_t hSteamAPICall = SteamUserStats()->DownloadLeaderboardEntries(hLeaderboard, eLeaderboardData, 0, k_nMaxLeaderboardEntries);
+                // Register for the async callback
+                m_callResultDownloadEntries.Set(hSteamAPICall, this, &STEAM_LeaderboardMenu::OnLeaderboardDownloadedEntries);
+            }
+            // load the current users
+            else if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobalAroundUser)
+            {
+                SteamAPICall_t hSteamAPICall = SteamUserStats()->DownloadLeaderboardEntries(hLeaderboard, eLeaderboardData, 0, 1);
+                // Register for the async callback
+                m_callResultDownloadEntries.Set(hSteamAPICall, this, &STEAM_LeaderboardMenu::OnLeaderboardDownloadedEntries);
+            }
         }
 
         Rebuild();
@@ -155,6 +264,17 @@ public:
         {
             m_texLongDistanceBoard.render((ULib::SCREEN_DIMENSIONS.x - m_texLongDistanceBoard.getWidth()) / 2.f, (ULib::SCREEN_DIMENSIONS.y - m_texLongDistanceBoard.getHeight()) / 2.f);
         }
+
+        for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
+        {
+            m_texLeaderboardEntriesRank[i].render(200, 160 + (25 * i));
+            m_texLeaderboardEntriesName[i].render(250, 160 + (25 * i));
+            m_texLeaderboardEntriesScore[i].render(800, 160 + (25 * i));
+        }
+
+        m_texUserEntryRank.render(200, 600);
+        m_texUserEntryName.render(250, 600);
+        m_texUserEntryScore.render(800, 600);
     }
 
     // Creates a leaderboard menu
@@ -169,6 +289,13 @@ public:
             {
                 m_leaderboardEntries.clear();
                 m_leaderboardEntries.push_back(LeaderboardEntry(ELeaderboardEntryOption::k_ELoading));
+                
+                for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
+                {
+                    assert(m_texLeaderboardEntriesName[i].loadFromRenderedText("Loading...", BLACK_TEXT));
+                    assert(m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT));
+                    assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT));
+                }
             }
 
             // Make sure to only erase the user entry if requesting just the current user
@@ -180,6 +307,9 @@ public:
                     m_usersEntry = nullptr;
                 }
                 m_usersEntry = new LeaderboardEntry(ELeaderboardEntryOption::k_ELoading);
+                assert(m_texUserEntryName.loadFromRenderedText("Loading...", BLACK_TEXT));
+                assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
+                assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
             }
         }
 
@@ -189,12 +319,22 @@ public:
             m_leaderboardEntries.clear();
             m_leaderboardEntries.push_back(LeaderboardEntry(ELeaderboardEntryOption::k_EIOFail));
 
+            for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
+            {
+                assert(m_texLeaderboardEntriesName[i].loadFromRenderedText("Network IO Failure", BLACK_TEXT));
+                assert(m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT));
+                assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT));
+            }
+
             if (m_usersEntry)
             {
                 delete m_usersEntry;
                 m_usersEntry = nullptr;
             }
             m_usersEntry = new LeaderboardEntry(ELeaderboardEntryOption::k_EIOFail);
+            assert(m_texUserEntryName.loadFromRenderedText("Network IO Failure", BLACK_TEXT));
+            assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
+            assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
         }
 
         // Populate the leaderboard entries
@@ -212,7 +352,11 @@ public:
                         delete m_usersEntry;
                         m_usersEntry = nullptr;
                     }
+
                     m_usersEntry = new LeaderboardEntry(ELeaderboardEntryOption::k_ENoScore);
+                    assert(m_texUserEntryName.loadFromRenderedText("No score", BLACK_TEXT));
+                    assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
+                    assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
                 }
 
                 // If not requesting global scores aro
@@ -220,31 +364,56 @@ public:
                 {
                     m_leaderboardEntries.clear();
                     m_leaderboardEntries.push_back(LeaderboardEntry(ELeaderboardEntryOption::k_ENoScore));
+
+                    for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
+                    {
+                        assert(m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT));
+                        assert(m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT));
+                        assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT));
+                    }
+
+                    assert(m_texLeaderboardEntriesName[0].loadFromRenderedText("No score", BLACK_TEXT));
                 }
             }
 
-            for (int index = 0; index < m_nLeaderboardEntries; index++)
+            // Print the parsed top ten leaderboard data
+            else if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobal)
             {
-                switch(m_leaderboardEntries[index].m_eOption)
+                // clear leaderboard entry textures
+                for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
                 {
-                case ELeaderboardEntryOption::k_ELoading:
-                    printf("Loading...\n");
-                    break;
-                case ELeaderboardEntryOption::k_EIOFail:
-                    printf("Network failure\n");
-                    break;
-                case ELeaderboardEntryOption::k_ENoScore:
-                    printf("No score\n");
-                    break;
-                case ELeaderboardEntryOption::k_EInvalid:
-                    printf("Invalid\n");
-                    break;
-                case ELeaderboardEntryOption::k_EValid:
-                    printf("(%d) %s - %d\n", m_leaderboardEntries[index].m_nGlobalRank, m_leaderboardEntries[index].m_name.c_str(), m_leaderboardEntries[index].m_nScore);
-                    break;
+                    assert(m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT));
+                    assert(m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT));
+                    assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT));
+                }
+
+                for (int i = 0; i < m_leaderboardEntries.size(); ++i)
+                {
+                    if (m_leaderboardEntries[i].m_eOption == ELeaderboardEntryOption::k_EValid)
+                    {
+                        assert(m_texLeaderboardEntriesName[i].loadFromRenderedText(m_leaderboardEntries[i].m_name, BLACK_TEXT));
+                        assert(m_texLeaderboardEntriesRank[i].loadFromRenderedText(std::to_string(m_leaderboardEntries[i].m_nGlobalRank), BLACK_TEXT));
+                        assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(std::to_string(m_leaderboardEntries[i].m_nScore), BLACK_TEXT));
+                    }
+                }
+
+                // Get the current users leaderboard data
+                ShowLeaderboard(m_hSteamLeaderboard, k_ELeaderboardDataRequestGlobalAroundUser);
+            }
+
+            // Print the parsed current user leaderboard data
+            else if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobalAroundUser)
+            {
+                assert(m_usersEntry);
+                
+                if (m_usersEntry->m_eOption == ELeaderboardEntryOption::k_EValid)
+                {
+                    assert(m_texUserEntryName.loadFromRenderedText(m_usersEntry->m_name, BLACK_TEXT));
+                    assert(m_texUserEntryRank.loadFromRenderedText(std::to_string(m_usersEntry->m_nGlobalRank), BLACK_TEXT));
+                    assert(m_texUserEntryScore.loadFromRenderedText(std::to_string(m_usersEntry->m_nScore), BLACK_TEXT));
                 }
             }
-        }  
+        }
     }
 
     // Called when SteamUserStats()->DownloadLeaderboardEntries() returns asynchronously
@@ -254,18 +423,7 @@ public:
         m_bLoading = false;
         m_bIOFailure = bIOFailure;
 
-        // Make sure that the leaderboard entries are empty
-        if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobal)
-        {
-            if (m_leaderboardEntries.empty())
-            {
-                for (LeaderboardEntry& e : m_leaderboardEntries)
-                {
-                    printf("%d\n", e.m_eOption);
-                }
-            }
-
-        }
+        printf("USER NAME: %s\n", SteamFriends()->GetPersonaName());
 
         // leaderboard entries handle will be invalid once we return from this function. Copy all data now.
         m_nLeaderboardEntries = MIN(pLeaderboardScoresDownloaded->m_cEntryCount, k_nMaxLeaderboardEntries);
@@ -274,6 +432,8 @@ public:
             // Store the downloaded leaderboard entry in tmpLBEntry
             SteamUserStats()->GetDownloadedLeaderboardEntry(pLeaderboardScoresDownloaded->m_hSteamLeaderboardEntries,
                 index, &tmpLdBdEntry, NULL, 0);
+
+            printf("(% d) % s - % d\n", tmpLdBdEntry.m_nGlobalRank, SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser), tmpLdBdEntry.m_nScore);
 
             // Parse the data from tmpLdBdEntry into the appropriate LeaderboardEntry(s)
             if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobal)
@@ -285,10 +445,19 @@ public:
             else if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobalAroundUser)
             {
                 // Assert m_usersEntry is the nullptr
-                assert(!m_usersEntry);
+                if (m_usersEntry)
+                {
+                    delete m_usersEntry;
+                    m_usersEntry = nullptr;
+                }
 
                 // Load the users entry
-                m_usersEntry = new LeaderboardEntry(SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser), tmpLdBdEntry.m_nScore, tmpLdBdEntry.m_nGlobalRank);
+                printf("%s ?= %s\n", SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser), SteamFriends()->GetPersonaName());
+                if (strcmp(SteamFriends()->GetPersonaName(), SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser)) == 0)
+                {
+                    m_usersEntry = new LeaderboardEntry(SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser), tmpLdBdEntry.m_nScore, tmpLdBdEntry.m_nGlobalRank);
+                    break;
+                }
             }
         }
 
@@ -338,6 +507,8 @@ bool STEAM_Leaderboards::init(SDL_Renderer* a_pRenderer)
         success = false;
     }
 
+    ShowFastestRun();
+
     return success;
 }
 
@@ -350,12 +521,12 @@ void STEAM_Leaderboards::update()
         {
             m_bRenderFastRunLeaderboard = false;
             m_btnDirectionArrow.setPosition(DIRECTION_BTN_POSITION_2);
+            ShowLongestDistance();
         }
         else
         {
             m_bRenderFastRunLeaderboard = true;
             m_btnDirectionArrow.setPosition(DIRECTION_BTN_POSITON_1);
-
         }
     }
 }
@@ -364,14 +535,14 @@ void STEAM_Leaderboards::update()
 void STEAM_Leaderboards::ShowFastestRun()
 {
     // we want to show the top 10 fastest run. To do so, we request global score data beginning at 0
-    m_pLeaderboardMenu->ShowLeaderboard(m_hFastestRunLeaderboard, k_ELeaderboardDataRequestGlobal, 0);
+    m_pLeaderboardMenu->ShowLeaderboard(m_hFastestRunLeaderboard, k_ELeaderboardDataRequestGlobal);
 }
 
 // Shows / refreshes leaderboard (longest distance)
 void STEAM_Leaderboards::ShowLongestDistance()
 {
     // we want to show the 10 users around us
-    m_pLeaderboardMenu->ShowLeaderboard(m_hLongDistanceLeaderboard, k_ELeaderboardDataRequestGlobal, 0);
+    m_pLeaderboardMenu->ShowLeaderboard(m_hLongDistanceLeaderboard, k_ELeaderboardDataRequestGlobal);
 }
 
 // Render the leaderboard menu

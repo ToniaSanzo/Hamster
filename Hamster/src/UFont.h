@@ -140,8 +140,6 @@ public:
 
 private:
     // Class constants
-    static const SDL_Color BLACK_TEXT;
-    static const SDL_Color ORANGE_TEXT;
     static const UVector3 Z_SPAWN_POS;
     static const std::string Z_STRING;
     static const int PLAY_TIME_SECONDS;

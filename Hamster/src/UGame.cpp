@@ -291,7 +291,7 @@ void UGame::update(const float &dt)
         // Open the settings menu
         else
         {
-            if (mPrevState == GameState::LEADERBOARD_MENU)
+            if (mCurrState != GameState::LEADERBOARD_MENU)
             {
                 mPrevState = mCurrState;
             }
@@ -312,11 +312,13 @@ void UGame::update(const float &dt)
         // Open the leaderboard menu
         else
         {
-            if (mPrevState == GameState::SETTINGS_MENU)
+            if (mCurrState != GameState::SETTINGS_MENU)
             {
                 mPrevState = mCurrState;
             }
             mCurrState = GameState::LEADERBOARD_MENU;
+
+            m_pLeaderboards->ShowLeaderboardData();
         }
     }
 
@@ -495,7 +497,7 @@ bool UGame::handleEvent(SDL_Event &e)
 {
     if (e.type == SDL_QUIT) { return true; }
 
-    if (mCurrState != GameState::SETTINGS_MENU || mCurrState != GameState::LEADERBOARD_MENU)
+    if (mCurrState != GameState::SETTINGS_MENU && mCurrState != GameState::LEADERBOARD_MENU)
     {
         mHamster.handleEvent(e);
     }
@@ -528,16 +530,6 @@ bool UGame::handleEvent(SDL_Event &e)
         // Handle the user clicking the sfx or music mute buttons
         mSFXButton.handleEvent(e);
         mMusicButton.handleEvent(e);
-// #if DEBUG
-        if (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_l)
-        {
-            m_pLeaderboards->ShowLongestDistance();
-        }
-        else if (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_f)
-        {
-            m_pLeaderboards->ShowFastestRun();
-        }
-// #endif
     }
     else if (mCurrState == GameState::LEADERBOARD_MENU)
     {

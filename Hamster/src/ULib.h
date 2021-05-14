@@ -26,6 +26,10 @@
 #define DIRECTION_BTN_POSITON_1 UVector3{817, 92, 0}
 #define DIRECTION_BTN_POSITION_2 UVector3{472, 92, 0}
 
+// SDL colots
+#define BLACK_TEXT SDL_Color{ 0, 0, 0, 0xFF }
+#define ORANGE_TEXT SDL_Color{ 0xFF, 0x95, 0, 0xFF }
+
 // Options for different leaderboard entries
 enum ELeaderboardEntryOption
 {
