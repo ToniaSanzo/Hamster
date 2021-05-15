@@ -68,7 +68,7 @@ bool STEAM_StatsAchievements::init()
     // If setting up SteamUser interface failed
     if (mSteamUser == nullptr)
     {
-        printf("Failed to load Steam User interface!\n");
+        // printf("Failed to load Steam User interface!\n");
         success = false;
     }
 
@@ -80,17 +80,8 @@ bool STEAM_StatsAchievements::init()
         // If setting up SteamUserStats interface failed
         if (mSteamUserStats == nullptr)
         {
-            printf("Failed to load Steam UserStats interface!\n");
+            // printf("Failed to load Steam UserStats interface!\n");
             success = false;
-        }
-
-        // Otherwise continue setup
-        else
-        {
-            // DEBUG: Reset stats remove before final release
-            // clearStatsAchievements();
-            // std::printf("stats reset.\n");
-            // END DEBUG
         }
     }
 
@@ -219,7 +210,7 @@ void STEAM_StatsAchievements::storeStatsIfNecessary()
 // We have recieved stats data from Steam. We then immediately update our data.
 void STEAM_StatsAchievements::onUserStatsReceived(UserStatsReceived_t *pCallback)
 {
-    printf("OnUserStatsReceived Callback\n");
+    // printf("OnUserStatsReceived Callback\n");
     m_bUsersStatsRecieved = true;
     if (!mSteamUserStats)
         return;
@@ -229,7 +220,7 @@ void STEAM_StatsAchievements::onUserStatsReceived(UserStatsReceived_t *pCallback
     {
         if (k_EResultOK == pCallback->m_eResult)
         {
-            printf("Received stats and achievements from Steam\n");
+            // printf("Received stats and achievements from Steam\n");
             m_bStatsValid = true;
 
             // load achievements
@@ -237,7 +228,7 @@ void STEAM_StatsAchievements::onUserStatsReceived(UserStatsReceived_t *pCallback
             {
                 Achievement_t &ach = g_rgAchievements[iAch];
                 mSteamUserStats->GetAchievement(ach.mAchievementIDChar, &ach.m_bAchieved);
-                printf("[Achievement #%d]Name: %s, Desc: %s, Unlocked: %s\n", iAch, mSteamUserStats->GetAchievementDisplayAttribute(ach.mAchievementIDChar, "name"), mSteamUserStats->GetAchievementDisplayAttribute(ach.mAchievementIDChar, "desc"), ach.m_bAchieved ? "true" : "false");
+                // printf("[Achievement #%d]Name: %s, Desc: %s, Unlocked: %s\n", iAch, mSteamUserStats->GetAchievementDisplayAttribute(ach.mAchievementIDChar, "name"), mSteamUserStats->GetAchievementDisplayAttribute(ach.mAchievementIDChar, "desc"), ach.m_bAchieved ? "true" : "false");
             }
 
             // load stats
@@ -256,7 +247,7 @@ void STEAM_StatsAchievements::onUserStatsReceived(UserStatsReceived_t *pCallback
         }
         else
         {
-            printf("RequestStats - failed, %d\n", pCallback->m_eResult);
+            // printf("RequestStats - failed, %d\n", pCallback->m_eResult);
         }
     }
 }
@@ -264,20 +255,20 @@ void STEAM_StatsAchievements::onUserStatsReceived(UserStatsReceived_t *pCallback
 // Our stats data was stored!
 void STEAM_StatsAchievements::onUserStatsStored(UserStatsStored_t *pCallback)
 {
-    printf("OnUserStatsStored Callback\n");
+    // printf("OnUserStatsStored Callback\n");
 
     // We may get callbacks for other games' stats arriving, ignore them
     if (mGameId.ToUint64() == pCallback->m_nGameID)
     {
         if (k_EResultOK == pCallback->m_eResult)
         {
-            printf("StoreStats - success\n");
+            // printf("StoreStats - success\n");
         }
         else if (k_EResultInvalidParam == pCallback->m_eResult)
         {
             // One or more stats we set broke a constraint. They've been reverted,
             // and we should re-iterate the values now to keep in sync.
-            printf("StoreStats - some failed to validate\n");
+            // printf("StoreStats - some failed to validate\n");
             // Fake up a callback here so that we re-load the values.
             UserStatsReceived_t callback;
             callback.m_eResult = k_EResultOK;
@@ -286,7 +277,7 @@ void STEAM_StatsAchievements::onUserStatsStored(UserStatsStored_t *pCallback)
         }
         else
         {
-            printf("StoreStats - failed, %d\n", pCallback->m_eResult);
+            // printf("StoreStats - failed, %d\n", pCallback->m_eResult);
         }
     }
 }
@@ -294,18 +285,18 @@ void STEAM_StatsAchievements::onUserStatsStored(UserStatsStored_t *pCallback)
 // An achievements was stored
 void STEAM_StatsAchievements::onAchievementStored(UserAchievementStored_t *pCallback)
 {
-    printf("OnAchievementStored Callback\n");
+    // printf("OnAchievementStored Callback\n");
 
     // we may get callbacks for other games stats arriving, ignore them
     if (mGameId.ToUint64() == pCallback->m_nGameID)
     {
         if (0 == pCallback->m_nMaxProgress)
         {
-            printf("Achievement '%s' unlocked!", pCallback->m_rgchAchievementName);
+            // printf("Achievement '%s' unlocked!", pCallback->m_rgchAchievementName);
         }
         else
         {
-            printf("Achievement '%s' progress callback, (%d / %d)\n", pCallback->m_rgchAchievementName, pCallback->m_nCurProgress, pCallback->m_nMaxProgress);
+            // printf("Achievement '%s' progress callback, (%d / %d)\n", pCallback->m_rgchAchievementName, pCallback->m_nCurProgress, pCallback->m_nMaxProgress);
         }
     }
 }

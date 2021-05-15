@@ -53,7 +53,7 @@ bool GHamster::init(SDL_Renderer *aRenderer, const std::string &path, USound *aS
     // Load the sprite sheet with the file path
     if (!mSpriteSheet.loadFromFile(path))
     {
-        printf("Failed to load hamster sprite sheet!\n");
+        // printf("Failed to load hamster sprite sheet!\n");
         success = false;
     }
     else
@@ -78,7 +78,7 @@ bool GHamster::init(SDL_Renderer *aRenderer, const std::string &path, USound *aS
     mSound = aSound;
     if (mSound == nullptr)
     {
-        printf("Failed to load passed in with invalid USound* argument!\n");
+        // printf("Failed to load passed in with invalid USound* argument!\n");
         success = false;
     }
 
@@ -480,7 +480,7 @@ bool DustBall::init(SDL_Renderer *aRenderer, const UVector3 &aInitialPosition)
     mTexture.initUTexture(aRenderer);
     if(!mTexture.loadFromFile("assets/dustball.png"))
     {
-        printf("Failed to load dustball texture!\n");
+        // printf("Failed to load dustball texture!\n");
         success = false;
     }
     else

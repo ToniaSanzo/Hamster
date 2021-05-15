@@ -26,7 +26,7 @@ bool init()
     // if it wasn't
     if (SteamAPI_RestartAppIfNecessary(1583410))
     {
-        printf("(SteamAPI_RestartAppIfNecessary(1583410)) returned true.\n");
+        // printf("(SteamAPI_RestartAppIfNecessary(1583410)) returned true.\n");
         success = false;
     }
 
@@ -35,14 +35,14 @@ bool init()
     // interface. Must return successfully to 
     if (!SteamAPI_Init())
     {
-        printf("Fatal Error - Steam must be running to play this game (SteamAPI_Init() failed).\n");
+        // printf("Fatal Error - Steam must be running to play this game (SteamAPI_Init() failed).\n");
         success = false;
     }
 
     // Initialize SDL subsystems
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) 
     {
-        printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
+        // printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
         success = false;
     }
     else 
@@ -50,7 +50,7 @@ bool init()
         // Create window
         if (!gWindow.init(ULib::TITLE, ULib::SCREEN_DIMENSIONS.x, ULib::SCREEN_DIMENSIONS.y, "assets/hamster_icon.png")) 
         {
-            printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
+            // printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
             success = false;
         }
         else 
@@ -59,7 +59,7 @@ bool init()
             gRenderer = gWindow.getRenderer();
             if (gRenderer == nullptr) 
             {
-                printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+                // printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
                 success = false;
             }
             else 
@@ -71,21 +71,21 @@ bool init()
                 int imgFlags = IMG_INIT_PNG;
                 if (!(IMG_Init(imgFlags) & imgFlags)) 
                 {
-                    printf("SDL_image could not initialzie! SDL_image Error: %s\n", IMG_GetError());
+                    // printf("SDL_image could not initialzie! SDL_image Error: %s\n", IMG_GetError());
                     success = false;
                 }
 
                 // Initialize music
                 if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) 
                 {
-                    printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+                    // printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
                     success = false;
                 }
 
                 // Initialize fonts
                 if (TTF_Init() == -1) 
                 {
-                    printf("SDL_ttf could not initialize! SDL_ttf Error: %s \n", TTF_GetError());
+                    // printf("SDL_ttf could not initialize! SDL_ttf Error: %s \n", TTF_GetError());
                     success = false;
                 }
 
@@ -98,7 +98,7 @@ bool init()
 // Closes and frees all the resources used to run the game
 void close() 
 {
-    printf("Cleaning up...");
+    // printf("Cleaning up...");
 
     // Destroy window
     gWindow.free();
@@ -113,7 +113,7 @@ void close()
     // Free resources used by the steam API
     SteamAPI_Shutdown();
 
-    printf(" done.\n");
+    // printf(" done.\n");
 }
 
 // Main Method
@@ -125,7 +125,7 @@ int main(int argc, char *args[])
     // Start up SDL and create window
     if (!init()) 
     {
-        printf("Failed to initialize!\n");
+        // printf("Failed to initialize!\n");
     }
     else 
     {
@@ -133,7 +133,7 @@ int main(int argc, char *args[])
         UGame game;
         if (!game.init(gRenderer, &gWindow)) 
         {
-            printf("Failed to initialize UGame!\n");
+            // printf("Failed to initialize UGame!\n");
         }
         else 
         {

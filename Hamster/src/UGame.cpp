@@ -59,7 +59,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
 
     if (mRenderer == nullptr || mWindow == nullptr)
     {
-        printf("Attempted to initialize the UGame object with nullptr! Pass in valid pointers in the UGame.init() function\n");
+        // printf("Attempted to initialize the UGame object with nullptr! Pass in valid pointers in the UGame.init() function\n");
         success = false;
     }
     else
@@ -70,7 +70,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             mBackgroundTexture.initUTexture(mRenderer);
             if (!mBackgroundTexture.loadFromFile("assets/background.png"))
             {
-                std::printf("Failed to load background texture!\n");
+                // printf("Failed to load background texture!\n");
                 success = false;
             }
 
@@ -78,7 +78,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             mGlassCageTexture.initUTexture(mRenderer);
             if (!mGlassCageTexture.loadFromFile("assets/glass_cage.png"))
             {
-                std::printf("Failed to load glass cage texture!\n");
+                // printf("Failed to load glass cage texture!\n");
                 success = false;
             }
 
@@ -86,7 +86,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             mWheelArmTexture.initUTexture(mRenderer);
             if (!mWheelArmTexture.loadFromFile("assets/wheel_arm.png"))
             {
-                std::printf("Failed to load wheel arm texture!\n");
+                // printf("Failed to load wheel arm texture!\n");
                 success = false;
             }
 
@@ -94,7 +94,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             mWheelTexture.initUTexture(mRenderer);
             if (!mWheelTexture.loadFromFile("assets/wheel.png"))
             {
-                std::printf("Failed to load wheel texture!\n");
+                // printf("Failed to load wheel texture!\n");
                 success = false;
             }
 
@@ -102,7 +102,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             mHouseForegroundTexture.initUTexture(mRenderer);
             if (!mHouseForegroundTexture.loadFromFile("assets/house_foreground.png"))
             {
-                std::printf("Failed to load house foreground texture!\n");
+                // printf("Failed to load house foreground texture!\n");
                 success = false;
             }
 
@@ -110,7 +110,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             mTitleTexture.initUTexture(mRenderer);
             if (!mTitleTexture.loadFromFile("assets/title.png"))
             {
-                std::printf("Failed to load title texture!\n");
+                // printf("Failed to load title texture!\n");
                 success = false;
             }
             else
@@ -123,7 +123,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             mSettingsMenuTexture.initUTexture(mRenderer);
             if (!mSettingsMenuTexture.loadFromFile("assets/settings_menu.png"))
             {
-                std::printf("Failed to load settings menu texture!\n");
+                // printf("Failed to load settings menu texture!\n");
                 success = false;
             }
         }
@@ -131,7 +131,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
         // Initialize the sounds
         if (!mSounds.init())
         {
-            printf("Failed to load sounds!\n");
+            // printf("Failed to load sounds!\n");
             success = false;
         }
         else
@@ -142,49 +142,49 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
         // Initialize the hamster
         if (!mHamster.init(mRenderer, "assets/hamster.png", &mSounds))
         {
-            std::printf("Failed to load hamster!\n");
+            // printf("Failed to load hamster!\n");
             success = false;
         }
 
         // Initialize the fonts
         if (!mFonts.init(mRenderer, &mSounds))
         {
-            std::printf("Failed to load fonts!\n");
+            // printf("Failed to load fonts!\n");
             success = false;
         }
 
         // Initialize the settings button
         if (!mSettingsButton.init(mRenderer, "assets/settings_button.png", SETTINGS_BTN_POSITION, OPTION_BTN_DIMENSION))
         {
-            std::printf("Failed to load the settings button!\n");
+            // printf("Failed to load the settings button!\n");
             success = false;
         }
 
         // Initialize the leaderboard button
         if (!mLeaderboardButton.init(mRenderer, "assets/leaderboard_button.png", LEADERBOARD_BTN_POSITION, OPTION_BTN_DIMENSION))
         {
-            std::printf("Failed to load the leaderboard button!\n");
+            // printf("Failed to load the leaderboard button!\n");
             success = false;
         }
 
         // Initialize the music button
         if (!mMusicButton.init(mRenderer, "assets/sound_button.png", MUSIC_BTN_POSITION, SOUND_BTN_DIMENSION))
         {
-            std::printf("Failed to load the music button!\n");
+            // printf("Failed to load the music button!\n");
             success = false;
         }
 
         // Initialize the sfx button
         if (!mSFXButton.init(mRenderer, "assets/sound_button.png", SFX_BTN_POSITION, SOUND_BTN_DIMENSION))
         {
-            std::printf("Failed to load the sfx button!\n");
+            // printf("Failed to load the sfx button!\n");
             success = false;
         }
 
         // Initialize the play again button
         if (!mPlayAgainButton.init(mRenderer, "assets/play_again_button.png", PLAY_AGAIN_BTN_POSITION, PLAY_AGAIN_BTN_DIMENSION))
         {
-            std::printf("Failed to load the play again button!\n");
+            // printf("Failed to load the play again button!\n");
             success = false;
         }
 
@@ -192,13 +192,13 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
         m_pStatsAndAchievements = new STEAM_StatsAchievements();
         if (!m_pStatsAndAchievements->init())
         {
-            std::printf("Failed to initialize the stats and achievements!\n");
+            // printf("Failed to initialize the stats and achievements!\n");
             success = false;
         }
         m_pLeaderboards = new STEAM_Leaderboards();
         if (!m_pLeaderboards->init(mRenderer))
         {
-            std::printf("Failed to initialize the leaderboards!\n");
+            // printf("Failed to initialize the leaderboards!\n");
             success = false;
         }
     }
@@ -212,7 +212,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
         // File does not exist
         if (file == nullptr)
         {
-            printf("Warning: Unable to open file! SDL Error: %s\n", SDL_GetError());
+            // printf("Warning: Unable to open file! SDL Error: %s\n", SDL_GetError());
 
             // Create file for writing
             file = SDL_RWFromFile("assets/save.bin", "w+b");
@@ -232,7 +232,7 @@ bool UGame::init(SDL_Renderer *aRenderer, UWindow *aWindow)
             }
             else
             {
-                printf("Error: Unable to create file! SDL Error: %s\n", SDL_GetError());
+                // printf("Error: Unable to create file! SDL Error: %s\n", SDL_GetError());
                 success = false;
             }
         }
@@ -425,7 +425,7 @@ void UGame::update(const float &dt)
             m_pStatsAndAchievements->addLoops(mStepCount / 5);
 
             // Enter new high score state
-            if (mFonts.getHighscore() < mStepCount / 5)
+            if (mFonts.getHighscore() < static_cast<unsigned>(mStepCount / 5))
             {
                 mCurrState = GameState::NEW_HIGHSCORE;
                 mHamster.setState(static_cast<int>(GameState::NEW_HIGHSCORE));
@@ -719,7 +719,7 @@ void UGame::close()
     }
     else
     {
-        printf("Error: Unable to save file! %s\n", SDL_GetError());
+        // printf("Error: Unable to save file! %s\n", SDL_GetError());
     }
 
     if (mRenderer)

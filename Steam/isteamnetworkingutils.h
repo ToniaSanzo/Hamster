@@ -386,7 +386,7 @@ struct SteamRelayNetworkStatus_t
 };
 
 /// Utility class for printing a SteamNetworkingIdentity.
-/// E.g. printf( "Identity is '%s'\n", SteamNetworkingIdentityRender( identity ).c_str() );
+/// E.g. printf_s( "Identity is '%s'\n", SteamNetworkingIdentityRender( identity ).c_str() );
 struct SteamNetworkingIdentityRender
 {
 	SteamNetworkingIdentityRender( const SteamNetworkingIdentity &x ) { x.ToString( buf, sizeof(buf) ); }

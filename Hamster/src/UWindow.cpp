@@ -41,7 +41,7 @@ bool UWindow::init(std::string title, float aW, float aH, std::string path = "")
     }
     else
     {
-        printf("Failed to create the SDL window!\n");
+        // printf("Failed to create the SDL window!\n");
         success = false;
     }
 
@@ -52,7 +52,7 @@ bool UWindow::init(std::string title, float aW, float aH, std::string path = "")
         mIcon = IMG_Load(path.c_str());
         if (!mIcon)
         {
-            printf("Unable to load image \"%s\"! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+            // printf("Unable to load image \"%s\"! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
             success = false;
         }
         else

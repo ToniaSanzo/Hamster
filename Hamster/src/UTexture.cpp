@@ -49,7 +49,7 @@ bool UTexture::loadFromFile(std::string path) {
 
     // Exit prematuraly if UTexture has not been properly initialized
     if (!mRenderer) {
-        printf("Attempted to render a texture without initializing a renderer!\n");
+        // printf("Attempted to render a texture without initializing a renderer!\n");
         return false;
     }
 
@@ -59,7 +59,7 @@ bool UTexture::loadFromFile(std::string path) {
     // Load image at specified path
     SDL_Surface *loadedSurface = IMG_Load(path.c_str());
     if (!loadedSurface) {
-        printf("unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+        // printf("unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
     }
     else {
         // Color key image
@@ -68,7 +68,7 @@ bool UTexture::loadFromFile(std::string path) {
         // Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface(mRenderer, loadedSurface);
         if (!newTexture) {
-            printf("Unable to create texture from %s! SDL Error: %s\n:", path.c_str(), SDL_GetError());
+            // printf("Unable to create texture from %s! SDL Error: %s\n:", path.c_str(), SDL_GetError());
         }
         else {
             // Get image dimensions
@@ -95,24 +95,24 @@ bool UTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 
     // Exit prematuraly if UTexture has not been properly initialized
     if (!mFont) {
-        printf("Attempted to render a text texture without initializing a font!\n");
+        // printf("Attempted to render a text texture without initializing a font!\n");
         return false;
     }
     if (!mRenderer) {
-        printf("Attempted to render a texture without initializing a renderer!\n");
+        // printf("Attempted to render a texture without initializing a renderer!\n");
         return false;
     }
 
     // Render text surface
     SDL_Surface *textSurface = TTF_RenderText_Blended(mFont, textureText.c_str(), textColor);
     if (textSurface == NULL) {
-        printf("Unable to render text surface!  SDL_ttfError: %s\n", TTF_GetError());
+        // printf("Unable to render text surface!  SDL_ttfError: %s\n", TTF_GetError());
     }
     else {
         // Create texture from surface pixels
         mTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
         if (mTexture == NULL) {
-            printf("Unable to create texture from rendered text! SDL_Error: %s\n", SDL_GetError());
+            // printf("Unable to create texture from rendered text! SDL_Error: %s\n", SDL_GetError());
         }
         else {
             // Get image dimensions

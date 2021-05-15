@@ -80,13 +80,13 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>D:\C++Lib\SDL2_ttf-2.0.15\include;D:\C++Lib\SDL2_mixer-2.0.4\include;D:\C++Lib\SDL2_image-2.0.5\include;D:\C++Lib\SDL2-devel-2.0.12-VC\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\C++Lib\SDL2_ttf-2.0.15\lib\x64;D:\C++Lib\SDL2_mixer-2.0.4\lib\x64;D:\C++Lib\SDL2_image-2.0.5\lib\x64;D:\C++Lib\SDL2-devel-2.0.12-VC\SDL2-2.0.12\lib\x64;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\PLEASE_UPDATE</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>D:\C++Lib\SDL2-devel-2.0.12-VC\SDL2-2.0.12\include;D:\C++Lib\SDL2_ttf-2.0.15\include;D:\C++Lib\SDL2_mixer-2.0.4\include;D:\C++Lib\SDL2_image-2.0.5\include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\C++Lib\SDL2-devel-2.0.12-VC\SDL2-2.0.12\lib\x64;D:\C++Lib\SDL2_ttf-2.0.15\lib\x64;D:\C++Lib\SDL2_mixer-2.0.4\lib\x64;D:\C++Lib\SDL2_image-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\PLEASE_UPDATE</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

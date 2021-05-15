@@ -131,21 +131,21 @@ public:
             m_texFastRunBoard.initUTexture(a_pRenderer);
             if (!m_texFastRunBoard.loadFromFile("assets/fastest_run_leaderboard.png"))
             {
-                std::printf("Failed to load fastest run leaderboard!\n");
+                // printf("Failed to load fastest run leaderboard!\n");
                 success = false;
             }
 
             m_texLongDistanceBoard.initUTexture(a_pRenderer);
             if (!m_texLongDistanceBoard.loadFromFile("assets/longest_distance_leaderboard.png"))
             {
-                std::printf("Failed to load longest distance leaderboard!\n");
+                // printf("Failed to load longest distance leaderboard!\n");
                 success = false;
             }
 
             m_texExitBtn.initUTexture(a_pRenderer);
             if (!m_texExitBtn.loadFromFile("assets/x_button.png"))
             {
-                std::printf("Failed to load exit button!\n");
+                // printf("Failed to load exit button!\n");
                 success = false;
             }
 
@@ -153,7 +153,7 @@ public:
             m_fntLeaderboard = TTF_OpenFont("assets/font.ttf", 18);
             if (!m_fntLeaderboard)
             {
-                printf("Failed to load leaderboard font, SDL_ttf Error: %s\n", TTF_GetError());
+                // printf("Failed to load leaderboard font, SDL_ttf Error: %s\n", TTF_GetError());
                 success = false;
             }
 
@@ -166,7 +166,7 @@ public:
 
                 if (!m_texLeaderboardEntriesRank.back().loadFromRenderedText(" ", BLACK_TEXT))
                 {
-                    printf("Failed to load leaderboard entry rank texture!\n");
+                    // printf("Failed to load leaderboard entry rank texture!\n");
                     success = false;
                 }
 
@@ -176,7 +176,7 @@ public:
 
                 if (!m_texLeaderboardEntriesName.back().loadFromRenderedText(" ", BLACK_TEXT))
                 {
-                    printf("Failed to load leaderboard entry name texture!\n");
+                    // printf("Failed to load leaderboard entry name texture!\n");
                     success = false;
                 }
 
@@ -186,7 +186,7 @@ public:
 
                 if (!m_texLeaderboardEntriesScore.back().loadFromRenderedText(" ", BLACK_TEXT))
                 {
-                    printf("Failed to load leaderboard entry score texture!\n");
+                    // printf("Failed to load leaderboard entry score texture!\n");
                     success = false;
                 }
             }
@@ -197,7 +197,7 @@ public:
 
             if (!m_texUserEntryRank.loadFromRenderedText(" ", BLACK_TEXT))
             {
-                printf("Failed to load user entry rank texture!\n");
+                // printf("Failed to load user entry rank texture!\n");
                 success = false;
             }
 
@@ -207,7 +207,7 @@ public:
 
             if (!m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT))
             {
-                printf("Failed to load user entry name texture!\n");
+                // printf("Failed to load user entry name texture!\n");
                 success = false;
             }
 
@@ -217,7 +217,7 @@ public:
 
             if (!m_texUserEntryScore.loadFromRenderedText(" ", BLACK_TEXT))
             {
-                printf("Failed to load user entry score texture!\n");
+                // printf("Failed to load user entry score texture!\n");
                 success = false;
             }
         }
@@ -258,13 +258,14 @@ public:
     {
         if (a_bRenderFastRunLeaderboard)
         {
-            m_texFastRunBoard.render((ULib::SCREEN_DIMENSIONS.x - m_texFastRunBoard.getWidth()) / 2.f, (ULib::SCREEN_DIMENSIONS.y - m_texFastRunBoard.getHeight()) / 2.f);
+            m_texFastRunBoard.render(static_cast<int>((ULib::SCREEN_DIMENSIONS.x - m_texFastRunBoard.getWidth()) / 2.f), static_cast<int>((ULib::SCREEN_DIMENSIONS.y - m_texFastRunBoard.getHeight()) / 2.f));
         }
         else
         {
-            m_texLongDistanceBoard.render((ULib::SCREEN_DIMENSIONS.x - m_texLongDistanceBoard.getWidth()) / 2.f, (ULib::SCREEN_DIMENSIONS.y - m_texLongDistanceBoard.getHeight()) / 2.f);
+            m_texLongDistanceBoard.render(static_cast<int>((ULib::SCREEN_DIMENSIONS.x - m_texLongDistanceBoard.getWidth()) / 2.f), static_cast<int>((ULib::SCREEN_DIMENSIONS.y - m_texLongDistanceBoard.getHeight()) / 2.f));
         }
 
+        
         for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
         {
             m_texLeaderboardEntriesRank[i].render(446, 137 + (36 * i));
@@ -292,9 +293,9 @@ public:
                 
                 for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
                 {
-                    assert(m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT));
-                    assert(m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT));
-                    assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT));
+                    m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT);
+                    m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT);
+                    m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT);
                 }
             }
 
@@ -307,9 +308,9 @@ public:
                     m_usersEntry = nullptr;
                 }
                 m_usersEntry = new LeaderboardEntry(ELeaderboardEntryOption::k_ELoading);
-                assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
-                assert(m_texUserEntryRank.loadFromRenderedText(" ", BLACK_TEXT));
-                assert(m_texUserEntryScore.loadFromRenderedText(" ", BLACK_TEXT));
+                m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT);
+                m_texUserEntryRank.loadFromRenderedText(" ", BLACK_TEXT);
+                m_texUserEntryScore.loadFromRenderedText(" ", BLACK_TEXT);
             }
         }
 
@@ -321,9 +322,9 @@ public:
 
             for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
             {
-                assert(m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT));
-                assert(m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT));
-                assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT));
+                m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT);
+                m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT);
+                m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT);
             }
 
             if (m_usersEntry)
@@ -332,9 +333,9 @@ public:
                 m_usersEntry = nullptr;
             }
             m_usersEntry = new LeaderboardEntry(ELeaderboardEntryOption::k_EIOFail);
-            assert(m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT));
-            assert(m_texUserEntryRank.loadFromRenderedText(" ", BLACK_TEXT));
-            assert(m_texUserEntryScore.loadFromRenderedText(" ", BLACK_TEXT));
+            m_texUserEntryName.loadFromRenderedText(" ", BLACK_TEXT);
+            m_texUserEntryRank.loadFromRenderedText(" ", BLACK_TEXT);
+            m_texUserEntryScore.loadFromRenderedText(" ", BLACK_TEXT);
         }
 
         // Populate the leaderboard entries
@@ -354,12 +355,12 @@ public:
                     }
 
                     m_usersEntry = new LeaderboardEntry(ELeaderboardEntryOption::k_ENoScore);
-                    assert(m_texUserEntryName.loadFromRenderedText("No score", BLACK_TEXT));
-                    assert(m_texUserEntryRank.loadFromRenderedText(" ", BLACK_TEXT));
-                    assert(m_texUserEntryScore.loadFromRenderedText(" ", BLACK_TEXT));
+                    m_texUserEntryName.loadFromRenderedText("No score", BLACK_TEXT);
+                    m_texUserEntryRank.loadFromRenderedText(" ", BLACK_TEXT);
+                    m_texUserEntryScore.loadFromRenderedText(" ", BLACK_TEXT);
                 }
 
-                // If not requesting global scores aro
+                // If not requesting global score around the user
                 else if(m_eLeaderboardData == k_ELeaderboardDataRequestGlobal)
                 {
                     m_leaderboardEntries.clear();
@@ -367,12 +368,10 @@ public:
 
                     for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
                     {
-                        assert(m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT));
-                        assert(m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT));
-                        assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT));
+                        m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT);
+                        m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT);
+                        m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT);
                     }
-
-                    assert(m_texLeaderboardEntriesName[0].loadFromRenderedText(" ", BLACK_TEXT));
                 }
             }
 
@@ -382,18 +381,19 @@ public:
                 // clear leaderboard entry textures
                 for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
                 {
-                    assert(m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT));
-                    assert(m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT));
-                    assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT));
+                    m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT);
+                    m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT);
+                    m_texLeaderboardEntriesScore[i].loadFromRenderedText(" ", BLACK_TEXT);
                 }
 
                 for (int i = 0; i < m_leaderboardEntries.size(); ++i)
                 {
                     if (m_leaderboardEntries[i].m_eOption == ELeaderboardEntryOption::k_EValid)
                     {
-                        assert(m_texLeaderboardEntriesName[i].loadFromRenderedText(m_leaderboardEntries[i].m_name, BLACK_TEXT));
-                        assert(m_texLeaderboardEntriesRank[i].loadFromRenderedText(std::to_string(m_leaderboardEntries[i].m_nGlobalRank), BLACK_TEXT));
-                        assert(m_texLeaderboardEntriesScore[i].loadFromRenderedText(std::to_string(m_leaderboardEntries[i].m_nScore), BLACK_TEXT));
+                        // printf("Creating valid leaderboard entry name: %s\n", m_leaderboardEntries[i].m_name.c_str());
+                        m_texLeaderboardEntriesName[i].loadFromRenderedText(m_leaderboardEntries[i].m_name, BLACK_TEXT);
+                        m_texLeaderboardEntriesRank[i].loadFromRenderedText(std::to_string(m_leaderboardEntries[i].m_nGlobalRank), BLACK_TEXT);
+                        m_texLeaderboardEntriesScore[i].loadFromRenderedText(std::to_string(m_leaderboardEntries[i].m_nScore), BLACK_TEXT);
                     }
                 }
 
@@ -404,13 +404,12 @@ public:
             // Print the parsed current user leaderboard data
             else if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobalAroundUser)
             {
-                assert(m_usersEntry);
-                
                 if (m_usersEntry->m_eOption == ELeaderboardEntryOption::k_EValid)
                 {
-                    assert(m_texUserEntryName.loadFromRenderedText(m_usersEntry->m_name, BLACK_TEXT));
-                    assert(m_texUserEntryRank.loadFromRenderedText(std::to_string(m_usersEntry->m_nGlobalRank), BLACK_TEXT));
-                    assert(m_texUserEntryScore.loadFromRenderedText(std::to_string(m_usersEntry->m_nScore), BLACK_TEXT));
+                    // printf("Creating valid user Entry name: %s\n", m_usersEntry->m_name.c_str());
+                    m_texUserEntryName.loadFromRenderedText(m_usersEntry->m_name, BLACK_TEXT);
+                    m_texUserEntryRank.loadFromRenderedText(std::to_string(m_usersEntry->m_nGlobalRank), BLACK_TEXT);
+                    m_texUserEntryScore.loadFromRenderedText(std::to_string(m_usersEntry->m_nScore), BLACK_TEXT);
                 }
             }
         }
@@ -423,7 +422,7 @@ public:
         m_bLoading = false;
         m_bIOFailure = bIOFailure;
 
-        printf("USER NAME: %s\n", SteamFriends()->GetPersonaName());
+        // printf("USER NAME: %s\n", SteamFriends()->GetPersonaName());
 
         // leaderboard entries handle will be invalid once we return from this function. Copy all data now.
         m_nLeaderboardEntries = MIN(pLeaderboardScoresDownloaded->m_cEntryCount, k_nMaxLeaderboardEntries);
@@ -433,7 +432,7 @@ public:
             SteamUserStats()->GetDownloadedLeaderboardEntry(pLeaderboardScoresDownloaded->m_hSteamLeaderboardEntries,
                 index, &tmpLdBdEntry, NULL, 0);
 
-            printf("(% d) % s - % d\n", tmpLdBdEntry.m_nGlobalRank, SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser), tmpLdBdEntry.m_nScore);
+            // printf("(% d) % s - % d\n", tmpLdBdEntry.m_nGlobalRank, SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser), tmpLdBdEntry.m_nScore);
 
             // Parse the data from tmpLdBdEntry into the appropriate LeaderboardEntry(s)
             if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobal)
@@ -452,7 +451,7 @@ public:
                 }
 
                 // Load the users entry
-                printf("%s ?= %s\n", SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser), SteamFriends()->GetPersonaName());
+                // printf("%s ?= %s\n", SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser), SteamFriends()->GetPersonaName());
                 if (strcmp(SteamFriends()->GetPersonaName(), SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser)) == 0)
                 {
                     m_usersEntry = new LeaderboardEntry(SteamFriends()->GetFriendPersonaName(tmpLdBdEntry.m_steamIDUser), tmpLdBdEntry.m_nScore, tmpLdBdEntry.m_nGlobalRank);
@@ -497,13 +496,13 @@ bool STEAM_Leaderboards::init(SDL_Renderer* a_pRenderer)
     m_pLeaderboardMenu = new STEAM_LeaderboardMenu();
     if (!m_pLeaderboardMenu->init(a_pRenderer))
     {
-        printf("Failed to load the leaderboard menu!\n");
+        // printf("Failed to load the leaderboard menu!\n");
         success = false;
     }
 
     if (!m_btnDirectionArrow.init(a_pRenderer, "assets/direction_arrows.png", DIRECTION_BTN_POSITON_1, OPTION_BTN_DIMENSION))
     {
-        printf("Failed to load the direction arrow button!\n");
+        // printf("Failed to load the direction arrow button!\n");
         success = false;
     }
 
@@ -658,11 +657,11 @@ void STEAM_Leaderboards::OnUploadScore(LeaderboardScoreUploaded_t *pScoreUploade
 {
     if (!pScoreUploadedResult->m_bSuccess)
     {
-        printf("error\n");
+        // printf("error\n");
     }
 
     if (pScoreUploadedResult->m_bScoreChanged)
     {
-        printf("could display new rank");
+        // printf("could display new rank");
     }
 }

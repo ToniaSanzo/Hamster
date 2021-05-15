@@ -64,7 +64,7 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
     mSleepFont = TTF_OpenFont("assets/font.ttf", 18);
     if (!mSleepFont)
     {
-        printf("Failed to load sleep font, SDL_ttf Error: %s\n", TTF_GetError());
+        // printf("Failed to load sleep font, SDL_ttf Error: %s\n", TTF_GetError());
         success = false;
     }
 
@@ -72,7 +72,7 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
     mCountdownFont = TTF_OpenFont("assets/font.ttf", 450);
     if (!mCountdownFont)
     {
-        printf("Failed to load sleep font, SDL_ttf Error: %s\n", TTF_GetError());
+        // printf("Failed to load sleep font, SDL_ttf Error: %s\n", TTF_GetError());
         success = false;
     }
     else
@@ -84,7 +84,7 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
         // Load the countdown text
         if (!mCountdownTexture.loadFromRenderedText("[NO VALUE]", BLACK_TEXT))
         {
-            printf("Failed to load countdown texture!\n");
+            // printf("Failed to load countdown texture!\n");
             success = false;
         }
         else
@@ -98,7 +98,7 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
     mMediumFont = TTF_OpenFont("assets/font.ttf", 92);
     if (!mCountdownFont)
     {
-        printf("Failed to load sleep font, SDL_ttf Error: %s\n", TTF_GetError());
+        // printf("Failed to load sleep font, SDL_ttf Error: %s\n", TTF_GetError());
         success = false;
     }
     else
@@ -109,7 +109,7 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
         // Load the game clock text
         if (!mGameClockTexture.loadFromRenderedText("[NO VALUE]", ORANGE_TEXT))
         {
-            printf("Failed to load game clock texture!\n");
+            // printf("Failed to load game clock texture!\n");
             success = false;
         }
         else
@@ -124,7 +124,7 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
         // Load the loop count text
         if (!mLoopCountTexture.loadFromRenderedText("[NO VALUE]", BLACK_TEXT))
         {
-            printf("Failed to load loop count texture!\n");
+            // printf("Failed to load loop count texture!\n");
             success = false;
         }
         else
@@ -139,7 +139,7 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
         // Load the loop count header text
         if (!mLoopCountHeaderTexture.loadFromRenderedText("Number of Loops", BLACK_TEXT))
         {
-            printf("Failed to load loop count header texture!\n");
+            // printf("Failed to load loop count header texture!\n");
                 success = false;
         }
         else
@@ -154,7 +154,7 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
         // Load the input header text
         if (!mInputHeaderTexture1.loadFromRenderedText("New Local Hi-Score!", BLACK_TEXT))
         {
-            printf("Failed to load input header 1!\n");
+            // printf("Failed to load input header 1!\n");
                 success = false;
         }
         mInputHeaderTexture2.initUTexture(mRenderer);
@@ -162,7 +162,7 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
         // Load the input header text
         if (!mInputHeaderTexture2.loadFromRenderedText("Enter name.", BLACK_TEXT))
         {
-            printf("Failed to load input header 2!\n");
+            // printf("Failed to load input header 2!\n");
             success = false;
         }
 
@@ -173,7 +173,7 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
         // Load the username input text
         if (!mInputTextTexture.loadFromRenderedText("_ _ _", BLACK_TEXT))
         {
-            printf("Failed to load username input text!\n");
+            // printf("Failed to load username input text!\n");
             success = false;
         }
 
@@ -183,7 +183,7 @@ bool UFont::init(SDL_Renderer *aRenderer, USound *aSounds)
         // Load the hgihscore text
         if (!mHighscoreTexture.loadFromRenderedText("[NON VALID]", BLACK_TEXT))
         {
-            printf("Failed to load highscore texture!\n");
+            // printf("Failed to load highscore texture!\n");
             success = false;
         }
     }
@@ -555,7 +555,7 @@ bool SleepZ::init(SDL_Renderer *aRenderer, TTF_Font *aFont, const std::string &a
     // Initialize what the sleep text contains
     if (!mTexture->loadFromRenderedText(aRenderText, WHITE_TEXT))
     {
-        printf("Failed to load SleepZ text!\n");
+        // printf("Failed to load SleepZ text!\n");
         success = false;
     }
     else

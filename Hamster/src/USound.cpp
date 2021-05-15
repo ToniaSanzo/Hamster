@@ -24,7 +24,7 @@ bool USound::init() {
     // Load the wheel music
     mWheelMusic = Mix_LoadMUS("assets/wheel_mus.wav");
     if (mWheelMusic == nullptr) {
-        printf("Failed to load wheel music! SDL_mixer Error: %s\n", Mix_GetError());
+        // printf("Failed to load wheel music! SDL_mixer Error: %s\n", Mix_GetError());
         success = false;
     }
 
@@ -32,14 +32,14 @@ bool USound::init() {
     mMenuMusic = Mix_LoadMUS("assets/menu_mus.wav");
     if (mMenuMusic == nullptr)
     {
-        printf("Failed to load menu music! SDL_mixer Error: %s\n", Mix_GetError());
+        // printf("Failed to load menu music! SDL_mixer Error: %s\n", Mix_GetError());
         success = false;
     }
 
     // Load the soft step sound effect
     mSoftStep = Mix_LoadWAV("assets/softstep.wav");
     if (mSoftStep == nullptr) {
-        printf("Failed to load soft step sound! SDL_mixer Error: %s\n", Mix_GetError());
+        // printf("Failed to load soft step sound! SDL_mixer Error: %s\n", Mix_GetError());
         success = false;
     }
 
@@ -47,7 +47,7 @@ bool USound::init() {
     mClick = Mix_LoadWAV("assets/click.wav");
     if (mClick == nullptr)
     {
-        printf("Failed to load click sound! SDL_mixer Error: %s\n", Mix_GetError());
+        // printf("Failed to load click sound! SDL_mixer Error: %s\n", Mix_GetError());
         success = false;
     }
 
@@ -55,7 +55,7 @@ bool USound::init() {
     mClack = Mix_LoadWAV("assets/clack.wav");
     if (mClack == nullptr)
     {
-        printf("Failed to load clack sound! SDL_mixer Error: %s\n", Mix_GetError());
+        // printf("Failed to load clack sound! SDL_mixer Error: %s\n", Mix_GetError());
         success = false;
     }
 

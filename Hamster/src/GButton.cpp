@@ -36,7 +36,7 @@ bool GButton::init(SDL_Renderer *aRenderer, const std::string &aPath, const UVec
     // Load the buttons texture from a file
     if (!mTexture.loadFromFile(aPath))
     {
-        printf("Failed to load button texture!\n");
+        // printf("Failed to load button texture!\n");
         success = false;
     }
     else
