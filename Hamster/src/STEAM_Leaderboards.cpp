@@ -51,7 +51,7 @@ struct LeaderboardEntry
 // Menu that shows a leaderboard
 class STEAM_LeaderboardMenu
 {
-    static const int k_nMaxLeaderboardEntries = 10;		// maximum number of leaderboard entries we can display
+    static const int k_nMaxLeaderboardEntries = 11;		// maximum number of leaderboard entries we can display
     std::vector<LeaderboardEntry> m_leaderboardEntries;	// leaderboard entries we received from DownloadLeaderboardEntries
     LeaderboardEntry* m_usersEntry;                     // The current user's leaderboard entry
     int m_nLeaderboardEntries;							// number of leaderboard entries we received
@@ -158,7 +158,7 @@ public:
             }
 
             // Init the leaderboard textures
-            for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
+            for (int i = 0; i < k_nMaxLeaderboardEntries + 1; ++i)
             {
                 m_texLeaderboardEntriesRank.push_back(UTexture());
                 m_texLeaderboardEntriesRank.back().initUTexture(a_pRenderer);
@@ -244,7 +244,7 @@ public:
             // load the current users
             else if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobalAroundUser)
             {
-                SteamAPICall_t hSteamAPICall = SteamUserStats()->DownloadLeaderboardEntries(hLeaderboard, eLeaderboardData, 0, 1);
+                SteamAPICall_t hSteamAPICall = SteamUserStats()->DownloadLeaderboardEntries(hLeaderboard, eLeaderboardData, -1, 1);
                 // Register for the async callback
                 m_callResultDownloadEntries.Set(hSteamAPICall, this, &STEAM_LeaderboardMenu::OnLeaderboardDownloadedEntries);
             }
@@ -266,11 +266,11 @@ public:
         }
 
         
-        for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
+        for (int i = 0; i < k_nMaxLeaderboardEntries && i < m_texLeaderboardEntriesName.size(); ++i)
         {
-            m_texLeaderboardEntriesRank[i].render(446, 137 + (36 * i));
-            m_texLeaderboardEntriesName[i].render(515, 137 + (36 * i));
-            m_texLeaderboardEntriesScore[i].render(762, 137 + (36 * i));
+            m_texLeaderboardEntriesRank[i].render(446, 137 + (40 * i));
+            m_texLeaderboardEntriesName[i].render(515, 137 + (40 * i));
+            m_texLeaderboardEntriesScore[i].render(762, 137 + (40 * i));
         }
 
         m_texUserEntryRank.render(460, 620);
@@ -291,7 +291,7 @@ public:
                 m_leaderboardEntries.clear();
                 m_leaderboardEntries.push_back(LeaderboardEntry(ELeaderboardEntryOption::k_ELoading));
                 
-                for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
+                for (int i = 0; i < m_leaderboardEntries.size(); ++i)
                 {
                     m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT);
                     m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT);
@@ -320,7 +320,7 @@ public:
             m_leaderboardEntries.clear();
             m_leaderboardEntries.push_back(LeaderboardEntry(ELeaderboardEntryOption::k_EIOFail));
 
-            for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
+            for (int i = 0; i < m_leaderboardEntries.size(); ++i)
             {
                 m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT);
                 m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT);
@@ -366,7 +366,7 @@ public:
                     m_leaderboardEntries.clear();
                     m_leaderboardEntries.push_back(LeaderboardEntry(ELeaderboardEntryOption::k_ENoScore));
 
-                    for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
+                    for (int i = 0; i < m_leaderboardEntries.size(); ++i)
                     {
                         m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT);
                         m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT);
@@ -379,7 +379,7 @@ public:
             else if (m_eLeaderboardData == k_ELeaderboardDataRequestGlobal)
             {
                 // clear leaderboard entry textures
-                for (int i = 0; i < k_nMaxLeaderboardEntries; ++i)
+                for (int i = 0; i < m_leaderboardEntries.size(); ++i)
                 {
                     m_texLeaderboardEntriesName[i].loadFromRenderedText(" ", BLACK_TEXT);
                     m_texLeaderboardEntriesRank[i].loadFromRenderedText(" ", BLACK_TEXT);
